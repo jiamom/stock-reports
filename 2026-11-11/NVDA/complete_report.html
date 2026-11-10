@@ -1,0 +1,1457 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>NVDA 2026-11-11 비중 축소: 주식 분석 보고서</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">NVDA</span> <span class="rating down">비중 축소</span></h1><p style="font:16px/1.6 system-ui"><strong>항목별 매수 매력도: 58~63점 / 100점</strong><br>점수는 기존 TradingAgents 보고서에 동일한 8개 항목을 적용한 별도 AI 평가입니다. 1~3년 관점의 매수 매력도를 비교하며, 높을수록 긍정적입니다. 가격 20 · 성장 20 · 수익성 15 · 재무 10 · 주가 흐름 15 · 관심·수급 5 · 향후 재료 5 · 하락 위험 관리 10점. 각 항목을 0~5점으로 평가한 뒤 배점에 맞춰 합산합니다. 자료가 부족하면 가능한 총점 범위로 표시합니다. 프로그램의 최종 매매 의견과 별도이며, 상승 확률·예상 수익률이나 검증된 수익 예측 모형이 아닙니다. 기존의 등급별 고정 점수(비중 축소 25점)는 더 이상 사용하지 않습니다.</p>
+<p class="date">분석 기준일 2026-11-11</p>
+<dl class="run"><div class="detail"><dt>생성 시각</dt><dd>2026-11-11 07:21</dd></div><div class="detail"><dt>심층 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>빠른 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>분석 담당</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">뉴스</span> <span class="field">재무</span></dd></div><div class="detail"><dt>토론 횟수</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>자료 출처</dt><dd><span class="group"><span class="name">시세</span><span class="field">yfinance</span></span> <span class="group"><span class="name">기술지표</span><span class="field">yfinance</span></span> <span class="group"><span class="name">재무</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">뉴스</span><span class="field">yfinance</span></span> <span class="group"><span class="name">거시경제</span><span class="field">fred</span></span> <span class="group"><span class="name">예측시장</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>버전</dt><dd>TradingAgents 0.7.1</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">분석팀 보고서</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">시장 분석가</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">투자심리 분석가</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">뉴스 분석가</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">재무 분석가</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">투자 검토팀 판단</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">상승론 분석가</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">하락론 분석가</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">투자 검토 책임자</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">매매 계획</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">매매 담당</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">위험 관리팀 판단</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">적극적 위험 분석가</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">보수적 위험 분석가</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">중립적 위험 분석가</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">최종 투자 판단</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">투자 총괄</span></a></li></ul></li></ul></nav>
+<main><section><h2>항목별 매수 매력도: 58~63점 / 100점</h2><p>2026년 11월 11일 기준 1~3년 상대 매수 매력은 강한 매출 성장·영업 수익성·재무 완충력과 취약한 가격 흐름·현금 전환 저하·조사 및 규제 불확실성이 대비되는 구조다. 표면 이익배수는 성장 대비 일부 매력이 있으나 정상화 이익과 예상치 검증 없이는 강한 저평가 판단이 어렵다. 현금 전환율 회복, 높은 마진과 고객 투자 지속, 비유동부채 증가 사유 및 조사 사실관계의 명료화는 평가를 높일 조건이다. 성장 둔화와 마진 하락의 동시 발생, 추가 규제 또는 고객 투자 축소는 평가를 낮출 조건이다. 저장 보고서에 대한 추가적인 주관적 평가이며 원래의 거래 라벨이나 보정된 확률이 아니고, 합산 점수 및 주문을 제시하지 않는다.</p><p>보고서 기준 시세: 2026년 11월 10일 종가 168.89달러. 기술적 분석 보고서의 최신 검증 가격이며 2026년 11월 11일 실시간 시세가 아니다.</p><p>자료 한계: 제공된 보고서만 사용했다. 재무제표 최신 기준은 2026년 7월 26일로 분석일보다 오래됐고, 내부자 거래는 9월 21일까지다. 원문 공시·주석과 회사의 검증 가능한 장기 가이던스가 없다. 펀더멘털의 가격 부재는 기술 보고서로 일부 보완되지만 종합정보와 재무제표의 기준시점·FCF 정의·부채 정의 차이는 남아 있다. 뉴스·감성 보고서의 시세 미검증 부분과 별개로 기술 보고서의 검증 가격·거래량을 사용했다. 조사 의혹과 내부조사 보도는 공식 규제 조치나 위법 확정이 아니며 거시 수치도 독립 검증되지 않았다. 소셜 대표성과 기관 수급 근거 부족으로 관심·수급 항목은 평가 불가 처리했다.</p><details><summary>8개 항목과 평가 근거 보기</summary><ul><li><strong>가격 매력도: 12 / 20점</strong><p>후행 PER 21.35배와 보고된 높은 영업 성장률의 조합은 1~3년 관점에서 완만하게 유리하다. 펀더멘털 보고서의 암시 가격 168.89달러는 기술 보고서의 11월 10일 종가와 일치해 가격 부재 문제는 일부 보완된다. 그러나 배수의 기준시점, 정상화 순이익, 선행 EPS의 대상 연도는 불명확하며 FCF 수치도 충돌한다. 선행 PER 10.60배를 확정적인 저평가 근거로 사용하지 않았다.</p><blockquote>표면적으로 선행 주가수익비율은 높지 않다. 그러나 **이 수치만으로 NVDA가 저평가됐다고 결론 내리기는 어렵다.**</blockquote></li><li><strong>사업 성장성: 18 / 20점</strong><p>보고된 최신 분기 매출은 전년 대비 105.9%, 전분기 대비 17.9% 증가했고 영업이익도 더 빠르게 성장했다. 이는 기대나 인수 발표가 아닌 제시된 실적 근거다. 플랫폼과 전환비용의 경쟁력은 분석자의 해석이며, 사업부·고객·수주 자료가 없어 유기적 성장 구성과 AI 수요 지속성을 독립 검증할 수 없다. 현재 성장률을 1~3년간 그대로 연장하지 않았다.</p><blockquote>2026년 7월 26일 종료 분기 매출은 **962억 2,100만 달러**, 전년 동기 대비 **105.9% 증가**했다.</blockquote></li><li><strong>기업 수익성: 12 / 15점</strong><p>영업이익률 66.2%와 최신 분기 FCF 214억 달러는 높은 사업 수익성과 양의 현금 창출을 뒷받침한다. 다만 FCF 마진은 22.2%로 전년보다 낮고 영업현금흐름은 전분기 대비 52.2% 감소했다. 순이익 대비 현금 전환율 40.3% 및 세금·영업외손익 미확인으로 지속 가능성에는 할인했다. 확인되지 않은 일회성 이익을 수익성 근거로 삼지 않았다.</p><blockquote>같은 분기 매출총이익률은 **75.0%**, 영업이익률은 **66.2%**로 매우 높다.</blockquote></li><li><strong>재무건전성: 8 / 10점</strong><p>7월 말 유동비율 4.59배, 총부채/총자산 28.5%, 큰 자기자본과 양의 영업현금흐름은 재무 완충력을 제공한다. 다만 현금비율은 0.52배이며 총부채가 전분기 대비 42.6% 늘었다. 증가한 비유동부채의 구성·만기와 유동자산의 회수 가능성이 미확인되어 최상위 평가는 유보한다. 총부채와 이자부 차입금 비율은 구분했다.</p><blockquote>또한 최신 분기 총부채는 직전 분기 대비 **42.6% 증가**했다.</blockquote></li><li><strong>주가 흐름: 3 / 15점</strong><p>11월 10일 종가는 10일·50일·200일 평균을 모두 하회하고 MACD 히스토그램도 음수로, 가격과 모멘텀이 불리하다. RSI 23.9496은 과매도이나 반전 확인이 아니며 165.89달러도 검증된 지지가 아니다. 50일선이 200일선 위에 있다는 반대 근거는 인정한다. 이 단기 신호를 1~3년 사업 전망의 대체물이 아닌 보조 요인으로 평가했다.</p><blockquote>NVDA 가격은 200일 단순이동평균 **204.262달러**와 50일 단순이동평균 **217.968달러**를 모두 밑돌고 있습니다.</blockquote></li><li><strong>관심·수급의 질: 자료 부족</strong><p>검증 거래량은 있으나 하루의 대량 거래만으로 기관 축적이나 수급의 질을 식별할 수 없다. StockTwits는 약 6분간 30개 게시물에 편중되고 중복 계정·태그 오류가 있으며 Reddit은 수집 실패다. 반복 뉴스도 독립적 증거가 아니므로 1~3년 매수 매력에 사용할 대표성 있는 관심·자금흐름 근거가 부족하다. 중립 점수로 대체하지 않는다.</p></li><li><strong>향후 재료: 2 / 5점</strong><p>내부조사 착수 보도는 후속 공식 설명과 결과가 가치 재평가를 일으킬 근거지만 발표 일정과 결론은 미확인이다. 의혹 해소는 긍정 재료, 불리한 사실 확인은 부정 재료로 작용할 수 있으며 현재는 불확실성 부담이 더 크다. CoreWeave 실적은 간접 신호일 뿐 NVDA 주문 증가가 아니고, 공식 실적 일정·회사 가이던스·제품 상용화 촉매는 제공되지 않았다.</p><blockquote>조사 착수는 보도됐지만 결론과 발표 일정은 제공되지 않았다. 의혹 해소와 새 불리한 정보의 등장 모두 가능성을 열어둬야 한다.</blockquote></li><li><strong>하락 위험 관리: 3 / 10점</strong><p>높은 유동성과 현금 창출은 완충 요인이지만, 반도체 수요 순환, 고객 투자 및 대체칩, 수출통제, 조사 관련 돌발 정보와 금리 부담이 중첩된다. 베타 2.247과 높은 일중 변동성, 확인되지 않은 지지는 손실 관리의 불확실성을 키운다. 의혹을 위법행위·벌금·매출 손실로 확정하지 않았으며 금리 수준도 미검증이다. 1~3년 하방 위험이 충분히 제한됐다고 보기 어렵다.</p><blockquote>2018년 10월 종료 분기 → 2019년 1월 종료 분기:** 매출이 31억 8,100만 달러에서 22억 500만 달러로 약 **30.7% 감소**했다.</blockquote></li></ul></details></section>
+<section id="s1"><h2>I. 분석팀 보고서</h2><h3 id="s1-1">시장 분석가</h3>
+<h4>NVDA 기술적 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 11일</strong><br />
+<strong>최신 검증 데이터: 2026년 11월 10일 종가 기준</strong><br />
+<strong>대상: NVDA — NVIDIA Corporation, 기술·반도체 업종, NMS</strong></p>
+<p><strong>투자 의견</strong>: Bearish</p>
+<h5>1. 핵심 판단: 강한 하락 추세와 과매도가 동시에 나타나는 구간</h5>
+<p>NVDA는 <strong>단기 하락 압력이 강하고, 가격이 장기 추세 기준선까지 크게 밑도는 상태</strong>입니다. 동시에 상대강도지수는 과매도 영역에 있어 기술적 반등 가능성도 높아졌습니다. 그러나 현재 확인되는 지표만으로는 매도세 소진이나 추세 반전을 판단하기 어렵습니다.</p>
+<p>최신 검증 종가는 <strong>168.89달러</strong>이며, 주요 지표는 다음과 같습니다.</p>
+<ul>
+<li>10일 지수이동평균: <strong>191.864달러</strong></li>
+<li>50일 단순이동평균: <strong>217.968달러</strong></li>
+<li>200일 단순이동평균: <strong>204.262달러</strong></li>
+<li>상대강도지수: <strong>23.9496</strong></li>
+<li>MACD 히스토그램: <strong>-4.28109</strong></li>
+<li>평균진폭: <strong>8.69885달러</strong></li>
+</ul>
+<p>핵심은 <strong>“많이 하락했다”와 “상승 전환이 확인됐다”를 구분하는 것</strong>입니다. NVDA는 전자에는 해당하지만, 후자를 뒷받침하는 신호는 아직 부족합니다.</p>
+<p>따라서 이 보고서가 다른 의사결정 담당자에게 전달하는 기본 관점은 <strong>신규 매수에는 확인 절차가 필요하고, 기존 보유에는 위험관리가 우선</strong>이라는 것입니다. 반대로 과매도와 높은 변동성 때문에 지금 가격에서 하락을 추격하는 전략도 위험합니다.</p>
+<h5>2. 데이터 범위와 해석상 주의사항</h5>
+<p>요청일은 2026년 11월 11일이지만, 검증 도구가 제공한 최신 거래 행은 <strong>11월 10일</strong>입니다. 따라서 아래 가격과 지표는 11월 11일 실시간 시세가 아닙니다.</p>
+<p>개별 지표 도구는 11월 11일을 거래일이 아닌 것으로 표시했습니다. 다만 이 출력만으로 실제 거래소 휴장 여부를 확정하지 않고, <strong>해당 날짜의 데이터가 제공되지 않았다는 한계</strong>로 처리했습니다.</p>
+<p>최종 수치에는 검증 스냅샷을 우선 적용했습니다. 거래량가중이동평균도 별도로 조회했지만 검증 스냅샷에 해당 값이 없어, 정확한 수치를 최종 판단 근거로 사용하지 않았습니다. 또한 제공된 도구는 가격·거래량과 기술지표를 다루므로, 이번 하락의 실적·정책·뉴스상 원인을 확인할 수는 없습니다.</p>
+<h5>3. 선택한 핵심 지표와 선정 이유</h5>
+<p>현재 NVDA처럼 급락과 과매도가 동시에 나타나는 환경에서는 추세, 모멘텀, 반등 위험, 포지션 위험을 구분하는 것이 중요합니다. 이에 다음 <strong>6개 지표</strong>를 핵심으로 선택했습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>선택 지표</th>
+<th>역할</th>
+<th>현재 NVDA에 적합한 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>close_10_ema</code></td>
+<td>단기 추세 및 회복 여부</td>
+<td>반등이 단순한 하루 상승을 넘어서는지 점검</td>
+</tr>
+<tr>
+<td><code>close_50_sma</code></td>
+<td>중기 추세</td>
+<td>단기 반등과 중기 추세 회복을 구분</td>
+</tr>
+<tr>
+<td><code>close_200_sma</code></td>
+<td>장기 추세 기준</td>
+<td>장기 기준선 아래에 있는 가격의 취약성 평가</td>
+</tr>
+<tr>
+<td><code>macdh</code></td>
+<td>하락 모멘텀</td>
+<td>매도 압력이 약해지는지, 재차 강해지는지 확인</td>
+</tr>
+<tr>
+<td><code>rsi</code></td>
+<td>과매도 및 반등 위험</td>
+<td>추가 하락 추격과 성급한 저가매수 양쪽의 위험 평가</td>
+</tr>
+<tr>
+<td><code>atr</code></td>
+<td>변동성 및 위험관리</td>
+<td>손절 폭과 포지션 크기를 시장 변동성에 맞게 조정</td>
+</tr>
+</tbody>
+</table></div>
+<p>이동평균 세 개는 같은 계열이지만 각각 단기·중기·장기라는 서로 다른 판단 구간을 담당합니다. MACD 계열은 히스토그램을 중심으로 사용해 중복을 줄였습니다. 거래량은 별도의 가격 자료로 보완했습니다.</p>
+<h5>4. 추세 분석: 가격 약세가 이동평균의 반응보다 앞서 진행</h5>
+<h6>단기: 반등보다 하락 추세가 우세</h6>
+<p>NVDA 종가 <strong>168.89달러</strong>는 10일 지수이동평균 <strong>191.864달러</strong> 아래에 있습니다. 단기 평균과의 간격이 커, 가격이 반등하더라도 곧바로 추세 회복으로 해석하기는 어렵습니다.</p>
+<p>최근 종가 흐름도 이를 뒷받침합니다.</p>
+<ul>
+<li><strong>11월 4일: 200.13달러</strong></li>
+<li><strong>11월 5일: 181.60달러</strong></li>
+<li><strong>11월 6일: 186.64달러</strong></li>
+<li><strong>11월 9일: 178.67달러</strong></li>
+<li><strong>11월 10일: 168.89달러</strong></li>
+</ul>
+<p>11월 6일에는 전일 대비 반등했지만, 이후 두 거래일 종가가 다시 낮아졌습니다. 이 흐름은 <strong>반등 하루만으로 하락 추세 종료를 판단해서는 안 된다</strong>는 구체적인 사례입니다.</p>
+<h6>중장기: 장기 기준선 이탈, 그러나 데드크로스는 아님</h6>
+<p>NVDA 가격은 200일 단순이동평균 <strong>204.262달러</strong>와 50일 단순이동평균 <strong>217.968달러</strong>를 모두 밑돌고 있습니다. 중장기 평균 대비 가격 위치는 약세입니다.</p>
+<p>다만 <strong>50일선은 여전히 200일선보다 높습니다.</strong> 따라서 현재 상태를 “50일선이 200일선을 하향 돌파한 데드크로스”로 설명하면 부정확합니다.</p>
+<p>더 정확한 해석은 다음과 같습니다.</p>
+<blockquote>
+<p>NVDA 가격은 장기 기준선 아래로 내려왔지만, 후행적인 이동평균 간 배열은 아직 최근 가격 급락을 완전히 반영하지 못한 상태다.</p>
+</blockquote>
+<p>이동평균 간 교차가 발생하지 않았다는 사실이 가격 약세를 무효화하지는 않습니다. 반대로 가격이 반등하더라도 중장기 평균 회복에는 별도의 확인이 필요합니다.</p>
+<h5>5. 모멘텀: 과매도이지만 매도 압력 소진은 미확인</h5>
+<h6>상대강도지수: 반등 위험을 알리지만 바닥을 보장하지 않음</h6>
+<p>NVDA의 상대강도지수는 <strong>23.9496</strong>으로 일반적인 과매도 기준인 30 아래입니다.</p>
+<p>이는 두 가지 의미를 동시에 가집니다.</p>
+<ol>
+<li><strong>신규 매수 관점:</strong> 하락 폭이 크다는 이유만으로 매수할 수는 없습니다. 강한 하락 추세에서는 과매도가 지속될 수 있습니다.</li>
+<li><strong>신규 공매도 관점:</strong> 추가 하락에 베팅하더라도 급격한 반등에 노출될 가능성을 고려해야 합니다.</li>
+</ol>
+<p>매수 쪽에서 유용한 후속 관찰 조건은 상대강도지수의 30 회복, 가격의 저점 갱신 중단, 단기 추세선 회복입니다. 이 중 하나만 나타나는 것보다 여러 조건이 함께 확인되는 편이 신뢰도가 높습니다.</p>
+<h6>MACD 히스토그램: 아직 약세 모멘텀</h6>
+<p>검증된 NVDA의 MACD 히스토그램은 <strong>-4.28109</strong>입니다. MACD선이 신호선 아래에 있다는 뜻이며, 현재 모멘텀은 약세 방향입니다.</p>
+<p>상대강도지수가 과매도라고 해도 MACD 히스토그램이 음수인 상태에서는 상승 전환을 단정할 수 없습니다. 향후에는 다음 순서를 관찰할 필요가 있습니다.</p>
+<ul>
+<li>음수 히스토그램의 절댓값이 줄어드는가?</li>
+<li>그 과정에서 가격의 새로운 저점 형성이 멈추는가?</li>
+<li>반등 이후 눌림에서도 이전 저점을 지키는가?</li>
+</ul>
+<p>음수 폭 축소는 <strong>하락 속도 둔화</strong>일 수 있지만, 그 자체가 <strong>상승 추세 확정</strong>은 아닙니다. 현재 자료만으로 강세 다이버전스나 바닥 형성을 확인했다고 주장할 근거도 부족합니다.</p>
+<h5>6. 거래량과 변동성: 위험관리의 중요성이 커진 상태</h5>
+<p>11월 10일 NVDA의 검증된 시세는 다음과 같습니다.</p>
+<ul>
+<li>시가: <strong>173.98달러</strong></li>
+<li>고가: <strong>174.65달러</strong></li>
+<li>저가: <strong>165.89달러</strong></li>
+<li>종가: <strong>168.89달러</strong></li>
+<li>거래량: <strong>424,954,776주</strong></li>
+</ul>
+<p>종가가 시가보다 낮고 당일 저가에 상대적으로 가까운 위치에서 마감했습니다. 따라서 해당 거래일에 강한 종가 회복이 있었다고 보기는 어렵습니다.</p>
+<p>거래량은 컸지만, <strong>대규모 거래량만으로 투매의 마지막 단계나 기관의 저가매수를 확정할 수는 없습니다.</strong> 거래량 자료는 매수·매도 주체나 거래 동기를 직접 보여주지 않기 때문입니다. 저점 형성 여부는 이후 가격 반응으로 확인해야 합니다.</p>
+<h6>평균진폭을 반영한 포지션 관리</h6>
+<p>NVDA의 평균진폭은 <strong>8.69885달러</strong>입니다. 짧은 가격 차이의 손절은 일상적인 변동에도 체결될 수 있으므로, 진입 규모와 손절 거리를 함께 설계해야 합니다.</p>
+<p>위험관리 원칙은 다음과 같습니다.</p>
+<blockquote>
+<p><strong>허용 손실액 ÷ 진입가와 손절가의 차이 = 이론상 최대 주식 수</strong></p>
+</blockquote>
+<p>변동성이 높아 손절 거리를 넓힌다면, 동일한 손실 한도를 유지하기 위해 수량을 줄여야 합니다. 다만 평균진폭은 미래 최대 손실을 제한하지 않으며, 갭 하락이나 체결 미끄러짐 때문에 실제 손실이 계획을 초과할 수 있습니다.</p>
+<h5>7. 가격 관찰 구간: 검증된 지지선이 아닌 조건부 기준</h5>
+<p>아래 수준은 실제 반등이 반복 확인된 지지·저항선이 아니라, <strong>최근 시세와 현재 지표에서 도출한 관찰 기준</strong>입니다.</p>
+<h6>165.89달러: 최근 저가 기준</h6>
+<p>11월 10일 NVDA의 저가입니다. 향후 이 수준을 하회하고 회복하지 못하면 저점 갱신 위험이 이어지는 것으로 볼 수 있습니다.</p>
+<p>다만 이 가격에서 충분한 매수세가 반복 확인된 것은 아닙니다. 따라서 “확정 지지선”으로 취급해서는 안 됩니다. 이 아래의 새로운 목표 가격도 현재 자료만으로 정밀하게 제시하기 어렵습니다.</p>
+<h6>174.65~178.67달러: 초기 회복 확인 구간</h6>
+<p><strong>174.65달러</strong>는 11월 10일 고가이고, <strong>178.67달러</strong>는 11월 9일 종가입니다. 향후 NVDA가 이 구간을 회복하고 유지한다면 최근 급락 일부를 되돌리는 첫 단계로 평가할 수 있습니다.</p>
+<p>그러나 이 구간 회복만으로 중기 추세 전환이 완성되지는 않습니다.</p>
+<h6>181.60~186.64달러: 최근 종가 재진입 구간</h6>
+<p>각각 11월 5일과 11월 6일 종가입니다. 초기 반등 이후 이 구간까지 복귀하는지 살펴볼 수 있습니다. 아직 반복 검증된 저항대라고 부를 근거는 없습니다.</p>
+<h6>191.864달러: 단기 평균 회복 기준</h6>
+<p>현재 10일 지수이동평균입니다. NVDA의 반등이 단기 추세 개선으로 이어지는지 판단할 때 참고할 수 있습니다. 이동평균은 매 거래일 바뀌므로, 향후에는 최신 값을 다시 확인해야 합니다.</p>
+<h5>8. 전략별 조건부 대응</h5>
+<h6>신규 매수 검토</h6>
+<p>현 단계에서 NVDA의 과매도만을 근거로 큰 규모의 매수를 정당화하기는 어렵습니다. 보수적으로는 다음 조건의 조합을 기다리는 접근이 적합합니다.</p>
+<ul>
+<li>최근 저점 갱신이 멈출 것</li>
+<li>초기 회복 구간을 종가 기준으로 되찾고 유지할 것</li>
+<li>상대강도지수가 과매도 영역에서 회복할 것</li>
+<li>MACD 히스토그램의 음수 폭이 줄어들 것</li>
+</ul>
+<p>반등을 확인한 뒤 진입하면 최저가를 놓칠 수 있지만, 하락 중인 가격을 무조건 매수하는 위험은 줄일 수 있습니다.</p>
+<h6>기존 보유</h6>
+<p>NVDA 보유자는 평균 매입단가보다 <strong>현재 허용 가능한 추가 손실과 포트폴리오 집중도</strong>를 먼저 점검할 필요가 있습니다.</p>
+<p>특히 레버리지나 단일 종목 비중이 크다면, 반등 기대만으로 위험 축소를 미루지 않는 것이 중요합니다. 최근 저가 하회 시 대응, 반등 시 비중 조정 조건, 최대 손실 한도를 사전에 정하는 편이 낫습니다.</p>
+<h6>신규 공매도 검토</h6>
+<p>추세는 약세지만 NVDA의 과매도와 높은 변동성은 추격 공매도의 위험을 높입니다. 추가 하락을 추격하기보다 반등 이후 회복 실패가 확인되는지 관찰하는 접근이 상대적으로 합리적입니다.</p>
+<p>공매도는 손실이 크게 확대될 수 있고 차입 비용과 반등 위험이 있으므로, 단순한 약세 전망과 실제 실행 판단을 분리해야 합니다.</p>
+<h5>종합 의견</h5>
+<p>NVDA는 <strong>가격 위치, 단기 추세, 모멘텀에서 약세가 우세</strong>합니다. 과매도는 반등 가능성을 높이는 요소지만, 바닥 확인을 대신하지는 않습니다.</p>
+<p>현재 도구가 뒷받침하는 결론은 <strong>신규 매수 대기, 기존 위험 노출 점검, 하락 추격 자제</strong>입니다. 이는 확정 거래 지시가 아니라, 후속 의사결정을 위한 기술적 근거와 조건부 대응안입니다.</p>
+<p>최종 매매 제안: WAIT</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>NVDA 검증 근거</th>
+<th>해석</th>
+<th>대응·관찰 사항</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>데이터 기준</td>
+<td>2026년 11월 10일 종가 168.89달러</td>
+<td>11월 11일 실시간 가격은 미제공</td>
+<td>주문 전 최신 시세 재확인</td>
+</tr>
+<tr>
+<td>단기 추세</td>
+<td>10일 지수이동평균 191.864달러 아래</td>
+<td>단기 약세 우세</td>
+<td>반등과 평균 회복을 구분</td>
+</tr>
+<tr>
+<td>중기 추세</td>
+<td>50일 단순이동평균 217.968달러 아래</td>
+<td>중기 가격 구조 취약</td>
+<td>단기 반등만으로 회복 판단 금지</td>
+</tr>
+<tr>
+<td>장기 기준</td>
+<td>200일 단순이동평균 204.262달러 아래</td>
+<td>장기 기준선 이탈</td>
+<td>장기 매수도 추가 확인 필요</td>
+</tr>
+<tr>
+<td>이동평균 배열</td>
+<td>50일선이 200일선보다 높음</td>
+<td>데드크로스는 확인되지 않음</td>
+<td>가격 약세와 평균선 교차를 구분</td>
+</tr>
+<tr>
+<td>과매도</td>
+<td>상대강도지수 23.9496</td>
+<td>반등 가능성과 추격 매도 위험 공존</td>
+<td>30 회복과 가격 안정 동시 관찰</td>
+</tr>
+<tr>
+<td>모멘텀</td>
+<td>MACD 히스토그램 -4.28109</td>
+<td>약세 모멘텀 지속</td>
+<td>음수 폭 축소 및 저점 갱신 중단 확인</td>
+</tr>
+<tr>
+<td>변동성</td>
+<td>평균진폭 8.69885달러</td>
+<td>손절·수량 설계 중요</td>
+<td>손절 폭 확대 시 수량 축소</td>
+</tr>
+<tr>
+<td>최근 저가</td>
+<td>11월 10일 165.89달러</td>
+<td>확정 지지가 아닌 관찰 기준</td>
+<td>하회 후 회복 여부 확인</td>
+</tr>
+<tr>
+<td>초기 회복 기준</td>
+<td>174.65~178.67달러</td>
+<td>최근 급락 되돌림의 첫 확인 구간</td>
+<td>일시 돌파보다 종가 유지 관찰</td>
+</tr>
+<tr>
+<td>기본 대응</td>
+<td>약세 추세와 과매도 동시 존재</td>
+<td>매수·공매도 양쪽에 실행 위험</td>
+<td>신규 진입 대기, 보유 위험 우선 점검</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">투자심리 분석가</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bearish</strong> (Score: 3.8/10)
+<strong>Confidence:</strong> Low</p>
+<h4>NVDA 감성 보고서</h4>
+<p>분석 기간: 2026-11-04~2026-11-11. 기준일: 2026-11-11. 대상은 NVDA(NVIDIA Corporation, 기술/반도체, NMS)이며, 제공된 자료만 사용했다.</p>
+<h5>1. 출처별 분석</h5>
+<h6>뉴스: 부정적 사건과 거시 부담이 우세</h6>
+<p>제공된 뉴스는 20건이다. 다만 다른 기업의 실적 요약과 종목 추천 등 NVDA와 직접 관련이 없는 항목이 섞여 있고, 같은 논란을 다룬 여러 기사와 영상이 있어 20건을 독립적인 NVDA 신호로 볼 수 없다. 또한 매체의 보도 프레이밍이지 기관투자가의 실제 포지션을 보여주는 자료는 아니다.</p>
+<p>NVDA 관련 보도의 중심은 CEO 관련 의혹, 중국으로의 제한 대상 반도체 반출 관련 보도, 내부조사 및 지배구조 우려다. 야후파이낸스는 관련 보도와 함께 NVDA의 약 6% 하락을 전했고, 월스트리트저널은 Wachtell Lipton의 내부조사 주도를 보도했다. 이는 조사 불확실성이 단기 심리에 부담을 준다는 근거다. 다만 의혹의 진위, CEO의 관여 여부, 법적 책임이나 위반 사실은 제공 자료로 확정할 수 없다. 약 75억 달러 규모의 반출 관련 수치도 보도된 주장으로 취급한다.</p>
+<p>이사회 구성과 조사 엄정성에 의문을 제기하는 영상, 경영진 접근권을 의식해 애널리스트들이 비판을 자제할 수 있다는 영상은 NVDA의 지배구조와 정보 신뢰성에 대한 우려를 드러낸다. 이는 논평이며, 실제 조사 부실이나 애널리스트의 동기를 입증하는 자료는 아니다.</p>
+<p>거시적으로는 예상보다 뜨거운 물가, 국채금리 상승, 연준 금리 인상 우려가 NVDA를 포함한 성장주 심리에 부담을 준다. 반도체 매도 규모가 약 5조 달러에 근접하고 NVDA의 매도 강도가 2019년 이후 극단적인 수준이라는 제목은 공포와 과매도 프레임이 함께 존재함을 보여준다. 다만 해당 지표의 산식과 원자료는 제공되지 않았다.</p>
+<p>반대 방향의 신호도 있다. 골드만삭스의 반도체 과매도 진단은 업종 반등 논리를 제공하지만, 기사 요약만으로 NVDA가 매수 추천 목록에 포함됐다고 단정할 수 없다. 첩보 의혹을 AI 기술의 전략적 중요성을 확인하는 사건으로 해석한 영상도 있다. 이는 AI 산업의 중요성에 대한 낙관론이지 NVDA의 조사 위험 해소를 의미하지 않는다. CoreWeave의 실적 기대 충족과 시간외 약 2.6% 상승 보도는 AI 인프라 수요 우려를 일부 완화하는 간접 신호다.</p>
+<h6>StockTwits: 태그는 거의 균형, 본문은 공포와 저가매수가 혼재</h6>
+<p>총 30개 메시지 중 상승 태그 6개(20.0%), 하락 태그 7개(23.3%), 무표시 17개(56.7%)다. 방향성 태그가 있는 13개만 보면 상승 46.2%, 하락 53.8%이며 상승 대 하락 비율은 6:7이다. 이는 강한 하락 합의가 아니라 불확실성에 가까운 소폭 하락 우위다. 표본 전체에서 무표시가 과반이므로 태그만으로 전체 심리를 대표하기 어렵다.</p>
+<p>상승 쪽에는 @neo299의 저가매수 의사, @vu_jade의 가격 매력 주장, @nanidog의 과매도 반등 기대가 있다. @CoronaTime20은 실적 호조와 다음 주 220달러 상회를 예상하지만, 이는 검증되지 않은 개인의 전망이다. @nanidog의 RSI 23 및 52주 저점 근접 주장과 무표시 계정의 ‘15년 만의 최저 밸류에이션’ 주장도 별도 시장자료로 확인되지 않았다.</p>
+<p>하락 쪽에서는 @Bunge76이 CEO의 중국 반출 관여를 가정해 사임과 30% 급락을 예상했고, @StocktraderOO7은 4억2,300만 주 거래 관련 주장과 추가 하락 전망을 제시했다. 이는 조건부 추측과 개인 주장이지 확인된 경영진 교체 계획, 매도 물량 또는 가격 예측 근거가 아니다. @Shortsqueezegamma의 실적 발표 지연 여부 질문 역시 지연 공시의 증거가 아니다.</p>
+<p>태그와 본문 간 불일치도 있다. 상승 태그를 단 @Dru12345의 글은 낙관적 투자 논거가 아니며, 일부 하락 태그 글은 조롱에 가깝다. @TheonetrueJester 한 계정이 하락 태그 7개 중 3개를 작성했으므로 메시지 수를 독립적인 투자자 수로 해석하면 하락 확신을 과대평가할 수 있다. 무표시 메시지에는 매수 의견뿐 아니라 하락 추세 예상과 의혹 재전파도 포함된다.</p>
+<p>30개 게시물은 모두 2026-11-10 22:07:44~22:13:48 UTC의 약 6분에 집중되어 있다. 따라서 일주일의 여론 변화가 아니라 특정 시점의 반응이다. 2026-11-11의 신규 게시물이나 연속적인 심리 시계열은 없다.</p>
+<h6>Reddit: 수집 실패로 평가 불가</h6>
+<p>r/wallstreetbets, r/stocks, r/investing 모두 수집 실패다. 이는 토론 부재나 중립적 심리를 뜻하지 않는다. 커뮤니티별 장단기 논거, 게시물 내용, 참여 수준을 비교할 수 없으며, 이를 이유로 전체 신뢰도를 낮게 평가한다.</p>
+<h5>2. 출처 간 일치와 차이</h5>
+<p>뉴스와 StockTwits는 모두 NVDA의 CEO 관련 의혹과 중국 반출 관련 보도를 핵심 관심사로 삼는다. 뉴스의 조사·지배구조 우려가 소셜에서는 사임 추측, 추가 급락 공포, 조롱으로 확대된다. 이는 사건 불확실성이 투자심리를 압박한다는 공통 신호다.</p>
+<p>차이는 가격 하락의 해석이다. 뉴스는 사건 위험과 거시 부담을 부각하는 반면, StockTwits의 일부 이용자는 가격 하락 자체를 저가매수 또는 단기 반등 기회로 본다. 다만 상승 태그가 압도적이지 않아 ‘뉴스는 비관적이지만 개인투자자는 강하게 낙관적’인 명확한 양극화로 판단하기는 어렵다. 오히려 뉴스의 하방 압력 위에 제한적인 반등 기대가 맞서는 구도다. 뉴스에도 업종 과매도 논리가 있어 반등 서사는 양쪽에 일부 존재한다.</p>
+<p>종합적으로 NVDA 심리는 완만한 약세, 3.8/10으로 평가한다. 이는 매수·매도 확률이나 예상 수익률이 아니라 정성적인 감성 강도다. Reddit 공백과 짧은 소셜 표본 때문에 신뢰도는 낮다.</p>
+<h5>3. 지배적인 서사</h5>
+<ul>
+<li><strong>핵심 경영자와 지배구조 위험:</strong> 개인 관련 논란이 조사 독립성, 경영 안정성, 기업 신뢰 문제로 확장되는 모습이다. 실제 경영진 교체는 확인되지 않았다.</li>
+<li><strong>중국 수출통제·안보 관련 불확실성:</strong> 제한 대상 반도체 반출 관련 보도가 NVDA의 규제 노출에 대한 우려를 자극한다. 위반 확정, 벌금, 추가 규제는 자료에 없다.</li>
+<li><strong>과매도 반등 기대와 추가 하락 공포의 충돌:</strong> 낮아진 가격을 기회로 보는 의견과 사건 위험이 남아 있다는 경계가 공존한다. 제공된 자료만으로 저평가나 기술적 바닥을 확정할 수 없다.</li>
+<li><strong>거시 부담과 기업 고유 위험의 중첩:</strong> 물가·금리 악재와 NVDA 관련 논란이 동시에 등장한다. 개별 기사에서는 NVDA가 다른 반도체주보다 약했다고 전하지만, 전체 기간의 상대수익률 자료는 없다.</li>
+<li><strong>AI 장기 중요성과 단기 신뢰 문제의 분리:</strong> AI 수요와 전략적 가치에 대한 낙관론이 남아 있어도 당장의 조사 불확실성을 상쇄한다고 단정하기 어렵다.</li>
+</ul>
+<h5>4. 자료에서 드러난 촉매와 위험</h5>
+<p><strong>조사 경과 및 공식 설명:</strong> 내부조사의 범위, 결과, 회사·이사회의 설명이 NVDA 심리 변화의 주요 관찰 대상이다. 조사 착수는 보도됐지만 결론과 발표 일정은 제공되지 않았다. 의혹 해소와 새 불리한 정보의 등장 모두 가능성을 열어둬야 한다.</p>
+<p><strong>실적 기대와 일정 확인:</strong> 소셜에는 Q3 실적 낙관론과 발표 지연 질문이 공존한다. 공식 발표일, 실적 수치, 가이던스나 지연 공시는 없어 어느 쪽도 사실로 채택할 수 없다. 실적 관련 공식 정보가 사건 중심의 관심을 사업 성과로 이동시키는지 관찰할 수 있다.</p>
+<p><strong>물가·금리와 AI 인프라 실적:</strong> 뜨거운 물가와 금리 상승 프레임은 NVDA 반등 기대의 제약 요인이다. 반면 CoreWeave 실적 보도는 수요 우려를 일부 누그러뜨리는 간접 자료지만 NVDA의 매출·이익 전망을 직접 검증하지는 않는다.</p>
+<p><strong>과매도 반등과 정보 품질 위험:</strong> 과매도 인식은 단기 매수 관심을 설명하지만 반등 시점이나 지속성을 예측하지 않는다. 반복 기사, 동일 계정의 반복 게시물, 풍자, 태그 오류, 미검증 가격·거래량·기술지표 주장은 신호 강도를 왜곡할 수 있다. 정확한 시장가격과 거래량, 공식 규제 문서, 전체 기사 본문, Reddit 토론은 제공되지 않았다.</p>
+<h5>5. 핵심 감성 신호 요약</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>NVDA 관련 신호</th>
+<th>방향</th>
+<th>출처</th>
+<th>근거 및 해석 한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CEO 관련 의혹과 내부조사</td>
+<td>부정적</td>
+<td>야후파이낸스·월스트리트저널</td>
+<td>약 6% 하락 보도와 조사 주도 로펌 보도. 의혹의 진위·책임은 미확정</td>
+</tr>
+<tr>
+<td>지배구조·정보 신뢰성 우려</td>
+<td>부정적</td>
+<td>야후파이낸스 영상</td>
+<td>이사회 조사 엄정성과 애널리스트 침묵에 대한 논평. 실제 부실을 입증하지 않음</td>
+</tr>
+<tr>
+<td>물가·금리 부담</td>
+<td>부정적</td>
+<td>야후파이낸스·IBD</td>
+<td>뜨거운 물가, 국채금리 상승, 금리 인상 우려가 성장주 심리를 압박</td>
+</tr>
+<tr>
+<td>소셜 방향성 태그</td>
+<td>중립에 가까운 소폭 부정적</td>
+<td>StockTwits</td>
+<td>상승 6개·하락 7개·무표시 17개. 태그 표본만의 상승 비중 46.2%</td>
+</tr>
+<tr>
+<td>저가매수·반등 기대</td>
+<td>긍정적이나 투기적</td>
+<td>StockTwits</td>
+<td>매수 의사와 과매도 주장 존재. 밸류에이션·RSI·목표가는 미검증</td>
+</tr>
+<tr>
+<td>과매도와 AI 수요 완충 논리</td>
+<td>제한적 긍정적</td>
+<td>야후파이낸스·월스트리트저널</td>
+<td>업종 과매도 진단, CoreWeave 실적 기대 충족. NVDA 직접 호재로 단정 불가</td>
+</tr>
+<tr>
+<td>대표성과 독립성 제한</td>
+<td>신뢰도 하향</td>
+<td>StockTwits</td>
+<td>약 6분간 30개 메시지, 한 계정이 하락 태그 7개 중 3개 작성</td>
+</tr>
+<tr>
+<td>커뮤니티 비교 불가</td>
+<td>평가 불가</td>
+<td>Reddit</td>
+<td>3개 서브레딧 수집 실패. 중립 또는 토론 부재로 해석하지 않음</td>
+</tr>
+</tbody>
+</table></div>
+<p>결론: NVDA는 사건·규제·거시 불확실성이 우세하되 일부 과매도 반등 기대가 완충하는 심리 구조다. 이 평가는 거래 결론이나 가격 예측이 아니며, 다른 분석 주체가 검증된 공시·펀더멘털·기술적 자료와 함께 판단할 보조 신호다.</p>
+<h3 id="s1-3">뉴스 분석가</h3>
+<h4>NVDA 주간 뉴스·거시경제 분석</h4>
+<p><strong>분석 기준일:</strong> 2026년 11월 11일<br />
+<strong>분석 기간:</strong> 2026년 11월 4~11일<br />
+<strong>대상:</strong> NVDA — NVIDIA Corporation, 기술·반도체, NMS<br />
+<strong>투자 의견</strong>: Neutral</p>
+<h5>1. 핵심 결론</h5>
+<p><strong>NVDA는 금리 상승 압력과 기업 고유의 조사 관련 보도가 동시에 작용하는 구간이다.</strong> 제공된 뉴스에서는 반도체 업종의 매도세, 예상보다 높은 미국 물가, 국채금리 상승이 공통 위험으로 나타난다. 여기에 NVDA 경영진 및 대중국 반도체 출하 관련 의혹 보도가 추가되면서, 업종 반등만으로 해소되기 어려운 불확실성이 생겼다.</p>
+<p>반면, 일부 금융기관의 반도체 과매도 평가와 인공지능 클라우드 업체의 실적 관련 긍정적 보도는 반등 재료다. 다만 <strong>과매도 주장과 사업가치 개선은 구분해야 한다.</strong> 현재 확보한 자료만으로는 NVDA의 실적 전망 하향 여부, 정확한 밸류에이션, 기술적 지지선을 확인할 수 없다.</p>
+<p><strong>뉴스 연구 관점의 우선순위는 저가 판단보다 공식 조사 내용, 금리 안정, 인공지능 투자 수요의 지속 여부를 확인하는 것이다.</strong> 아래 내용은 거래 판단을 위한 근거 정리이며, 최종 매매 결정은 유보한다.</p>
+<h5>2. NVDA 관련 주요 뉴스</h5>
+<h6>가. 기업 고유 위험: 조사 관련 보도의 사실관계가 중요</h6>
+<p>제공된 야후 파이낸스 기사 요약은 NVDA 경영진과 관련된 외국 정보활동 의혹 및 대중국 반도체 출하 관련 보도를 주가 하락 요인으로 지목했다. 별도로 월스트리트저널은 법률회사 와첼 립턴이 NVDA 내부조사를 맡는다고 보도했다.</p>
+<ul>
+<li>야후 파이낸스 기사 제목은 NVDA의 당일 하락 폭을 약 **6%**로 제시했다. 다만 원시 시세 자료로 독립 검증하지는 못했다.</li>
+<li>기사에 등장하는 <strong>75억 달러 규모 출하 관련 내용은 의혹 보도의 일부</strong>다. 이를 확정된 불법행위, 손실 또는 향후 매출 감소로 해석해서는 안 된다.</li>
+<li>여러 기사가 같은 사안을 반복 보도하고 있어, 기사 수 자체를 독립적인 증거의 수로 볼 수 없다.</li>
+</ul>
+<p><strong>NVDA에 대한 의미:</strong> 사실관계가 확정되기 전에도 규제·지배구조 불확실성이 투자자가 요구하는 위험 보상을 높일 수 있다. 그러나 매출 제한, 벌금, 경영진 변경 등은 현재 자료로 확인되지 않았다.</p>
+<p><strong>확인할 사항:</strong> NVDA의 공식 공시·성명, 조사 범위와 독립성, 규제기관의 공식 조치, 수출허가 또는 고객 주문에 대한 구체적 영향이다.</p>
+<p>출처: <a href="https://www.wsj.com/tech/law-firm-wachtell-lipton-to-lead-nvidia-internal-investigation-d37731c7">월스트리트저널의 내부조사 보도</a>, <a href="https://finance.yahoo.com/markets/article/nvidia-stock-drops-3-extending-decline-on-report-alleged-chinese-spy-linked-to-nvidia-ceo-aided-75-billion-in-china-chip-shipments-152654028.html">야후 파이낸스의 NVDA 하락 보도</a></p>
+<h6>나. 반도체 매도세와 과매도 주장</h6>
+<p>야후 파이낸스는 반도체 업종의 대규모 시가총액 감소와 NVDA의 강한 매도 압력을 보도했다. 다른 기사에서는 골드만삭스가 반도체 종목 일부를 과매도 상태로 평가했다고 전했다.</p>
+<p>이는 <strong>반등 가능성을 점검할 근거이지, 즉시 매수해야 한다는 증거는 아니다.</strong> 제공된 요약에는 과매도 산식, NVDA의 상대강도지수, 거래량, 평가배수 등이 없어 기술적 저점이나 적정가치를 산출할 수 없다. 업종 전체에 대한 긍정적 평가를 NVDA에 대한 직접 매수 의견으로 확대해서도 안 된다.</p>
+<h6>다. 인공지능 수요: 간접적인 긍정 신호</h6>
+<p>월스트리트저널 요약에 따르면 코어위브는 시장 예상에 부합하는 분기 실적을 발표했고, 시간외 주가가 약 <strong>2.6% 상승</strong>했다.</p>
+<p>인공지능 인프라 사업에 대한 일부 우려를 완화하는 신호지만, 이것만으로 NVDA의 신규 주문 증가나 이익률 개선을 확인할 수는 없다. NVDA에는 고객사의 <strong>설비투자 계획, 실제 자금조달 능력, 데이터센터 가동 일정, GPU 구매 약정</strong>이 더 직접적인 판단 근거다.</p>
+<p>앤스로픽의 기업공개 관련 보도 역시 인공지능 투자심리에 영향을 줄 수 있지만, NVDA 매출에 대한 즉각적인 효과는 확인되지 않았다.</p>
+<h5>3. 거시경제: 물가와 금리가 가장 직접적인 변수</h5>
+<h6>가. 뉴스는 물가 상방 충격과 국채금리 상승을 가리킨다</h6>
+<p>이번 주 수집된 기사들은 예상보다 높은 미국 물가와 이에 따른 금리 인상 우려, 국채금리 상승을 반복적으로 언급했다.</p>
+<p>NVDA에 미치는 경로는 다음과 같다.</p>
+<ol>
+<li><strong>할인율 상승:</strong> 미래 이익에 대한 현재가치가 낮아져 성장주 평가배수가 압박받을 수 있다.</li>
+<li><strong>고객 자금조달 비용 상승:</strong> 외부 자금에 의존하는 인공지능 인프라 업체의 투자 여력이 약해질 수 있다.</li>
+<li><strong>위험자산 비중 축소:</strong> 반도체 전반의 매도세가 기업별 실적 차이를 압도할 수 있다.</li>
+</ol>
+<p>다만 <strong>이번 분석에서는 물가지수와 국채금리의 정확한 수준·변화 폭을 검증하지 못했다.</strong> FRED 도구가 인증키 미설정으로 데이터를 반환하지 않았기 때문이다. 따라서 기사에 제시된 방향성과 공식 통계 확인을 구분해야 한다.</p>
+<p>출처: <a href="https://finance.yahoo.com/markets/article/10-year-treasury-yield-jumps-as-odds-of-rate-hike-rise-amid-hot-inflation-print-alphacheck-144120699.html">야후 파이낸스의 물가·국채금리 보도</a></p>
+<h6>나. 예측시장: 연내 금리 인하 부재에 높은 확률</h6>
+<p>조회된 폴리마켓 자료는 다음을 제시했다.</p>
+<ul>
+<li><strong>“2026년에 연준 금리 인하가 한 차례도 없을 것인가?” — 예 확률 98%</strong></li>
+<li>최근 1주 변화: <strong>+1.2%포인트</strong></li>
+<li>표시 거래량: 약 <strong>956만 달러</strong></li>
+<li>해결일: <strong>2027년 1월 1일</strong></li>
+</ul>
+<p>이는 금리 인하에 대한 기대가 약하다는 보조 신호다. <strong>금리 인하가 없다는 확률은 금리 인상 확률과 같지 않으며</strong>, 동결과 인상 시나리오를 구분해 주지도 않는다. 또한 연간 누적 사건에 관한 계약이므로 다음 회의의 정책 전망과 직접 비교해서는 안 된다. 거래량 역시 현재 호가의 유동성을 보장하지 않는다.</p>
+<h6>다. 세계 정세에 대한 자료 범위</h6>
+<p>글로벌 뉴스 결과는 미국 기업·기술주 기사에 편중됐다. 유럽·중국 경기, 원유, 환율, 지정학적 충돌을 포괄하는 충분한 자료는 확보되지 않았다. 따라서 이번 보고서에서 검증 가능한 세계경제의 중심축은 <strong>미국 물가·금리와 인공지능 투자환경</strong>이며, 다른 지역의 위험이 낮다는 의미는 아니다.</p>
+<h5>4. NVDA 거래 판단에 활용할 조건</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>시나리오</th>
+<th>확인 조건</th>
+<th>NVDA에 대한 해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>위험 완화</td>
+<td>공식 조사 설명이 구체화되고, 추가 규제 영향이 확인되지 않으며 국채금리가 안정</td>
+<td>위험 프리미엄 축소와 반등 지속 가능성을 재평가</td>
+</tr>
+<tr>
+<td>불확실성 지속</td>
+<td>조사 관련 보도가 이어지고 금리가 높은 수준을 유지</td>
+<td>단기 반등과 추세 전환을 구분할 필요</td>
+</tr>
+<tr>
+<td>위험 확대</td>
+<td>공식적인 수출 제한·규제 조치, 고객 투자 축소, 추가 금리 상승</td>
+<td>실적 전망과 평가배수에 동시 하방 압력 가능</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>실무적으로는 다음 세 가지가 중요하다.</strong></p>
+<ul>
+<li><strong>신규 진입 검토:</strong> 과매도 기사만을 근거로 판단하기보다 공식 사실관계와 NVDA의 업종 대비 상대성과를 함께 확인한다.</li>
+<li><strong>기존 노출 관리:</strong> 조사 관련 돌발 뉴스에 따른 가격 급변 가능성을 고려한다. 손절 주문도 갭 하락 시 지정한 가격의 체결을 보장하지 않는다.</li>
+<li><strong>가격 기준 설정:</strong> 현재가·변동성·거래량 자료가 없으므로 구체적인 진입가, 목표가, 손절가는 제시하지 않는다.</li>
+</ul>
+<h5>5. 최종 요약</h5>
+<p><strong>NVDA의 이번 주 핵심은 인공지능 성장 기대 자체보다, 높은 금리와 기업 고유 불확실성이 그 성장에 부여하는 가격을 낮추고 있다는 점이다.</strong> 장기 수요가 유지되더라도 단기 주가 안정이 자동으로 보장되지는 않는다. 반대로 의혹 보도가 실제 사업 훼손으로 이어졌다고 단정할 근거도 아직 부족하다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>확보한 근거</th>
+<th>NVDA에 대한 영향</th>
+<th>다음 확인 사항</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기업 조사</td>
+<td>내부조사 착수 관련 언론 보도</td>
+<td>불확실성·가격 급변 위험 확대</td>
+<td>공식 공시, 조사 결과, 규제기관 발표</td>
+</tr>
+<tr>
+<td>주가 약세</td>
+<td>약 6% 하락이라는 기사 제목</td>
+<td>기업 고유 위험의 가격 반영 가능성</td>
+<td>실제 시세, 업종 대비 상대수익률</td>
+</tr>
+<tr>
+<td>반도체 과매도</td>
+<td>일부 기관의 과매도 평가 보도</td>
+<td>기술적 반등 가능성, 저점 확정 근거는 아님</td>
+<td>거래량, 변동성, 이익 추정치</td>
+</tr>
+<tr>
+<td>인공지능 수요</td>
+<td>코어위브 실적의 시장 예상 부합 보도</td>
+<td>간접적인 투자심리 지지</td>
+<td>고객 설비투자·자금조달·GPU 주문</td>
+</tr>
+<tr>
+<td>미국 물가·금리</td>
+<td>물가 상방 충격과 금리 상승 관련 기사</td>
+<td>평가배수 및 고객 투자 여력에 부담</td>
+<td>공식 물가 수치와 국채금리</td>
+</tr>
+<tr>
+<td>통화정책 기대</td>
+<td>연내 금리 인하 없음 98%, 주간 +1.2%포인트</td>
+<td>단기 완화 기대가 약함을 시사</td>
+<td>계약 조건, 향후 회의별 정책 기대</td>
+</tr>
+<tr>
+<td>자료 한계</td>
+<td>FRED 조회 실패, 글로벌 뉴스 편중</td>
+<td>거시 판단의 정밀도 제한</td>
+<td>공식 통계와 지역별 뉴스 보완</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-4">재무 분석가</h3>
+<h4>NVDA 펀더멘털 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 11일 | 최근 일주일 검토 범위: 2026년 11월 5~11일</strong></p>
+<p><strong>투자 의견</strong>: 보유 유지</p>
+<h5>1. 핵심 판단</h5>
+<p><strong>NVDA는 매출 성장과 영업 수익성이 매우 강하지만, 순이익의 현금 전환율 저하와 시세·밸류에이션 데이터의 정합성 문제를 함께 확인해야 하는 상태다.</strong> 기업의 영업 실적은 긍정적이지만, 제공된 자료만으로 현재 가격에서의 신규 매수 매력을 확정하기는 어렵다.</p>
+<ul>
+<li><strong>성장성:</strong> 2026년 7월 26일 종료 분기 매출은 <strong>962억 2,100만 달러</strong>, 전년 동기 대비 <strong>105.9% 증가</strong>했다.</li>
+<li><strong>수익성:</strong> 같은 분기 매출총이익률은 <strong>75.0%</strong>, 영업이익률은 **66.2%**로 매우 높다.</li>
+<li><strong>이익의 질:</strong> 해당 분기 영업현금흐름은 누적 수치에서 역산하면 <strong>240억 7,700만 달러</strong>로, 순이익의 **40.3%**에 그친다. 순이익 증가를 현금흐름이 같은 속도로 뒷받침하지는 못하고 있다.</li>
+<li><strong>재무 안정성:</strong> 유동비율은 <strong>4.59배</strong>이고 자기자본은 <strong>2,289억 8,400만 달러</strong>로, 제공된 대차대조표상 단기 지급능력은 양호하다.</li>
+<li><strong>정보 한계:</strong> 최근 일주일의 신규 공시나 내부자 거래는 제공 자료에서 확인되지 않는다. 이는 해당 기간에 사건이 없었다는 의미가 아니다.</li>
+</ul>
+<p><strong>이 보고서는 NVDA에 대한 펀더멘털 연구 의견이다. 실제 거래 결정은 최신 가격, 공시 원문, 시장 예상치와 대조한 뒤 내려야 한다.</strong></p>
+<h5>2. 자료 범위와 신뢰도</h5>
+<p>다음 자료를 활용했다.</p>
+<ol>
+<li><strong>NVDA 종합 기업정보:</strong> 시가총액, 이익배수, 수익성, 주가 관련 지표.</li>
+<li><strong>NVDA 분기 손익계산서:</strong> 최신 제공 기간은 2026년 7월 26일 종료 분기.</li>
+<li><strong>NVDA 분기 대차대조표:</strong> 최신 제공 기준일은 2026년 7월 26일.</li>
+<li><strong>NVDA 현금흐름표:</strong> 최신 자료는 2026년 7월 26일까지의 6개월 누적 수치.</li>
+<li><strong>NVDA 내부자 거래:</strong> 최신 제공 거래일은 2026년 9월 21일.</li>
+</ol>
+<p>재무제표 도구는 <strong>2026년 11월 11일까지 제출된 미국 증권거래위원회 자료에 기반한 수치</strong>라고 명시한다. 다만 공시 원문, 주석, 제출일별 변경 내역은 제공되지 않았다. 따라서 최근 일주일의 변화 자체보다는 <strong>분석 기준일에 이용 가능한 재무 상태</strong>를 중심으로 평가했다.</p>
+<p>이하 재무제표 표의 금액 단위는 별도 표시가 없으면 <strong>백만 달러</strong>이며, 비율과 증감률은 제공 수치에서 계산했다.</p>
+<h5>3. NVDA 기업 개요와 사업 경쟁력</h5>
+<p>NVDA는 미국 나스닥 시장에 상장된 기술·반도체 기업이다. 주요 사업 기반은 그래픽처리장치, 데이터센터용 가속 컴퓨팅, 네트워킹 및 관련 소프트웨어 생태계다.</p>
+<p>NVDA를 평가할 때 중요한 것은 개별 반도체 판매뿐 아니라, 하드웨어와 개발 도구·소프트웨어를 결합한 플랫폼의 경쟁력이다. 이러한 구조는 고객의 개발·운영 전환비용을 높일 수 있다.</p>
+<p>다만 이번 도구 결과에는 <strong>사업부별 매출, 주요 고객 비중, 지역별 매출, 제품별 출하량 및 수주잔고</strong>가 없다. 따라서 인공지능 관련 수요가 전체 실적에 얼마나 기여했는지, 고객 집중도가 얼마나 높은지는 정량적으로 검증할 수 없다.</p>
+<p>NVDA의 핵심 점검 대상은 다음과 같다.</p>
+<ul>
+<li>대형 고객의 데이터센터 투자 지속성.</li>
+<li>경쟁 가속기와 고객 자체 설계 반도체의 대체 가능성.</li>
+<li>첨단 제조·패키징·메모리 공급 제약.</li>
+<li>수출 규제와 지역별 판매 제한.</li>
+<li>신제품 전환에 따른 원가 및 재고 부담.</li>
+</ul>
+<p>이는 <strong>구조적 위험 요인</strong>이며, 최근 일주일에 새로 발생한 사건으로 확인된 것은 아니다.</p>
+<h5>4. NVDA 손익계산서 분석</h5>
+<h6>최근 실적 비교</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 7월 27일 종료 분기</th>
+<th style="text-align:right">2026년 4월 26일 종료 분기</th>
+<th style="text-align:right">2026년 7월 26일 종료 분기</th>
+<th style="text-align:right">최신 분기 전년 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출액</td>
+<td style="text-align:right">46,743</td>
+<td style="text-align:right">81,615</td>
+<td style="text-align:right">96,221</td>
+<td style="text-align:right">+105.9%</td>
+</tr>
+<tr>
+<td>매출원가</td>
+<td style="text-align:right">12,890</td>
+<td style="text-align:right">20,458</td>
+<td style="text-align:right">24,079</td>
+<td style="text-align:right">+86.8%</td>
+</tr>
+<tr>
+<td>매출총이익</td>
+<td style="text-align:right">33,853</td>
+<td style="text-align:right">61,157</td>
+<td style="text-align:right">72,142</td>
+<td style="text-align:right">+113.1%</td>
+</tr>
+<tr>
+<td>영업이익</td>
+<td style="text-align:right">28,440</td>
+<td style="text-align:right">53,536</td>
+<td style="text-align:right">63,734</td>
+<td style="text-align:right">+124.1%</td>
+</tr>
+<tr>
+<td>순이익</td>
+<td style="text-align:right">26,422</td>
+<td style="text-align:right">58,321</td>
+<td style="text-align:right">59,688</td>
+<td style="text-align:right">+125.9%</td>
+</tr>
+<tr>
+<td>희석 주당순이익</td>
+<td style="text-align:right">1.08달러</td>
+<td style="text-align:right">2.39달러</td>
+<td style="text-align:right">2.46달러</td>
+<td style="text-align:right">+127.8%</td>
+</tr>
+<tr>
+<td>매출총이익률</td>
+<td style="text-align:right">72.4%</td>
+<td style="text-align:right">74.9%</td>
+<td style="text-align:right">75.0%</td>
+<td style="text-align:right">약 +2.6%포인트</td>
+</tr>
+<tr>
+<td>영업이익률</td>
+<td style="text-align:right">60.8%</td>
+<td style="text-align:right">65.6%</td>
+<td style="text-align:right">66.2%</td>
+<td style="text-align:right">약 +5.4%포인트</td>
+</tr>
+</tbody>
+</table></div>
+<h6>해석</h6>
+<p><strong>첫째, NVDA는 매출 성장과 영업 레버리지를 동시에 보여준다.</strong><br />
+최신 분기의 매출 증가율보다 영업이익 증가율이 높다. 매출이 확대되는 과정에서 원가와 영업비용이 상대적으로 느리게 증가했다는 의미다.</p>
+<p>매출총이익에서 영업이익을 차감한 영업비용은 전년 동기 <strong>54억 1,300만 달러</strong>에서 <strong>84억 800만 달러</strong>로 약 <strong>55.3% 증가</strong>했다. 같은 기간 매출 증가율 105.9%보다 낮다.</p>
+<p><strong>둘째, 직전 분기 대비 영업 실적도 강하다.</strong></p>
+<ul>
+<li>매출: <strong>17.9% 증가</strong></li>
+<li>영업이익: <strong>19.0% 증가</strong></li>
+<li>순이익: <strong>2.3% 증가</strong></li>
+<li>희석 주당순이익: <strong>2.9% 증가</strong></li>
+</ul>
+<p>순이익 증가가 영업이익 증가보다 크게 낮다는 점은 구분해서 봐야 한다. 직전 분기에는 순이익이 영업이익보다 <strong>47억 8,500만 달러 많았지만</strong>, 최신 분기에는 순이익이 영업이익보다 <strong>40억 4,600만 달러 적다</strong>.</p>
+<p>제공 자료에는 세금과 영업외손익의 세부 내역이 없다. 따라서 이를 특정 세제 혜택이나 투자 평가이익 때문이라고 단정할 수 없다. <strong>지속 가능한 이익을 평가하려면 영업이익과 조정된 세후이익을 공시 주석으로 검증해야 한다.</strong></p>
+<h6>상반기 실적</h6>
+<p>2026년 4월·7월 종료 분기를 합산하면 다음과 같다.</p>
+<ul>
+<li>매출: <strong>1,778억 3,600만 달러</strong>, 전년 동기 대비 약 <strong>95.8% 증가</strong>.</li>
+<li>영업이익: <strong>1,172억 7,000만 달러</strong>, 약 <strong>134.2% 증가</strong>.</li>
+<li>순이익: <strong>1,180억 900만 달러</strong>, 약 <strong>161.1% 증가</strong>.</li>
+</ul>
+<p>NVDA의 실적 확장은 분명하지만, 순이익 증가율은 영업외손익과 세금 효과를 확인하기 전까지 그대로 장기 성장률로 적용해서는 안 된다.</p>
+<h5>5. NVDA 현금흐름과 이익의 질</h5>
+<p><strong>현금흐름표의 7월 수치는 6개월 누적이다.</strong> 아래 최신 단독 분기 수치는 6개월 누적에서 4월 종료 분기 수치를 차감해 계산했다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 7월 종료 단독 분기</th>
+<th style="text-align:right">2026년 4월 종료 분기</th>
+<th style="text-align:right">2026년 7월 종료 단독 분기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">15,365</td>
+<td style="text-align:right">50,344</td>
+<td style="text-align:right">24,077</td>
+</tr>
+<tr>
+<td>설비투자</td>
+<td style="text-align:right">1,895</td>
+<td style="text-align:right">1,757</td>
+<td style="text-align:right">2,677</td>
+</tr>
+<tr>
+<td>잉여현금흐름</td>
+<td style="text-align:right">13,470</td>
+<td style="text-align:right">48,587</td>
+<td style="text-align:right">21,400</td>
+</tr>
+<tr>
+<td>영업현금흐름 ÷ 순이익</td>
+<td style="text-align:right">58.2%</td>
+<td style="text-align:right">86.3%</td>
+<td style="text-align:right">40.3%</td>
+</tr>
+<tr>
+<td>잉여현금흐름 ÷ 매출</td>
+<td style="text-align:right">28.8%</td>
+<td style="text-align:right">59.5%</td>
+<td style="text-align:right">22.2%</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>잉여현금흐름은 영업현금흐름에서 설비투자를 차감한 단순 정의다.</em></p>
+<h6>긍정적인 부분</h6>
+<p>NVDA의 최신 단독 분기 영업현금흐름은 전년 동기 대비 <strong>56.7%</strong>, 잉여현금흐름은 <strong>58.9% 증가</strong>했다.</p>
+<p>상반기 누적 기준으로도:</p>
+<ul>
+<li>영업현금흐름: <strong>744억 2,100만 달러</strong>, 전년 대비 <strong>74.0% 증가</strong>.</li>
+<li>설비투자: <strong>44억 3,400만 달러</strong>.</li>
+<li>잉여현금흐름: <strong>699억 8,700만 달러</strong>, 전년 대비 <strong>76.5% 증가</strong>.</li>
+</ul>
+<p>현금 창출의 절대 규모는 매우 크다.</p>
+<h6>주의해야 할 부분</h6>
+<p>반면 최신 분기의 영업현금흐름은 직전 분기보다 <strong>52.2% 감소</strong>했다. 같은 기간 매출과 영업이익은 증가했다.</p>
+<p>상반기 누적 영업현금흐름도 순이익의 약 **63.1%**에 머문다. 이는 반드시 회계 문제를 뜻하지는 않지만, 다음 항목을 우선 확인해야 한다.</p>
+<ul>
+<li>매출채권 증가와 회수기간 변화.</li>
+<li>재고 및 공급망 선급금 증가.</li>
+<li>세금 납부 시점.</li>
+<li>비현금 영업외손익.</li>
+<li>고객 결제조건 변화.</li>
+</ul>
+<p><strong>NVDA의 다음 실적에서 가장 중요한 확인 사항은 순이익 증가뿐 아니라 현금 전환율 회복이다.</strong></p>
+<p>상반기 투자활동 현금유출은 <strong>351억 2,400만 달러</strong>, 재무활동 현금유출은 <strong>274억 5,900만 달러</strong>다. 세부 내역이 없어 이를 전부 설비투자나 자사주 매입으로 해석할 수는 없다.</p>
+<h5>6. NVDA 대차대조표와 재무 안정성</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2026년 1월 25일</th>
+<th style="text-align:right">2026년 4월 26일</th>
+<th style="text-align:right">2026년 7월 26일</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>총자산</td>
+<td style="text-align:right">206,803</td>
+<td style="text-align:right">259,474</td>
+<td style="text-align:right">320,272</td>
+</tr>
+<tr>
+<td>유동자산</td>
+<td style="text-align:right">125,605</td>
+<td style="text-align:right">150,995</td>
+<td style="text-align:right">197,412</td>
+</tr>
+<tr>
+<td>현금 및 현금성자산</td>
+<td style="text-align:right">10,605</td>
+<td style="text-align:right">13,237</td>
+<td style="text-align:right">22,443</td>
+</tr>
+<tr>
+<td>총부채</td>
+<td style="text-align:right">49,510</td>
+<td style="text-align:right">64,000</td>
+<td style="text-align:right">91,288</td>
+</tr>
+<tr>
+<td>유동부채</td>
+<td style="text-align:right">32,163</td>
+<td style="text-align:right">43,884</td>
+<td style="text-align:right">43,019</td>
+</tr>
+<tr>
+<td>자기자본</td>
+<td style="text-align:right">157,293</td>
+<td style="text-align:right">195,474</td>
+<td style="text-align:right">228,984</td>
+</tr>
+</tbody>
+</table></div>
+<p>최신 기준 주요 비율은 다음과 같다.</p>
+<ul>
+<li><strong>유동비율: 4.59배</strong></li>
+<li><strong>현금비율: 0.52배</strong></li>
+<li><strong>총부채 ÷ 총자산: 28.5%</strong></li>
+<li><strong>총부채 ÷ 자기자본: 39.9%</strong></li>
+</ul>
+<p>유동자산이 유동부채를 크게 상회하므로 단기 유동성은 양호하다. 다만 현금 자체는 유동부채보다 적어, 유동자산 구성과 회수 가능성을 함께 확인해야 한다.</p>
+<p>또한 최신 분기 총부채는 직전 분기 대비 <strong>42.6% 증가</strong>했다. 유동부채는 감소했으므로 증가분은 비유동부채에 집중돼 있다. 비유동부채는 차감 계산상 <strong>201억 1,600만 달러에서 482억 6,900만 달러</strong>로 늘었다.</p>
+<p>도구에 부채 세부 항목이 없어 차입, 리스, 이연세금 등 어느 요인이 주도했는지는 확인되지 않는다.</p>
+<p>종합정보의 부채·자기자본 비율 **17.0%**는 위의 총부채 기준 **39.9%**와 다르다. 이자부 차입금과 총부채는 정의가 다를 수 있으므로 두 수치를 같은 지표로 취급하면 안 된다.</p>
+<h5>7. NVDA 재무 이력</h5>
+<p>장기 수치에서는 높은 성장성과 반도체 업황의 변동성이 함께 확인된다.</p>
+<ul>
+<li><strong>2018년 10월 종료 분기 → 2019년 1월 종료 분기:</strong> 매출이 31억 8,100만 달러에서 22억 500만 달러로 약 <strong>30.7% 감소</strong>했다.</li>
+<li><strong>2022년 5월 종료 분기 → 2022년 10월 종료 분기:</strong> 매출이 82억 8,800만 달러에서 59억 3,100만 달러로 약 <strong>28.4% 감소</strong>했다.</li>
+<li><strong>2023년 7월 종료 분기 → 2026년 7월 종료 분기:</strong> 매출은 135억 700만 달러에서 962억 2,100만 달러로 약 <strong>7.1배 확대</strong>됐다.</li>
+</ul>
+<p>따라서 NVDA의 현재 성장률을 장기간 일정하게 연장하는 가정보다는, 수요 정상화와 마진 하락을 포함한 시나리오 분석이 적절하다.</p>
+<p>과거 주당순이익 자료는 주식분할 조정 기준이 일관적인지 확인되지 않으므로, 장기 비교에서는 주당순이익보다 매출·영업이익·현금흐름을 우선했다.</p>
+<h5>8. NVDA 밸류에이션: 낮은 표면 배수보다 정합성 확인이 우선</h5>
+<p>종합정보가 제공한 주요 수치는 다음과 같다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align:right">제공 수치</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시가총액</td>
+<td style="text-align:right">약 4조 781억 9,000만 달러</td>
+</tr>
+<tr>
+<td>최근 12개월 매출</td>
+<td style="text-align:right">약 3,029억 7,000만 달러</td>
+</tr>
+<tr>
+<td>최근 12개월 순이익</td>
+<td style="text-align:right">약 1,928억 8,000만 달러</td>
+</tr>
+<tr>
+<td>후행 주가수익비율</td>
+<td style="text-align:right">21.35배</td>
+</tr>
+<tr>
+<td>선행 주가수익비율</td>
+<td style="text-align:right">10.60배</td>
+</tr>
+<tr>
+<td>후행 주당순이익</td>
+<td style="text-align:right">7.91달러</td>
+</tr>
+<tr>
+<td>선행 주당순이익</td>
+<td style="text-align:right">15.93달러</td>
+</tr>
+<tr>
+<td>주가순자산비율</td>
+<td style="text-align:right">17.81배</td>
+</tr>
+<tr>
+<td>배당수익률</td>
+<td style="text-align:right">0.56%</td>
+</tr>
+<tr>
+<td>베타</td>
+<td style="text-align:right">2.247</td>
+</tr>
+</tbody>
+</table></div>
+<p>표면적으로 선행 주가수익비율은 높지 않다. 그러나 <strong>이 수치만으로 NVDA가 저평가됐다고 결론 내리기는 어렵다.</strong></p>
+<h6>주요 불일치</h6>
+<ul>
+<li>후행 주가수익비율과 주당순이익을 곱하면 암시 가격은 약 <strong>168.89달러</strong>다.</li>
+<li>이는 제공된 50일 평균 <strong>219.04달러</strong>, 200일 평균 <strong>204.63달러</strong>보다 크게 낮다.</li>
+<li>제공된 52주 범위는 <strong>164.27~243.37달러</strong>다. 암시 가격이 이 범위 안에 있기는 하지만, 직접적인 최신 가격과 기준시각은 없다.</li>
+</ul>
+<p>따라서 급격한 가격 변동인지, 서로 다른 기준시점의 정보가 섞였는지 확인해야 한다.</p>
+<p>또한 종합정보의 잉여현금흐름 <strong>418억 1,000만 달러</strong>는 재무제표에서 계산한 상반기 누적 <strong>699억 8,700만 달러</strong>와 기간·정의가 명확히 연결되지 않는다. 이를 이용한 잉여현금흐름 수익률 산출은 보류한다.</p>
+<p><strong>NVDA의 목표주가를 제시하기 전에 최신 가격, 정상화 주당순이익, 예상치의 대상 회계연도 및 잉여현금흐름 정의를 맞추는 것이 우선이다.</strong></p>
+<h5>9. NVDA 내부자 거래</h5>
+<p>최근 일주일의 거래는 제공 자료에서 확인되지 않는다. 최신 제공 기록은 다음과 같다.</p>
+<ul>
+<li><strong>2026년 9월 21일:</strong> 법무책임자가 30,460주, 약 <strong>679만 달러</strong> 매도.</li>
+<li><strong>2026년 9월 18일:</strong> 이사 마크 스티븐스가 1,366,000주, 약 <strong>3억 15만 달러</strong> 매도.</li>
+<li><strong>2026년 9월 4일:</strong> 같은 이사가 1,022,239주, 약 <strong>2억 3,564만 달러</strong> 매도.</li>
+<li><strong>2026년 9월 2일:</strong> 같은 이사가 1,848,501주, 약 <strong>4억 1,084만 달러</strong> 매도.</li>
+</ul>
+<p>마크 스티븐스의 위 세 차례 매도 합계는 약 <strong>423만 7천 주, 9억 4,663만 달러</strong>다.</p>
+<p>제공된 목록에서는 공개시장 매수가 확인되지 않는다. 다만 매도자의 전체 보유량, 예정 매매계획 여부, 세금 및 개인 자금 수요를 알 수 없어 매도만으로 NVDA의 향후 실적 악화를 예측할 수는 없다. 무상 주식보상과 증여도 공개시장 매수·매도와 구분해야 한다.</p>
+<h5>10. NVDA 거래 판단에 활용할 조건</h5>
+<h6>기존 NVDA 보유자</h6>
+<p><strong>영업 실적만 보면 보유 논리는 유지되지만, 현금흐름과 비유동부채 증가의 원인을 검증해야 한다.</strong></p>
+<p>다음 자료에서 우선 확인할 사항은 다음과 같다.</p>
+<ol>
+<li>영업현금흐름 증가율이 순이익 증가율에 다시 근접하는가.</li>
+<li>매출채권과 재고가 매출보다 빠르게 증가하는가.</li>
+<li>약 75%의 매출총이익률이 유지되는가.</li>
+<li>영업외손익과 세금 효과를 제외한 이익 성장도 강한가.</li>
+<li>비유동부채 증가가 향후 현금 지급 부담을 높이는가.</li>
+</ol>
+<h6>NVDA 신규 진입 검토자</h6>
+<p><strong>현재 자료만으로 가격 수준을 확정할 수 없으므로 추격 매수 판단은 유보하는 편이 합리적이다.</strong></p>
+<p>최신 가격과 정상화 이익을 확인한 뒤, 다음 조건을 조합해 판단할 수 있다.</p>
+<ul>
+<li><strong>긍정 조건:</strong> 높은 매출 성장 지속, 마진 유지, 현금 전환율 개선, 검증 가능한 예상이익.</li>
+<li><strong>경계 조건:</strong> 매출 성장 둔화와 마진 하락의 동시 발생, 매출채권·재고 급증, 현금 전환율 추가 악화.</li>
+<li><strong>위험 관리:</strong> 제공 베타가 2.247인 만큼 시장 변동에 민감할 수 있으므로, 포지션 규모와 허용 손실을 먼저 정해야 한다. 베타 자체는 특정 손절 가격을 산출하는 근거는 아니다.</li>
+</ul>
+<p><strong>종합적으로 NVDA의 사업 실적 평가는 긍정적이지만, 단기 거래 매력은 데이터 확인 전까지 중립이다.</strong> 아래 표기는 신규 주문 지시가 아닌 연구상 판단 요약이다.</p>
+<p>최종 매매 제안: 보유 유지</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>NVDA 핵심 항목</th>
+<th>확인된 근거</th>
+<th>해석</th>
+<th>후속 확인·행동</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>분석 기간</td>
+<td>2026년 11월 5~11일의 신규 사건 자료 미확인</td>
+<td>주간 변화에 대한 확정 판단 불가</td>
+<td>최신 공시·거래 기록 확인</td>
+</tr>
+<tr>
+<td>매출 성장</td>
+<td>최신 분기 매출 962억 2,100만 달러, 전년 대비 +105.9%</td>
+<td>강한 사업 확장</td>
+<td>다음 분기 성장 지속성 점검</td>
+</tr>
+<tr>
+<td>영업 수익성</td>
+<td>영업이익률 66.2%, 전년 대비 약 +5.4%포인트</td>
+<td>영업 레버리지 양호</td>
+<td>원가·영업비용 증가율 점검</td>
+</tr>
+<tr>
+<td>순이익의 질</td>
+<td>직전 분기 순이익이 영업이익을 상회</td>
+<td>세금·영업외손익 확인 필요</td>
+<td>정상화 세후이익 검증</td>
+</tr>
+<tr>
+<td>현금 전환</td>
+<td>최신 분기 영업현금흐름/순이익 40.3%</td>
+<td>주요 경계 신호</td>
+<td>매출채권·재고·세금 내역 확인</td>
+</tr>
+<tr>
+<td>잉여현금흐름</td>
+<td>최신 단독 분기 214억 달러, 전년 대비 +58.9%</td>
+<td>절대 창출력은 강함</td>
+<td>순이익과 증가 속도 비교</td>
+</tr>
+<tr>
+<td>단기 유동성</td>
+<td>유동비율 4.59배</td>
+<td>대차대조표상 양호</td>
+<td>유동자산 구성·회수 가능성 점검</td>
+</tr>
+<tr>
+<td>부채 변화</td>
+<td>비유동부채가 전분기 201억 달러에서 483억 달러로 증가</td>
+<td>증가 원인 불명확</td>
+<td>차입·리스·세금 주석 확인</td>
+</tr>
+<tr>
+<td>밸류에이션</td>
+<td>후행 21.35배, 선행 10.60배</td>
+<td>표면상 매력적이나 기준시점 확인 필요</td>
+<td>최신 가격·예상치 기간 대조</td>
+</tr>
+<tr>
+<td>내부자 거래</td>
+<td>제공된 최근 기록은 매도 중심, 최신 거래일 9월 21일</td>
+<td>보조적 경계 신호</td>
+<td>보유량 대비 비중·예정 매매 여부 확인</td>
+</tr>
+<tr>
+<td>최종 연구 의견</td>
+<td>영업 실적 강세와 현금흐름·자료 불확실성 병존</td>
+<td>NVDA 보유·관망</td>
+<td>검증 전 공격적 신규 진입 유보</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. 투자 검토팀 판단</h2><h3 id="s2-1">상승론 분석가</h3>
+<p>Bull Analyst: <strong>투자 의견</strong>: Bullish</p>
+<h5>NVDA 강세 논거: 주가는 급락했지만, 사업의 성장 엔진이 꺼졌다는 증거는 없다</h5>
+<p>약세 측이 먼저 지적할 부분은 분명합니다. NVDA는 주요 이동평균선 아래에 있고, 조사 관련 보도와 금리 상승 부담까지 겹쳤습니다. 단기 차트가 나쁘다는 데에는 동의합니다.</p>
+<p>하지만 투자 판단의 핵심은 **“최근 주가가 하락했는가”가 아니라 “앞으로 벌어들일 이익과 현금이 현재 가격에 비해 충분한가”**입니다. 제공된 자료에서 NVDA는 매출이 두 배 이상 증가하면서 영업이익률까지 높아진 기업입니다. 저는 이 사업 성과가 단기 가격 추세보다 장기 투자 판단에서 더 중요한 근거라고 봅니다.</p>
+<p>아래 판단은 제공된 2026년 11월 11일 기준 연구자료와 11월 10일 종가를 사용합니다. 최신 공시 원문과 실시간 시세를 별도로 검증한 것은 아닙니다.</p>
+<h5>1. “성장 기대만으로 오른 주식”이라는 비판에 실적으로 답할 수 있다</h5>
+<p>NVDA의 최신 제공 분기 실적은 성장의 크기뿐 아니라 질도 보여줍니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">최신 제공 분기</th>
+<th>투자 관점의 의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">962억 2,100만 달러, 전년 대비 <strong>105.9% 증가</strong></td>
+<td>이미 큰 사업 규모에서도 강한 확장</td>
+</tr>
+<tr>
+<td>영업이익</td>
+<td style="text-align:right">637억 3,400만 달러, <strong>124.1% 증가</strong></td>
+<td>매출보다 빠른 이익 성장</td>
+</tr>
+<tr>
+<td>매출총이익률</td>
+<td style="text-align:right"><strong>75.0%</strong></td>
+<td>높은 부가가치와 수익성</td>
+</tr>
+<tr>
+<td>영업이익률</td>
+<td style="text-align:right"><strong>66.2%</strong></td>
+<td>규모 확대에 따른 영업 레버리지</td>
+</tr>
+<tr>
+<td>직전 분기 대비 매출</td>
+<td style="text-align:right"><strong>17.9% 증가</strong></td>
+<td>전년 대비 기저효과만으로 설명하기 어려운 성장</td>
+</tr>
+</tbody>
+</table></div>
+<p>약세 측에 묻고 싶습니다. <strong>사업이 이미 급격히 악화하고 있다면, 왜 매출이 직전 분기보다 17.9% 늘어나는 동안 영업이익률도 상승했을까요?</strong></p>
+<p>물론 이 실적은 7월 종료 분기여서 11월의 주문 상황을 보장하지 않습니다. 그렇더라도 최신 제공 재무자료가 보여주는 방향은 수요 붕괴가 아니라 사업 확장입니다. 향후 악화를 예상하는 것과 이미 악화가 확인됐다고 말하는 것은 구분해야 합니다.</p>
+<h6>성장률이 둔화해도 성장 기회는 남는다</h6>
+<p>NVDA의 기회는 개별 반도체 판매를 넘어 데이터센터 가속 컴퓨팅, 네트워킹, 개발 도구와 소프트웨어를 결합하는 데 있습니다. 고객의 인공지능 인프라 투자가 확대될 때 여러 계층에서 매출을 확보할 수 있는 구조입니다.</p>
+<p>최신 분기 매출을 단순히 네 배 하면 약 <strong>3,848억 8,400만 달러</strong>입니다. 이는 매출 전망이나 회사 가이던스가 아니라 <strong>현재 분기 매출 규모의 연환산 참고치</strong>입니다. 다만 제공된 최근 12개월 매출 약 3,029억 7,000만 달러보다 높아, 최신 사업 규모가 과거 12개월 평균을 상당히 웃돈다는 점은 확인할 수 있습니다.</p>
+<p>강세 논거는 “매년 매출이 두 배가 된다”가 아닙니다. <strong>이미 커진 매출 기반에 높은 수익성이 결합되면, 성장률이 정상화돼도 이익 창출력은 상당할 수 있다</strong>는 것입니다.</p>
+<h5>2. 경쟁우위는 반도체 하나가 아니라 고객의 전환비용에 있다</h5>
+<p>“경쟁 가속기나 고객 자체 설계 반도체가 NVDA를 대체할 것”이라는 반론은 타당한 위험입니다. 그러나 대체 가능성과 손쉬운 대체는 다릅니다.</p>
+<p>NVDA는 하드웨어뿐 아니라 개발 도구·소프트웨어, 네트워킹을 결합한 플랫폼을 제공합니다. 고객은 구매가격 외에도 기존 코드의 이전, 개발자 교육, 성능 검증, 운영 안정성과 도입 시간을 고려해야 합니다. 이 과정에서 전환비용이 발생할 수 있습니다.</p>
+<p>그 경제적 결과와 일관되는 지표가 <strong>75.0%의 매출총이익률</strong>입니다. 이 수치 하나로 독점력이나 영구적 우위를 입증할 수는 없습니다. 다만 현재 NVDA가 단순 가격경쟁에 밀리는 범용 부품업체처럼 수익을 내고 있지는 않다는 강한 근거입니다.</p>
+<p>또한 전년 대비 영업비용 증가율은 약 **55.3%**로, 매출 증가율 105.9%보다 낮았습니다. 이는 플랫폼과 연구개발 투자를 더 큰 매출 기반에 분산시키는 확장성을 보여줍니다.</p>
+<h5>3. 현금 전환율은 약점이다. 그러나 현금 창출력이 사라진 것은 아니다</h5>
+<p>약세 측의 가장 설득력 있는 지적은 최신 분기 영업현금흐름이 순이익의 **40.3%**에 그친다는 점입니다. 저는 이를 가볍게 보지 않습니다. 매출채권, 재고, 선급금, 세금과 비현금손익의 세부 검증이 필요합니다.</p>
+<p>그렇지만 현금 전환율 하락을 곧바로 현금 창출 붕괴로 해석하면 전체 그림을 놓칩니다.</p>
+<ul>
+<li>최신 단독 분기 잉여현금흐름: <strong>214억 달러</strong>, 전년 대비 <strong>58.9% 증가</strong></li>
+<li>상반기 영업현금흐름: <strong>744억 2,100만 달러</strong>, 전년 대비 <strong>74.0% 증가</strong></li>
+<li>상반기 잉여현금흐름: <strong>699억 8,700만 달러</strong>, 전년 대비 <strong>76.5% 증가</strong></li>
+</ul>
+<p>상반기 잉여현금흐름은 같은 기간 매출의 약 **39.4%**입니다. 이익 대비 전환율은 아쉽지만, 매출 대비 현금 창출 규모는 여전히 큽니다.</p>
+<p>따라서 제 해석은 이렇습니다.</p>
+<blockquote>
+<p><strong>NVDA는 현금이 부족한 기업이라기보다, 이익의 급증을 현금흐름이 같은 속도로 따라가지 못하는 기업입니다.</strong></p>
+</blockquote>
+<p>이 차이는 중요합니다. 다만 다음 실적에서도 현금 전환율이 악화하고 매출채권·재고까지 매출보다 빠르게 늘어난다면 강세 논거를 낮춰야 합니다.</p>
+<h5>4. 가격 하락은 확인됐고, 밸류에이션 우려 중 하나는 교차 확인이 가능하다</h5>
+<p>제공된 종가는 <strong>168.89달러</strong>입니다. 11월 4일의 200.13달러보다 약 <strong>15.6% 하락</strong>했습니다.</p>
+<p>물론 가격 하락 자체가 저평가를 뜻하지는 않습니다. 하지만 펀더멘털 보고서가 우려한 가격 정합성에는 일부 보완 근거가 있습니다. 후행 주가수익비율 21.35배와 주당순이익 7.91달러를 곱한 암시 가격은 약 <strong>168.88달러</strong>로, 기술적 보고서의 종가와 사실상 일치합니다.</p>
+<p>즉, 낮아진 암시 가격과 높은 이동평균의 차이는 적어도 <strong>최근 급락으로 설명할 수 있는 부분</strong>이 있습니다. 이동평균보다 주가가 낮다는 사실만으로 가격 자료가 잘못됐다고 볼 필요는 없습니다.</p>
+<p>선행 주가수익비율 <strong>10.60배</strong>도 검증할 가치가 있습니다. 다만 예상 주당순이익의 대상 기간과 산출 근거가 불명확하므로 확정적인 저평가 근거로 쓰지는 않겠습니다.</p>
+<p><strong>현재 실적의 성장성과 표면 배수 사이에 상당한 간극이 있다는 점은 매수 검토의 이유이지, 검증을 생략할 이유는 아닙니다.</strong></p>
+<h5>5. 조사·금리·약세 차트에 대한 답변</h5>
+<h6>“조사 위험이 있으니 투자할 수 없다”</h6>
+<p>조사 관련 보도는 중대한 위험입니다. 특히 경영진, 수출통제와 지배구조 문제는 단순한 소음으로 치부할 수 없습니다.</p>
+<p>그러나 제공 자료에는 위반 확정, 벌금, 경영진 교체, 고객 주문 취소가 확인되지 않습니다. 보도된 <strong>75억 달러</strong> 역시 확정 손실이나 매출 감소액이 아닙니다.</p>
+<p>강세 입장은 무조건적인 무혐의 기대가 아닙니다. <strong>가능한 손실을 확정 손실처럼 계산하지 말자</strong>는 것입니다. 공식 조사 결과와 실제 영업 영향이 중요하며, 불리한 사실이 확인되면 투자 논거도 수정해야 합니다.</p>
+<h6>“높은 금리가 인공지능 투자를 꺾는다”</h6>
+<p>그럴 수 있습니다. 할인율 상승과 고객의 자금조달 비용 상승은 모두 부담입니다.</p>
+<p>반면 NVDA 자체는 유동비율 <strong>4.59배</strong>, 상반기 잉여현금흐름 약 <strong>700억 달러</strong>를 기록했습니다. 외부 자금조달에 전적으로 의존하는 적자 성장기업과는 다릅니다. 다만 비유동부채 증가의 성격은 추가 확인이 필요합니다.</p>
+<p>인공지능 인프라 업체의 예상 부합 실적과 시간외 약 <strong>2.6% 상승</strong> 보도도 수요 붕괴론을 일부 완화합니다. NVDA 주문을 직접 입증하지는 않지만, 산업 전체가 일제히 무너지고 있다는 주장에도 근거가 충분하지 않습니다.</p>
+<h6>“차트가 하락 추세인데 왜 매수인가”</h6>
+<p>단기 거래라면 기다리는 판단이 합리적입니다. 상대강도지수 <strong>23.95</strong>, 음수인 MACD 히스토그램은 바닥 확인 신호가 아닙니다.</p>
+<p>하지만 장기 투자자는 모든 이동평균 회복을 기다리는 대신 더 낮은 가격에 일부 위험을 감수할 수 있습니다. 상대강도지수의 과매도는 <strong>매수 논거의 본체가 아니라, 강한 사업을 낮아진 가격에서 검토하게 만드는 보조 조건</strong>입니다.</p>
+<h5>결론: NVDA는 단기 반등만 노릴 종목이 아니라, 장기 이익 창출력으로 평가할 종목이다</h5>
+<p>제 강세 판단의 중심은 세 가지입니다.</p>
+<ol>
+<li><strong>매출과 영업이익이 동시에 급성장하고 있다.</strong></li>
+<li><strong>플랫폼 경쟁력과 영업 레버리지가 높은 수익성으로 나타나고 있다.</strong></li>
+<li><strong>현금 전환율 우려에도 절대 현금 창출력과 유동성은 강하다.</strong></li>
+</ol>
+<p>따라서 NVDA에 대한 제 의견은 <strong>장기 관점의 분할 매수</strong>입니다. 단기 바닥이나 빠른 반등을 확신하는 공격적 일괄 매수는 아닙니다. 최신 공시와 예상이익을 확인하고, 현금 전환율 개선 및 조사 관련 공식 설명에 따라 추가 매수 여부를 결정하는 접근이 적절합니다.</p>
+<p><strong>약세 측은 현재의 불확실성을 정확히 지적합니다. 그러나 그 불확실성이 NVDA의 성장성과 현금 창출력을 이미 무너뜨렸다는 결론까지 뒷받침하지는 못합니다. 그것이 제가 NVDA의 장기 강세 편에 서는 이유입니다.</strong></p>
+<p>최종 매매 제안: 매수</p>
+<h3 id="s2-2">하락론 분석가</h3>
+<p>Bear Analyst: <strong>투자 의견</strong>: Bearish</p>
+<h4>NVDA 약세 논거: 좋은 사업이라는 사실만으로 지금 매수가 정당화되지는 않는다</h4>
+<p>강세 측이 강조한 NVDA의 성장성과 수익성은 인정합니다. 최신 제공 분기 매출이 전년 대비 <strong>105.9% 증가</strong>하고 영업이익률이 **66.2%**인 기업을 두고 사업이 이미 붕괴했다고 주장하는 것은 부정확합니다.</p>
+<p>그러나 강세 측의 마지막 반론에는 문제가 있습니다. <strong>약세 논거가 성립하려면 사업이 이미 무너졌다는 증거까지 필요한 것은 아닙니다.</strong> 투자자는 실적 악화가 확정되기 전에도, 미래 이익에 대한 불확실성이 커지거나 기대수익에 비해 위험이 높아지면 매수를 피할 수 있습니다.</p>
+<p>제 판단은 명확합니다. <strong>NVDA의 과거 실적은 강하지만, 지금 분할 매수를 시작하기에 충분한 안전마진은 입증되지 않았습니다.</strong> 현금 전환율 악화, 검증되지 않은 예상이익, 조사 관련 불확실성, 금리 부담이 동시에 존재하기 때문입니다.</p>
+<p>이 분석은 제공된 2026년 11월 11일 기준 연구자료와 11월 10일 종가 <strong>168.89달러</strong>를 사용하며, 공시 원문이나 실시간 시세를 별도로 검증한 것은 아닙니다.</p>
+<h5>1. “매출이 늘었는데 왜 약세인가?” — 주가는 지난 분기가 아니라 다음 분기를 평가합니다</h5>
+<p>강세 측은 묻습니다.</p>
+<blockquote>
+<p>“사업이 악화하고 있다면, 왜 매출이 전 분기보다 17.9% 늘었습니까?”</p>
+</blockquote>
+<p>제 답은 이렇습니다. <strong>7월 종료 분기의 성장은 확인됐지만, 그것이 11월 이후 주문과 현금 회수를 보장하지는 않습니다.</strong></p>
+<p>제공 자료에는 다음 핵심 정보가 없습니다.</p>
+<ul>
+<li>주요 고객별 매출과 고객 집중도</li>
+<li>실제 구매 약정과 수주잔고</li>
+<li>지역별 매출과 수출통제 노출</li>
+<li>고객의 설비투자 지속 능력</li>
+<li>매출채권·재고·선급금의 상세 변화</li>
+</ul>
+<p>이 정보가 없다고 수요 감소를 단정할 수는 없습니다. 하지만 반대로, 높은 성장률이 지속된다는 전제 아래 매수를 권고할 근거도 제한됩니다.</p>
+<p>NVDA는 과거에도 분기 매출이 약 <strong>28~31% 감소한 구간</strong>을 경험했습니다. 당시 사업 구성과 지금은 다르므로 같은 하락을 예측하는 근거는 아닙니다. 다만 <strong>반도체 기업의 강한 실적을 안정적인 장기 성장률로 연장하는 것이 위험할 수 있다</strong>는 경고로는 충분합니다.</p>
+<h5>2. 현금 전환율은 단순한 부차적 약점이 아닙니다</h5>
+<p>강세 측은 “현금 창출력이 사라진 것은 아니다”라고 말합니다. 맞습니다. 하지만 그것은 매수 판단에 필요한 기준보다 낮은 기준입니다.</p>
+<p>쟁점은 현금이 존재하느냐가 아니라, <strong>보고된 이익을 어느 정도까지 지속 가능한 현금 창출력으로 평가할 수 있느냐</strong>입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>NVDA 지표</th>
+<th style="text-align:right">직전 분기</th>
+<th style="text-align:right">최신 제공 분기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">503억 4,400만 달러</td>
+<td style="text-align:right">240억 7,700만 달러</td>
+</tr>
+<tr>
+<td>영업현금흐름 ÷ 순이익</td>
+<td style="text-align:right">86.3%</td>
+<td style="text-align:right">40.3%</td>
+</tr>
+<tr>
+<td>잉여현금흐름 ÷ 매출</td>
+<td style="text-align:right">59.5%</td>
+<td style="text-align:right">22.2%</td>
+</tr>
+</tbody>
+</table></div>
+<p>최신 분기에는 매출이 <strong>17.9% 증가</strong>했지만, 영업현금흐름은 <strong>52.2% 감소</strong>했습니다. 순이익 <strong>596억 8,800만 달러</strong>와 영업현금흐름 사이의 차이는 약 <strong>356억 달러</strong>입니다.</p>
+<p>물론 이는 회계 부정의 증거가 아닙니다. 세금 납부 시점, 운전자본 증가, 비현금손익 등으로 설명될 수 있습니다. <strong>하지만 설명될 수 있다는 것과 실제로 설명됐다는 것은 다릅니다.</strong></p>
+<p>강세 측은 다음 실적에서 현금 전환율이 더 악화하면 판단을 낮추겠다고 합니다. 저는 순서를 바꾸겠습니다.</p>
+<blockquote>
+<p><strong>현금 전환율이 왜 악화했는지 확인한 뒤 매수해야지, 먼저 매수하고 다음 실적에서 원인을 확인할 이유는 약합니다.</strong></p>
+</blockquote>
+<p>상반기 잉여현금흐름 약 <strong>700억 달러</strong>는 분명 강점입니다. 다만 상반기 평균이 최신 분기의 급격한 변화를 지워주지는 않습니다.</p>
+<h5>3. “선행 10.60배”는 안전마진이 아니라 예상이익 검증의 출발점입니다</h5>
+<p>가격 정합성에 대한 강세 측의 지적은 타당합니다. 후행 주가수익비율과 주당순이익을 곱한 가격이 실제 제공 종가와 거의 일치하므로, 이동평균과의 차이만으로 가격 자료 오류를 주장해서는 안 됩니다.</p>
+<p>그러나 <strong>가격이 맞는다는 사실과 예상이익이 믿을 만하다는 사실은 별개</strong>입니다.</p>
+<p>제공된 후행 주당순이익은 <strong>7.91달러</strong>, 선행 주당순이익은 <strong>15.93달러</strong>입니다. 단순 비교하면 선행 수치는 후행의 약 두 배입니다. 예상치의 대상 기간이 불명확하므로 이를 정확한 연간 성장률로 해석할 수는 없지만, 낮은 선행 배수가 상당히 높은 예상이익에 의존한다는 점은 분명합니다.</p>
+<p>위험을 설명하기 위한 단순 민감도 계산을 보겠습니다.</p>
+<ul>
+<li>선행 주당순이익이 제공 예상치보다 <strong>20% 낮아지고</strong></li>
+<li>평가배수는 그대로 <strong>10.60배</strong>라면</li>
+<li>계산상 가격은 약 <strong>135달러</strong>입니다.</li>
+</ul>
+<p>이는 목표주가나 실적 예측이 아닙니다. <strong>배수가 더 낮아지지 않아도 예상이익 하향만으로 약 20%의 가격 하락이 발생할 수 있다는 산술적 예시</strong>입니다.</p>
+<p>따라서 “선행 배수가 낮다”는 주장은 예상이익의 기간·산출 근거·현금 전환 가능성을 검증하기 전에는 충분한 매수 논거가 아닙니다.</p>
+<h5>4. 높은 마진은 경쟁우위의 증거인 동시에 경쟁 유인입니다</h5>
+<p>NVDA의 플랫폼과 고객 전환비용은 실질적인 강점입니다. 이를 부정할 필요는 없습니다.</p>
+<p>하지만 강세 측은 <strong>전환비용이 높다는 사실에서 마진 방어력까지 너무 쉽게 연결하고 있습니다.</strong> 고객이 NVDA를 완전히 대체하지 못해도, 일부 작업을 경쟁 가속기나 자체 설계 반도체로 옮기면 신규 구매량과 가격 협상력이 달라질 수 있습니다.</p>
+<p>NVDA의 약세 시나리오에 전면적인 시장 지배력 상실이 필요한 것은 아닙니다.</p>
+<ul>
+<li>고객이 일부 물량만 다른 제품으로 분산하거나</li>
+<li>신제품 전환 과정에서 원가가 높아지거나</li>
+<li>공급 제약으로 납품이 지연되거나</li>
+<li>가격 인하 압력이 발생해도</li>
+</ul>
+<p>이익 전망은 영향을 받을 수 있습니다. 이는 확인된 최근 악화가 아니라 구조적 위험입니다.</p>
+<p>규모를 보면 작은 마진 변화도 중요합니다. 최신 분기 매출을 고정하고 매출총이익률이 <strong>75%에서 70%로 하락한다는 가정</strong>을 적용하면, 매출총이익은 약 <strong>48억 달러</strong> 줄어듭니다. 다른 조건이 같다면 최신 영업이익의 약 **7.5%**에 해당합니다.</p>
+<p><strong>경쟁사가 NVDA를 무너뜨리지 않아도, 수익성의 일부를 압박하는 것만으로 주식의 매력은 낮아질 수 있습니다.</strong></p>
+<h5>5. 조사 위험과 금리 위험은 NVDA의 현금 보유만으로 해결되지 않습니다</h5>
+<h6>조사 위험: 확정 손실이 아니어도 투자위험은 존재합니다</h6>
+<p>보도된 <strong>75억 달러</strong>를 벌금이나 매출 손실로 계산해서는 안 됩니다. 경영진의 관여, 위반 여부, 규제 조치도 제공 자료에서 확정되지 않았습니다.</p>
+<p>그렇지만 강세 측의 “확정된 손실이 없다”는 반론은 충분하지 않습니다. 조사 결과가 나오기 전에도 투자자는 불확실성에 대해 더 높은 위험 보상을 요구할 수 있습니다. 실제 수출허가·고객 주문·경영 안정성에 영향이 발생한다면 이익 전망도 바뀔 수 있습니다.</p>
+<p>반대로 의혹이 해소되면 반등할 수 있습니다. 바로 그렇기 때문에 <strong>지금의 매수는 사업 성장뿐 아니라 사건 해결에도 노출되는 투자</strong>입니다.</p>
+<h6>금리 위험: 공급자의 재무 건전성과 고객의 구매 능력은 다릅니다</h6>
+<p>NVDA의 유동비율 <strong>4.59배</strong>는 단기 지급능력이 양호하다는 근거입니다. 하지만 고객의 자금조달 비용까지 낮춰주지는 않습니다.</p>
+<p>높은 금리는 두 경로로 작용할 수 있습니다.</p>
+<ol>
+<li>NVDA 미래 이익에 적용하는 할인율을 높입니다.</li>
+<li>외부 자금에 의존하는 인공지능 인프라 고객의 투자 여력을 압박합니다.</li>
+</ol>
+<p>코어위브의 예상 부합 실적은 긍정적인 간접 신호입니다. 그러나 시간외 주가 <strong>2.6% 상승</strong>이 NVDA의 향후 주문과 현금 회수를 검증해 주지는 않습니다.</p>
+<h5>6. 차트는 사업 붕괴의 증거가 아니지만, 매수를 서두르지 않을 이유입니다</h5>
+<p>NVDA의 <strong>168.89달러</strong> 종가는 주요 평균 대비 다음 수준에 있습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>기준</th>
+<th style="text-align:right">제공 수치</th>
+<th style="text-align:right">종가의 하회 폭</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>10일 지수이동평균</td>
+<td style="text-align:right">191.864달러</td>
+<td style="text-align:right">약 12.0%</td>
+</tr>
+<tr>
+<td>50일 단순이동평균</td>
+<td style="text-align:right">217.968달러</td>
+<td style="text-align:right">약 22.5%</td>
+</tr>
+<tr>
+<td>200일 단순이동평균</td>
+<td style="text-align:right">204.262달러</td>
+<td style="text-align:right">약 17.3%</td>
+</tr>
+</tbody>
+</table></div>
+<p>상대강도지수 <strong>23.95</strong>는 과매도이지만, MACD 히스토그램은 <strong>-4.28</strong>이고 저점 형성도 확인되지 않았습니다. 평균진폭 <strong>8.70달러</strong>는 종가의 약 **5.2%**로, 가격 변동 위험도 큽니다.</p>
+<p>강세 측의 분할 매수는 한 번에 투자하는 위험을 낮출 뿐, <strong>잘못된 이익 추정이나 지속적인 하락 추세에 노출되는 문제를 해결하지는 못합니다.</strong></p>
+<p>그렇다고 지금 추격 공매도를 권하는 것도 아닙니다. 과매도 반등과 조사 관련 긍정적 소식은 급격한 상승을 유발할 수 있습니다.</p>
+<h5>결론: NVDA의 강한 과거보다, 검증되지 않은 미래에 지불하는 가격이 문제입니다</h5>
+<p>강세 측의 핵심은 “사업이 무너졌다는 증거가 없다”입니다. 제 핵심은 다릅니다.</p>
+<p><strong>사업 붕괴가 확인되지 않았다는 이유만으로 매수를 시작할 필요는 없습니다.</strong></p>
+<p>NVDA를 다시 긍정적으로 평가하려면 다음이 중요합니다.</p>
+<ul>
+<li>현금 전환율 악화 원인의 구체적인 설명과 개선</li>
+<li>선행 주당순이익의 대상 기간과 산출 근거 검증</li>
+<li>조사 관련 공식 설명과 실제 영업 영향 확인</li>
+<li>고객 투자 지속성과 가격 안정의 확인</li>
+</ul>
+<p>현재는 강한 실적과 별개로, 이러한 핵심 질문들이 남아 있습니다. <strong>저는 NVDA 신규 매수를 피하고, 기존 보유자는 특히 집중도나 레버리지가 높다면 비중 축소를 우선 검토해야 한다고 봅니다.</strong> 이는 무조건적인 전량 매도나 신규 공매도 권고가 아니라, 현재 자료에 근거한 위험 노출 축소 의견입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s2-3">투자 검토 책임자</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>판단 근거</strong>: NVDA는 강한 사업이지만 현재 자료만으로 적극적인 매수의 안전마진이 입증되지는 않았다는 약세 논거가 근소하게 우세합니다. 매출 105.9% 증가, 영업이익률 66.2%, 상반기 잉여현금흐름 약 700억 달러는 사업 붕괴나 전량 매도를 주장하기 어렵게 하는 강력한 반증입니다. 그러나 최신 분기에 매출이 전분기 대비 17.9% 증가하는 동안 영업현금흐름은 52.2% 감소했고, 순이익 대비 현금 전환율은 86.3%에서 40.3%로 낮아졌습니다. 원인에 관한 세부 자료가 없다는 점이 가장 중요한 판단 요인입니다. 선행 주가수익비율 10.60배 역시 예상 주당순이익의 대상 기간과 산출 근거가 확인되지 않아 안전마진으로 인정하기 어렵습니다. 조사 보도는 확정 손실이 아니고 약세 차트도 사업 악화의 증거는 아니지만, 이런 불확실성 속에서 즉시 비중을 늘릴 필요성을 낮춥니다. 따라서 NVDA는 전량 매도보다는 제한적인 비중 축소가 적절합니다. 판단은 제공된 2026년 11월 11일 기준 자료와 11월 10일 종가에 한정되며, 최신 공시·실시간 가격은 검증하지 않았습니다.</p>
+<p><strong>대응 계획</strong>: NVDA 목표 노출을 표준 배정액의 75%로 설정합니다. 실제 보유량은 알 수 없으므로 트레이더와 포트폴리오 매니저가 현 보유액과 비교해 목표 초과분만 2~3회로 나누어 축소하고, 이미 목표 이하라면 추가 매도나 목표 충족을 위한 자동 매수를 하지 않습니다. 신규 매수와 기계적인 물타기는 보류하고 신규 공매도는 실행하지 않습니다. 과매도와 제공 평균진폭 약 5.2%를 고려해 레버리지를 늘리지 않고, 주문 전 실제 가격·유동성·포트폴리오 집중도를 확인합니다. 168.89달러는 과거 참고가격이지 현재 주문가격이나 손절 기준이 아닙니다. 다음 공시에서 영업현금흐름과 순이익의 차이를 운전자본·세금·비현금 항목으로 조정하고, 매출채권·재고 증가율을 매출 증가율과 대조하며, 선행 주당순이익 15.93달러의 기간·산출 근거와 조사 관련 공식 설명을 확인합니다. 현금 전환율 회복과 이익 추정의 신뢰성 확보 시 표준 배정액의 100% 복귀를 검토하고, 현금 전환율 악화 지속에 채권·재고의 상대적 급증 또는 공식적으로 확인된 주문·수출 제약이 동반되면 50% 이하로 추가 축소를 검토합니다. 재평가 비중은 운용상 위험 한도이지 자료로 산출된 최적 비중은 아닙니다.</p>
+</section><section id="s3"><h2>III. 매매 계획</h2><h3 id="s3-1">매매 담당</h3>
+<p><strong>대응</strong>: 매도</p>
+<p><strong>판단 근거</strong>: NVDA는 연구 계획의 비중 축소 의견에 따라 전량 매도가 아닌 목표 초과분의 제한적 매도가 적절합니다. 검증 종가 168.89달러가 주요 이동평균 아래에 있고 MACD 히스토그램도 음수인 데다 현금 전환율 하락 원인이 확인되지 않았지만, 강한 사업 실적과 RSI 23.9496의 과매도는 공격적인 매도에 반대되는 근거입니다. 목표 초과분은 2~3회 분할 축소하며, 174.65달러는 최근 고가에 근거한 반등 시 일부 매도 지정가 후보로만 사용하고 전체 축소를 그 가격 도달에 의존시키지 않습니다. 실시간 시세와 보유 정보가 없어 즉시 주문가격이나 잔여 보유분의 일률적인 손절가는 확정하지 않으며 신규 공매도는 하지 않습니다.</p>
+<p><strong>진입 가격</strong>: 174.65</p>
+<p><strong>손절 기준</strong>: 제시되지 않음</p>
+<p><strong>보유 비중 계획</strong>: NVDA 목표 노출은 표준 배정액의 75%로 설정하고 현재 노출의 목표 초과분만 2~3회 분할 매도합니다. 이미 목표 이하이면 추가 매도나 자동 매수를 하지 않습니다. 표준 배정 비중이 포트폴리오의 8%라면 목표는 6%이며, 이는 설명용 예시이지 최적 비중 추정치가 아닙니다.</p>
+<p>최종 매매 제안: <strong>매도</strong></p>
+</section><section id="s4"><h2>IV. 위험 관리팀 판단</h2><h3 id="s4-1">적극적 위험 분석가</h3>
+<p>적극적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 NVDA의 제한적 매도에 찬성합니다. 다만 이유는 성장 가능성을 포기해서가 아닙니다. 공격적인 투자자는 위험을 무조건 많이 떠안는 사람이 아니라, 상승 잠재력에 대한 노출은 남기면서 불필요한 초과 위험을 줄이는 사람입니다. 이번 결정의 강점은 바로 여기에 있습니다. NVDA를 전량 처분하지 않고 목표 초과분만 매도하면, 추가 하락에 대응할 여력과 AI 성장의 수혜를 받을 잔여 포지션을 동시에 확보할 수 있습니다.</p>
+<p>아직 보수적·중립적 분석가의 실제 발언은 없으므로, 그들이 하지 않은 주장을 인용하지는 않겠습니다. 대신 제공된 보고서의 관망·보유 논리에서 제가 반박하고 싶은 지점을 말씀드리겠습니다.</p>
+<p>먼저 보수적 시각에서 “이동평균 아래이고 조사 불확실성도 있으니 대폭 축소해야 한다”고 주장한다면, 저는 기업의 성장 동력을 지나치게 낮게 평가한다고 보겠습니다. NVDA의 최신 제공 분기 매출은 전년 대비 105.9%, 영업이익은 124.1% 증가했습니다. 매출총이익률 75.0%, 영업이익률 66.2%는 단순한 기대감이 아니라 제공된 재무자료에서 확인되는 실적입니다. 하드웨어·네트워킹·소프트웨어를 결합한 플랫폼은 고객의 전환비용을 높일 수 있는 경쟁 기반이기도 합니다. 이런 기업의 노출을 전부 없애는 것은 위험 회피인 동시에 상당한 상승 기회의 포기입니다.</p>
+<p>반등 가능성도 무시하기 어렵습니다. NVDA의 RSI는 23.9496이고, ATR은 검증 종가의 약 5.2%에 해당합니다. 이는 바닥 확인은 아니지만, 급격한 반등에 대비해야 할 환경이라는 뜻입니다. 검증 종가 168.89달러에서 현재 스냅샷의 10일 이동평균 191.864달러까지의 가격 차이는 약 13.6%입니다. 그 수준으로 회복한다는 예측은 아니지만, 전량 매도가 놓칠 수 있는 상승 폭을 보여주는 조건부 비교입니다. 따라서 과매도 구간에서 전량 매도나 신규 공매도로 방향성을 극단화하기보다, 핵심 보유분을 남기는 편이 고수익 기회를 보존합니다.</p>
+<p>반대로 중립적 시각의 “사업이 좋으니 그대로 보유하며 확인하자”는 논리에도 동의하기 어렵습니다. 좋은 기업이라는 판단과 현재의 초과 비중을 유지해야 한다는 판단은 다릅니다. NVDA는 주요 이동평균을 모두 밑돌고 MACD 히스토그램도 -4.28109입니다. 최근에는 하루 반등 이후 다시 저점을 낮췄습니다. 현금 전환율이 40.3%로 내려간 원인까지 확인되지 않은 상황에서, 목표를 넘는 노출을 그대로 두는 것은 중립이 아니라 기존 위험을 계속 선택하는 행동입니다. 제한적 매도는 성장 전망에 대한 부정이 아니라, 추가 위험을 정당화할 근거가 부족한 부분만 줄이는 결정입니다.</p>
+<p>그렇다고 현금흐름 문제를 사업 붕괴로 확대 해석해서도 안 됩니다. NVDA의 최신 단독 분기 잉여현금흐름은 214억 달러로 전년 대비 58.9% 증가했고, 유동비율도 4.59배입니다. 현금 전환율 악화는 검증해야 할 경고 신호지만, 회계 문제나 유동성 위기의 증거는 아닙니다. 이처럼 강한 현금 창출과 미해결 위험이 함께 존재하기 때문에 전량 매도보다 초과분 매도가 더 설득력 있습니다.</p>
+<p>“공식 조사 결과와 금리 안정을 확인할 때까지 아무것도 하지 말자”는 관망론도 기회비용을 빠뜨립니다. 불확실성이 해소된 뒤에는 가격이 이미 움직였을 수 있습니다. NVDA의 의혹은 확정된 위반이나 손실이 아니며, 감성 점수 3.8/10 역시 신뢰도가 낮습니다. StockTwits 상승·하락 태그는 6 대 7에 불과하고 표본도 약 6분에 집중돼 있습니다. 이를 강한 시장 합의로 해석해 매도 강도를 높여서는 안 됩니다. 동시에 조사·금리 위험이 사라진 것도 아니므로, 아무 조정 없이 기다릴 근거로 삼을 수도 없습니다. 일부 노출을 줄이고 나머지로 상승 가능성에 참여하는 방식이 양쪽의 약점을 피합니다.</p>
+<p>실행에서는 NVDA 목표 노출을 표준 배정액의 75%로 두고, 현재 노출이 이를 넘는 부분만 2~3회 나눠 매도하는 원안을 지지합니다. 이는 현재 보유량의 25%를 무조건 매도하라는 뜻이 아닙니다. 표준 배정 비중이 8%라면 목표는 6%라는 설명용 예시이며, 실제 적정 비중은 보유 상황과 손실 감내 능력에 따라 달라집니다. 이미 목표 이하라면 추가 매도도 자동 매수도 하지 않습니다.</p>
+<p>NVDA의 174.65달러는 신규 진입가격이 아니라 최근 고가에 근거한 일부 반등 매도 지정가 후보로만 보겠습니다. 검증 종가보다 약 3.4% 높은 수준이지만 도달이 보장되지 않으므로, 전체 축소를 그 가격에 걸어두는 것은 반등에 대한 또 다른 방향성 베팅입니다. 주문 전 최신 시세와 실제 보유 비중을 확인하고, 잔여 물량에 일률적인 손절가를 임의로 붙이지 않는 원칙도 유지해야 합니다.</p>
+<p>제 결론은 분명합니다. NVDA의 성장 동력은 남겨두되, 확인되지 않은 위험을 목표 이상으로 보유할 이유는 없습니다. 제한적 매도는 소극적인 후퇴가 아니라, 반등 참여권과 향후 투자 선택권을 함께 확보하는 적극적인 자본 배분입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-2">보수적 위험 분석가</h3>
+<p>보수적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>공격적 분석가님, NVDA의 목표 초과분을 줄이자는 방향에는 동의합니다. 하지만 “성장 참여를 위해 핵심 보유분을 남긴다”는 논리만으로 표준 배정액의 75%가 안전하다고 판단할 수는 없습니다. 보수적 관점에서 중요한 것은 반등을 얼마나 놓칠 수 있느냐보다, 남겨둔 NVDA가 추가로 하락할 때 포트폴리오가 그 손실을 감당할 수 있느냐입니다. 저는 제한적 매도를 지지하되, 목표 비중을 위험 예산으로 다시 검증하고 분할 매도의 지연 위험을 줄이는 수정을 권고합니다.</p>
+<p>먼저, NVDA의 매출 105.9% 증가와 영업이익률 66.2%는 분명 강점입니다. 그렇지만 제공된 최신 재무제표는 2026년 7월 종료 분기이고, 가격과 뉴스 분석은 11월 기준입니다. 과거 분기의 높은 성장률만으로 이후의 금리·수출규제·조사 관련 불확실성까지 상쇄할 수는 없습니다. 저는 전량 매도를 주장하는 것이 아닙니다. 다만 “사업 경쟁력이 강하다”는 주장과 “현재 남길 비중이 적절하다”는 판단 사이에는 별도의 손실 검증이 필요하다는 것입니다.</p>
+<p>과매도 반등에 대한 강조에도 균형이 필요합니다. 공격적 분석가님이 제시한 NVDA의 10일 이동평균까지 약 13.6%라는 가격 차이는 가능한 회복 폭의 비교이지, 기대수익률이 아닙니다. 그 수준에 도달할 확률과 그 전에 발생할 추가 손실을 알 수 없기 때문입니다. RSI 23.9496은 바닥을 보장하지 않고, MACD 히스토그램 -4.28109와 주요 이동평균 아래의 가격은 여전히 취약한 흐름을 보여줍니다. 실제로 제공된 NVDA 종가는 11월 4일 200.13달러에서 11월 10일 168.89달러로 약 15.6% 하락했습니다. 반등 가능성을 인정하더라도, 그것이 위험 축소를 늦출 근거가 되어서는 안 됩니다.</p>
+<p>현금흐름에 대해서도 “위기의 증거가 아니다”와 “잔여 노출이 안전하다”는 구분해야 합니다. NVDA의 분기 잉여현금흐름 214억 달러와 유동비율 4.59배는 긍정적입니다. 그러나 영업현금흐름의 순이익 대비 비율은 40.3%이고, 영업현금흐름은 전분기 대비 52.2% 감소했습니다. 비유동부채 증가 원인도 확인되지 않았습니다. 이것을 회계 문제나 유동성 위기로 단정해서는 안 되지만, 원인을 모르는 상태에서 높은 이익의 지속성과 현금 회수 가능성에 동일한 확신을 부여해서도 안 됩니다. 기업의 지급능력이 양호하더라도 주주는 상당한 평가손실을 입을 수 있습니다.</p>
+<p>조사 보도와 소셜 자료에 대한 공격적 분석가님의 주의에는 동의합니다. 의혹은 확정된 위반이 아니고, 감성 점수 3.8/10도 신뢰도가 낮습니다. 다만 자료의 신뢰도가 낮다는 사실이 NVDA의 사건 위험이 낮다는 뜻은 아닙니다. 공식적으로 확인되지 않은 혐의를 매도 근거로 부풀리지 않되, 불리한 공식 발표가 나올 경우의 갭 하락은 대비해야 합니다. 금리 상승 역시 NVDA의 평가배수와 고객사의 AI 투자 자금조달에 동시에 부담을 줄 수 있습니다. 강한 사업 실적이 이러한 두 경로의 위험을 자동으로 막아주지는 않습니다.</p>
+<p>중립적 분석가는 아직 발언하지 않았으므로 특정 주장을 대신 만들어 반박하지는 않겠습니다. 다만 보고서의 보유 유지나 WAIT를 “NVDA 기존 비중을 그대로 유지하라”는 뜻으로 적용하는 것은 경계합니다. 신규 진입을 기다리는 것과 이미 보유한 위험을 방치하는 것은 다릅니다. 반대로 목표 이하의 소규모 보유자까지 같은 강도로 매도할 이유도 없습니다. 판단 기준은 의견의 중립성이 아니라 실제 보유 비중, 현금 수요, 레버리지와 반도체·AI 관련 중복 노출이어야 합니다.</p>
+<p>따라서 NVDA 목표를 표준 배정액의 75%로 두는 원안은 확정적인 안전선이 아니라 잠정 상한으로 보겠습니다. 예를 들어 NVDA 비중이 6%일 때 추가로 20% 하락하면, 다른 자산의 변화와 거래비용을 제외한 포트폴리오 직접 손실은 약 1.2%입니다. 이는 전망이 아니라 스트레스 예시입니다. 이 손실이 허용 범위를 넘는다면 6%도 과도합니다. 적용 방식은 “NVDA에 배정할 수 있는 포트폴리오 손실 한도 ÷ 가정한 NVDA 하락률”로 비중 상한을 점검하는 것입니다. 이 계산도 갭 위험과 다른 보유자산의 동반 하락을 완전히 반영하지 못하므로 추가 여유가 필요합니다.</p>
+<p>실행 측면에서는 NVDA 초과분의 2~3회 분할 매도를 유지하되, 반등 가격만이 아니라 실행 기한과 재검토 조건도 정해야 합니다. 최신 시세와 실제 보유량을 확인한 뒤 위험 한도를 이미 초과했다면, 초과분 일부는 174.65달러 도달을 기다리지 않고 유동성과 호가를 고려해 우선 축소하는 편이 타당합니다. 나머지 분할에도 기한을 두어 반등이 오지 않는다는 이유로 축소가 무기한 미뤄지지 않도록 해야 합니다. 174.65달러는 과거 고가에 근거한 일부 매도 지정가 후보이지, 신규 진입가나 체결이 보장된 가격이 아닙니다.</p>
+<p>마지막으로, 일률적인 NVDA 손절가를 임의로 정하지 않는 데는 동의하지만, 손절가가 없다는 이유로 대응 계획까지 비워두어서는 안 됩니다. 잔여 보유분에는 허용 가능한 추가 손실액, 비중 상한, 공식 악재 발생 시 재평가 절차를 정해야 합니다. 165.89달러는 확정 지지가 아닌 과거 저가 관찰 기준이며, 현재 상황에 적용하려면 최신 데이터 확인이 선행돼야 합니다. 손절 주문도 갭 하락 시 손실을 보장된 수준으로 제한하지 못하므로, 수량 조절이 우선입니다.</p>
+<p>제 결론은 NVDA의 성장 가능성을 부정하는 매도가 아니라, 반등이 없어도 견딜 수 있도록 만드는 매도입니다. 위험 예산으로 검증한 목표를 초과하는 보유분은 기한을 정해 축소하고, 이미 그 목표 이하라면 추가 매도나 자동 매수를 하지 않는 것이 기본입니다. 다만 레버리지나 중복 집중으로 전체 위험 한도가 초과됐다면 목표 자체를 더 낮춰야 합니다. 신규 공매도는 하지 않겠습니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-3">중립적 위험 분석가</h3>
+<p>중립적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 NVDA의 목표 초과분을 제한적으로 매도하는 방향에 동의합니다. 다만 공격적 분석가님처럼 잔여 보유분을 성장 참여의 수단으로만 정당화해서도 안 되고, 보수적 분석가님처럼 불확실성을 이유로 목표 비중을 계속 낮추는 방향으로 기울어서도 안 됩니다. 이번 매도는 NVDA의 추가 하락을 확신하는 거래가 아니라, 사업의 강점과 미해결 위험 사이에서 포트폴리오 노출을 조정하는 거래여야 합니다.</p>
+<p>공격적 분석가님, NVDA의 성장성과 현금 창출력을 강조한 점은 타당합니다. 제공된 최신 분기의 매출 증가율 105.9%, 영업이익률 66.2%, 잉여현금흐름 214억 달러는 전량 매도를 경계할 근거입니다. 그러나 이 수치만으로 현재 남길 비중까지 정당화할 수는 없습니다. 최신 재무자료는 7월 종료 분기이고 가격·뉴스 자료는 11월 기준입니다. 그 사이 고객 투자계획이나 규제 환경이 어떻게 변했는지 확인되지 않았습니다. 사업 경쟁력과 현재 노출의 적정성은 별도로 검증해야 합니다.</p>
+<p>특히 NVDA의 10일 이동평균까지 약 13.6%라는 가격 차이를 강조하면, 예측이 아니라고 설명하더라도 반등을 기대수익처럼 받아들이게 할 수 있습니다. 이동평균은 적정가치나 반드시 돌아가는 가격이 아닙니다. RSI 23.9496 역시 과매도 상태를 보여줄 뿐, 반등의 시점과 지속성을 알려주지 않습니다. 따라서 잔여 NVDA를 보유할 이유는 “많이 떨어져 반등할 수 있어서”가 아니라, 추가 손실을 감당하면서 장기 사업가치에 참여할 여력이 있기 때문이어야 합니다.</p>
+<p>또한 중립적 접근을 “사업이 좋으니 그대로 기다린다”는 주장으로 볼 필요는 없습니다. 중립은 무행동이 아니라, 확인된 위험에는 대응하되 불확실한 전망에 과도하게 베팅하지 않는 방식입니다. NVDA 초과 비중을 줄이는 것과, 목표 이하의 보유분까지 매도하는 것은 다른 결정입니다.</p>
+<p>보수적 분석가님, 위험 예산을 검증하고 분할 매도가 무기한 지연되지 않도록 하자는 제안에는 동의합니다. 다만 표준 배정액의 75%를 잠정 상한으로 두고 추가 여유까지 계속 요구하면, 불확실성이 남아 있다는 이유만으로 NVDA 목표가 반복적으로 낮아질 수 있습니다. 목표 조정에는 새로운 공식 악재, 현금 수요 변화, 레버리지 또는 중복 집중처럼 구체적인 근거가 필요합니다. 이미 알려진 위험을 매 재검토 때마다 새로운 축소 사유로 계산해서는 안 됩니다.</p>
+<p>NVDA 비중 6%에서 주가가 20% 하락하면 포트폴리오 직접 손실이 약 1.2%라는 예시는 유용합니다. 하지만 20%는 전망도 최대 손실도 아닙니다. 한 가지 하락률만 선택하면 그 가정에 따라 비중 상한이 크게 달라집니다. 여러 하락 시나리오와 다른 보유자산의 동반 하락을 함께 검토해야 합니다. 반대로 NVDA에만 지나치게 가혹한 가정을 적용해 성장 노출을 과도하게 없애는 것도 경계해야 합니다.</p>
+<p>현금흐름 문제도 같은 균형이 필요합니다. NVDA의 영업현금흐름이 순이익의 40.3%에 그친 점은 중요한 경고입니다. 그러나 최신 분기 잉여현금흐름은 전년 대비 58.9% 증가했고 유동비율도 4.59배입니다. 원인이 확인되지 않았다는 것은 점검 우선순위를 높일 이유이지, 곧바로 영구적인 이익 훼손을 전제할 이유는 아닙니다. 매출채권, 재고, 세금 납부, 비현금 손익을 확인한 뒤 일시적인 차이인지 구조적 악화인지 구분해야 합니다.</p>
+<p>거시와 사건 위험에 대해서도 두 분 모두 확신의 수준을 제한해야 합니다. 제공된 보도대로 물가와 금리 압력이 지속된다면 NVDA의 평가배수뿐 아니라 고객사의 AI 투자 자금조달에도 부담이 될 수 있습니다. 반대로 금리가 안정되고 고객 투자계획이 유지된다면 반등 여건은 개선될 수 있습니다. 다만 공식 금리·물가 수치가 검증되지 않았고, 연내 금리 인하 부재 확률 98%는 금리 인상 확률이 아닙니다. 이를 공격적인 축소의 정밀한 근거로 사용할 수는 없습니다.</p>
+<p>NVDA 관련 조사 보도 역시 확정된 위반이나 손실로 취급해서는 안 됩니다. 감성 점수 3.8/10은 신뢰도가 낮고, StockTwits 표본은 약 6분간 30개 메시지에 불과합니다. 뉴스와 소셜이 같은 의혹을 반복한 경우 이를 각각 독립적인 악재로 더하지 않는 것이 중요합니다. 다만 공식적인 불리한 발표가 나오면 판단을 바꿀 준비는 필요합니다.</p>
+<p>그래서 저는 원안을 다음처럼 보완하겠습니다. NVDA 목표 노출은 표준 배정액의 75%를 출발점으로 삼되, 실제 보유량과 현금 수요, 투자기간, 레버리지, 다른 AI·반도체 자산의 노출을 확인해 적용합니다. 75%는 최적 비중이나 안전 보장이 아닙니다. 표준 비중이 8%라면 목표는 6%이고, 현재 비중이 8%일 때 줄일 양은 포트폴리오의 2%포인트입니다. 현재 보유량의 25%를 모든 투자자에게 일률적으로 매도하라는 뜻은 아닙니다.</p>
+<p>NVDA가 그 목표를 초과한다면 초과분을 2~3회 분할 축소하되, 위험 한도를 이미 넘었다면 일부 축소를 반등까지 미루지 않겠습니다. 나머지는 사전에 정한 재검토 시점과 최신 시세를 기준으로 실행합니다. 다만 분할 횟수를 채우기 위한 매도는 하지 않습니다. 가격 하락 등으로 실제 비중이 이미 목표 이하가 됐다면 남은 매도 필요량을 다시 계산해야 합니다.</p>
+<p>NVDA의 174.65달러는 최근 고가에 근거한 일부 매도 지정가 후보일 뿐, 신규 진입가나 확정 저항선이 아닙니다. 검증 종가 168.89달러와의 차이는 약 3.4%로, ATR 약 5.2%보다 작습니다. 이는 평소 변동 범위에서도 접근할 수 있는 수준이라는 의미이지 도달을 보장하지는 않습니다. 전체 매도를 이 가격에 의존시키거나, 반대로 이 가격 부근의 움직임만으로 추세 전환을 판단하지 않겠습니다.</p>
+<p>잔여 NVDA에는 임의의 일률적 손절가 대신 허용 추가 손실액과 재평가 조건을 정하는 편이 낫습니다. 공식적인 규제 조치, 고객 투자 축소, 현금 전환율의 추가 악화는 목표 자체를 재검토할 근거입니다. 반면 가격 안정과 모멘텀 개선이 나타나면 추가 축소의 속도를 재검토할 수 있지만, 그것만으로 자동 재매수하지는 않습니다. 165.89달러 역시 과거 저가 관찰 기준이지 자동 전량 매도선은 아닙니다.</p>
+<p>마지막으로 NVDA 매도 대금을 다른 고변동 AI·반도체 자산으로 즉시 옮기면 분산 효과가 제한됩니다. 현금 수요에 맞는 유동성 자산이나 기존 포트폴리오에서 부족한 자산군을 검토하되, 현금·채권에도 인플레이션·금리·환율 위험이 있음을 함께 고려해야 합니다.</p>
+<p>결론적으로 NVDA는 전량 매도보다 목표 초과분 축소가 더 균형적인 선택입니다. 공격적 관점의 성장 참여는 남기되 반등 기대에 실행을 의존하지 않고, 보수적 관점의 손실 관리는 받아들이되 미확인 위험만으로 목표를 계속 낮추지는 않겠습니다. 이미 검증한 목표 이하라면 추가 매도나 자동 매수 없이 관찰하고, 신규 공매도는 하지 않겠습니다. 모든 가격 기준은 제공된 2026년 11월 10일 스냅샷이므로 실제 주문 전 최신 시세와 보유 정보를 확인해야 합니다.</p>
+<p>최종 매매 제안: 매도</p>
+</section><section id="s5"><h2>V. 최종 투자 판단</h2><h3 id="s5-1">투자 총괄</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>핵심 요약</strong>: NVDA는 전량 매도가 아니라 목표 초과분의 제한적 축소가 적절합니다. 표준 배정액의 75%를 잠정 목표로 삼되 실제 보유 비중·레버리지·AI 및 반도체 중복 노출과 손실 한도로 검증하고, 초과분만 2~3회 분할 축소하며 이미 목표 이하라면 추가 매도나 자동 매수는 하지 않습니다. 위험 한도 초과분은 반등을 기다리지 말고 일부 우선 축소하되, 174.65달러는 최신 시세 확인 후 사용할 과거 반등 매도 후보일 뿐이며 신규 진입·공매도와 레버리지 확대는 보류합니다. 다음 공시까지 잠정 유지하되 공식 규제 조치나 현금흐름 악화가 확인되면 조기 재평가하고, 잔여 보유분은 임의의 고정 손절가 대신 허용 손실액과 비중 상한으로 관리합니다.</p>
+<p><strong>투자 근거</strong>: NVDA의 비중 축소 논거가 우세하지만 전량 매도를 정당화할 정도는 아닙니다. 세 분석가의 매도 표기보다 실제 제안인 목표 초과분 축소를 중시하면 최종 등급은 비중 축소에 해당합니다. 가장 중요한 경고는 제공된 최신 분기에 매출이 전분기 대비 17.9% 증가했는데 영업현금흐름은 52.2% 감소하고 순이익 대비 현금 전환율은 86.3%에서 40.3%로 낮아졌다는 점입니다. 운전자본·세금·비현금 항목별 원인이 제공되지 않아 일시적 차이인지 구조적 악화인지 판별할 수 없습니다. 선행 주가수익비율 10.60배도 예상 주당순이익 15.93달러의 기간과 산출 근거가 확인되지 않아 저평가의 근거로 채택하지 않습니다.</p>
+<p>반대로 NVDA의 매출 전년 대비 105.9% 증가, 영업이익률 66.2%, 분기 잉여현금흐름 214억 달러와 그 전년 대비 58.9% 증가, 유동비율 4.59배는 사업 붕괴나 유동성 위기라는 해석에 반대되는 증거입니다. 이 점에서 성장 참여를 남기자는 공격적 분석가의 주장은 타당하지만, 강한 사업 실적만으로 현재 비중의 적정성을 입증하지는 못합니다. 보수적 분석가의 손실 예산 검증과 실행 지연 방지, 중립적 분석가의 동일 위험 중복 계산 금지와 매 분할 전 필요 매도량 재계산을 함께 채택합니다.</p>
+<p>NVDA의 제공 종가는 11월 4일 200.13달러에서 11월 10일 168.89달러로 약 15.6% 하락했고 주요 이동평균 아래에 있으며 MACD 히스토그램은 -4.28109입니다. 이는 실행상 경계 근거이지 사업 악화의 증명은 아닙니다. RSI 23.9496과 종가 대비 약 5.2%의 ATR은 반등과 큰 변동에 대비할 이유이므로 전량 처분이나 신규 공매도보다 분할 축소가 적절합니다. 174.65달러는 일부 반등 매도 후보, 165.89달러는 과거 저가 관찰 기준이며 어느 쪽도 현재의 확정 저항선·지지선 또는 자동 손절선이 아닙니다.</p>
+<p>NVDA 목표 75%는 최적 비중이나 안전 보장이 아닌 운용상 출발점입니다. 표준 비중이 포트폴리오의 8%라면 잠정 목표는 6%이고, 실제 비중이 8%일 때만 축소량이 2%포인트입니다. 6% 비중에서 NVDA가 20% 하락하면 다른 자산 변동과 비용을 제외한 직접 손실이 약 1.2%라는 스트레스 예시를 포함해 여러 하락 및 동반 하락 시나리오로 검증해야 합니다. 추가 축소는 실제 위험 예산 초과 또는 새로운 확인 증거에 근거해야 하며, 기존 불확실성을 반복 계산해서 목표를 계속 낮춰서는 안 됩니다.</p>
+<p>NVDA의 현금 전환율 회복, 매출채권·재고 증가와 매출 성장의 정합성, 예상 이익 산출 근거 및 공식 조사 설명이 확인되면 표준 배정액 100% 복귀를 검토합니다. 반대로 현금 전환율 악화가 지속되고 채권·재고의 상대적 급증 또는 공식 주문·수출 제약이 동반되면 50% 이하로 추가 축소를 검토합니다. 조사 보도는 확정 위반이나 손실이 아니며 소규모 소셜 표본과 낮은 신뢰도의 감성 점수는 독립적인 추가 악재로 계산하지 않습니다. 판단 자료는 2026년 7월 종료 분기 재무와 제공된 2026년 11월 10일 가격·11월 11일 기준 분석으로 시차가 있으며, 최신 공시·실시간 가격·실제 보유량·현금 수요가 없으므로 주문 전 확인이 필요합니다.</p>
+<p><strong>목표 가격</strong>: 제시되지 않음</p>
+<p><strong>투자 기간</strong>: 다음 공시까지 잠정 유지하되 공식 중요 사건 발생 시 즉시 재평가</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">맨 위로</a>
+</body>
+</html>
