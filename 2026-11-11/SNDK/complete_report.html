@@ -1,0 +1,1450 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>SNDK 2026-11-11 비중 축소: 주식 분석 보고서</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">SNDK</span> <span class="rating down">비중 축소</span></h1><p style="font:16px/1.6 system-ui"><strong>항목별 매수 매력도: 51.5~56.5점 / 100점</strong><br>점수는 기존 TradingAgents 보고서에 동일한 8개 항목을 적용한 별도 AI 평가입니다. 1~3년 관점의 매수 매력도를 비교하며, 높을수록 긍정적입니다. 가격 20 · 성장 20 · 수익성 15 · 재무 10 · 주가 흐름 15 · 관심·수급 5 · 향후 재료 5 · 하락 위험 관리 10점. 각 항목을 0~5점으로 평가한 뒤 배점에 맞춰 합산합니다. 자료가 부족하면 가능한 총점 범위로 표시합니다. 프로그램의 최종 매매 의견과 별도이며, 상승 확률·예상 수익률이나 검증된 수익 예측 모형이 아닙니다. 기존의 등급별 고정 점수(비중 축소 25점)는 더 이상 사용하지 않습니다.</p>
+<p class="date">분석 기준일 2026-11-11</p>
+<dl class="run"><div class="detail"><dt>생성 시각</dt><dd>2026-11-11 07:44</dd></div><div class="detail"><dt>심층 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>빠른 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>분석 담당</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">뉴스</span> <span class="field">재무</span></dd></div><div class="detail"><dt>토론 횟수</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>자료 출처</dt><dd><span class="group"><span class="name">시세</span><span class="field">yfinance</span></span> <span class="group"><span class="name">기술지표</span><span class="field">yfinance</span></span> <span class="group"><span class="name">재무</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">뉴스</span><span class="field">yfinance</span></span> <span class="group"><span class="name">거시경제</span><span class="field">fred</span></span> <span class="group"><span class="name">예측시장</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>버전</dt><dd>TradingAgents 0.7.1</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">분석팀 보고서</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">시장 분석가</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">투자심리 분석가</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">뉴스 분석가</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">재무 분석가</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">투자 검토팀 판단</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">상승론 분석가</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">하락론 분석가</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">투자 검토 책임자</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">매매 계획</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">매매 담당</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">위험 관리팀 판단</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">적극적 위험 분석가</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">보수적 위험 분석가</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">중립적 위험 분석가</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">최종 투자 판단</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">투자 총괄</span></a></li></ul></li></ul></nav>
+<main><section><h2>항목별 매수 매력도: 51.5~56.5점 / 100점</h2><p>2026년 11월 11일 기준 동일한 1~3년 투자기간으로 보면, SNDK는 급증한 보고 매출·영업현금흐름, 재무 완충력과 낮은 표면적 이익 배수가 장점이다. 그러나 정상화 이익의 불확실성, 낸드 경쟁과 가격 상승 둔화 보도, 자본배분 불투명성과 강한 주가 약세가 매수 매력을 제한한다. 이는 저장된 보고서를 이용한 추가 주관적 평가이며 프레임워크의 고유 등급이나 보정된 확률이 아니다. 이익률 상승의 원인과 일회성 항목, 전체 투자 부담, 계약 수익성 및 점유율 방어가 검증되면 평가를 높일 수 있다. 반대로 가격 하락 전환·추정이익 하향·유동부채 부담 확대가 확인되면 낮출 수 있다. 기술적 회복은 보조적인 개선 조건이며 총점은 계산하지 않았다.</p><p>보고서 기준 시세: 최신 제공 시세: 2026년 11월 10일 종가 859.99달러. 2026년 11월 11일 분석일보다 하루 이전 자료이며 실시간 시세가 아니다.</p><p>자료 한계: 제공된 네 보고서만 사용했다. 재무수치는 원문 공시 링크·제출일 대조가 없고 일부 분기 누락, 누적·분기 현금흐름 혼재 및 밸류에이션 공급원 불일치가 있다. 뉴스·계약·분할·점유율 정보는 주로 제목과 요약이며 공식 확인이 부족하다. 선행 EPS는 예측 기준과 갱신일이 없어 회사 가이던스로 취급하지 않았다. 소셜 표본은 짧고 편중돼 대표성이 없으며 거시 공식 지표도 확보되지 않았다. 과거 가격·분할 보도와 기사별 낙폭의 차이는 임의로 통합하지 않았다. 사용자 보유 내역·손익·위험성향은 평가에 사용하지 않았다.</p><details><summary>8개 항목과 평가 근거 보기</summary><ul><li><strong>가격 매력도: 12 / 20점</strong><p>보고된 후행 PER 6.87배와 FCF 수익률 약 9.19%는 가격 매력도를 지지한다. 다만 시가총액·순이익 기준 PER는 6.30배로 불일치하고, 낸드 경기 정점 이익이라면 낮은 배수가 착시일 수 있다. 선행 PER 2.98배는 추정 시점·기관 수가 불명확해 회사의 확정 전망이나 정상화 가치로 채택하지 않았다. 1~3년 관점에서 제한적인 우위로 평가한다.</p><blockquote>현재 이익이 매우 높다면, 낮은 주가수익비율은 저평가가 아니라 이익 정점에 대한 시장의 우려를 반영할 수도 있다.</blockquote></li><li><strong>사업 성장성: 14 / 20점</strong><p>보고 재무수치상 최신 분기 매출의 전년 대비 378% 증가는 강력한 성장 증거다. 그러나 가격·물량·제품 구성별 기여가 없어 유기적 출하 성장으로 단정할 수 없다. AI 저장 수요와 계약 매출은 언론·펀드 서한 재인용이며, 점유율 하락과 중국 업체 경쟁 보도는 1~3년 성장의 지속성을 제약한다.</p><blockquote>전년 동기 대비 매출 증가율: **378.0%**</blockquote></li><li><strong>기업 수익성: 10.5 / 15점</strong><p>보고된 최신 영업이익률 79.6%, 영업현금흐름 63.63억 달러 및 단순 FCF 63.09억 달러는 높은 현재 수익성을 지지한다. 다만 일회성·재고 효과가 분리되지 않아 이를 정상 이익으로 전부 인정하지 않았다. 현금전환율 78.5%, 합작사업 투자 부담 누락 가능성과 과거 대규모 손실을 고려하면 1~3년 지속 수익성에는 상당한 할인 판단이 필요하다.</p><blockquote>85%의 매출총이익률을 정상적이고 지속 가능한 수준으로 바로 가정해서는 안 됩니다.</blockquote></li><li><strong>재무건전성: 7 / 10점</strong><p>유동비율 2.58배, 자기자본/총자산 70.3%와 현금 51.36억 달러는 재무 완충력을 제공한다. 반면 현금/유동부채는 0.86배이고 유동부채가 전년 대비 약 293% 증가했다. 차입금 구성과 57.55억 달러 재무활동 유출의 용도가 불명확하므로 무차입 또는 자사주 매입으로 해석하지 않았다.</p><blockquote>재무상태표상 자기자본 비중이 높고 유동자산이 유동부채를 상당 폭 웃돌아, 단기 지급능력의 기본 완충력은 양호합니다.</blockquote></li><li><strong>주가 흐름: 3 / 15점</strong><p>최신 제공일인 11월 10일 종가는 하락 중인 10일·50일 이동평균을 모두 밑돌고 RSI 29.18 및 음의 MACD도 약세를 지지한다. MACD 음수 폭 축소와 저점 이후 반등은 일부 완충 증거지만 추세 전환은 아니다. 1~3년 평가의 보조 요인으로만 반영하며 과매도나 낙폭을 저평가 근거로 사용하지 않았다.</p><blockquote>종가 859.99 &lt; 10일 지수이동평균선 1,011.26 &lt; 50일 단순이동평균선 1,478.33</blockquote></li><li><strong>관심·수급의 질: 자료 부족</strong><p>대표성 있는 관심·수급 자료가 부족하다. StockTwits 30건은 약 78분에 집중되고 한 작성자가 20%를 차지하며 Reddit은 수집 실패했다. 뉴스 중복, 미검증 옵션 게시물 및 비교 기준 없는 하루 거래량만으로 기관 수급이나 지속적인 관심의 질을 판정할 수 없어 중립 점수도 부여하지 않는다.</p></li><li><strong>향후 재료: 2 / 5점</strong><p>수십억 달러 계약 매출 보도는 향후 매출 가시성의 잠재 재료지만 계약 조건·수익성·인식 시점이 확인되지 않았다. 11월 19일 8대 1 분할 역시 기사 기준이며 기업가치를 직접 높이지 않는다. 다음 실적·제품 출시 일정과 검증된 회사 가이던스가 없어 1~3년 가치 창출 촉매의 확실성은 낮고, 기존 기대의 주가 반영 정도도 알 수 없다.</p><blockquote>현재 확보한 기사 요약만으로 이익 전망을 상향할 근거는 부족하다.</blockquote></li><li><strong>하락 위험 관리: 3 / 10점</strong><p>낸드 가격과 경쟁에 민감한 수익구조, 과거 대규모 손실, 비정상적으로 높은 최근 이익률의 정상화 가능성이 하방 관리에 불리하다. 평균진폭 104.683과 확인되지 않은 추세 반전은 큰 변동 위험을 더한다. 양호한 유동성과 현금창출이 완충하지만 계약의 하방 방어력과 정상화 이익을 계량화할 수 없어 위험이 충분히 관리 가능하다고 보기는 어렵다.</p><blockquote>SNDK는 2023년 12월 종료 분기 순손실 **3억 100만 달러**, 2025년 3월 종료 분기 순손실 **19억 3,300만 달러**를 기록했습니다.</blockquote></li></ul></details></section>
+<section id="s1"><h2>I. 분석팀 보고서</h2><h3 id="s1-1">시장 분석가</h3>
+<h4>SNDK 기술적 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 11일</strong><br />
+<strong>최신 확인 시세: 2026년 11월 10일</strong><br />
+<strong>대상: SNDK — Sandisk Corporation, 기술 / 컴퓨터 하드웨어, NMS</strong></p>
+<p><strong>투자 의견</strong>: BEARISH</p>
+<h5>1. 핵심 판단: 하락 추세는 유효하며, 과매도 반등과 추세 전환을 구분해야 합니다</h5>
+<p>SNDK는 <strong>강한 하락 추세 속에서 단기 반등을 시도했지만, 추세 전환은 확인되지 않은 상태</strong>입니다. 가격은 단기·중기 이동평균선 아래에 있고, 상대강도지수는 과매도권이며, 모멘텀도 여전히 약세입니다. 다만 최근 MACD 히스토그램의 음수 폭이 줄어들어 하락 압력이 일부 완화되는 조짐은 있습니다.</p>
+<p>현재의 핵심은 다음과 같습니다.</p>
+<ul>
+<li><strong>신규 매수:</strong> 과매도만을 근거로 진입하기보다 가격 회복 확인이 우선입니다.</li>
+<li><strong>기존 보유:</strong> 반등 기대보다 손실 허용 범위와 포지션 규모를 먼저 점검할 구간입니다.</li>
+<li><strong>신규 공매도:</strong> 추세는 유리하지만, 과매도 반등 위험 때문에 저가 추격은 불리할 수 있습니다.</li>
+</ul>
+<p>이 보고서는 기술적 자료에 한정합니다. 실적, 뉴스, 기업가치, 공매도 대차 여건은 확인하지 않았으며, 최종 거래 결정은 별도의 검토가 필요합니다.</p>
+<h5>2. 데이터 기준과 최신 가격</h5>
+<p>검증 스냅샷에서 확인된 SNDK의 최신 가격은 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2026년 11월 10일 확인값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시가</td>
+<td style="text-align:right">861.34</td>
+</tr>
+<tr>
+<td>고가</td>
+<td style="text-align:right">914.82</td>
+</tr>
+<tr>
+<td>저가</td>
+<td style="text-align:right">826.667</td>
+</tr>
+<tr>
+<td>종가</td>
+<td style="text-align:right">859.99</td>
+</tr>
+<tr>
+<td>거래량</td>
+<td style="text-align:right">13,626,335주</td>
+</tr>
+</tbody>
+</table></div>
+<p>11월 11일 가격 행은 제공되지 않았으므로, 위 수치를 당일 실시간 시세로 해석해서는 안 됩니다. 지표 도구는 11월 11일을 비거래일로 표시했지만, 이 보고서에서는 그 달력 판정을 별도로 확정하지 않고 <strong>최신 제공 데이터가 11월 10일이라는 사실만 사용</strong>합니다.</p>
+<p>정확한 최신 가격과 주요 지표는 검증 스냅샷을 우선했습니다. 거래량가중이동평균선은 개별 지표 도구에서 조회됐지만 검증 스냅샷에 포함되지 않아, 정확한 수치 기반 매매 기준에서는 제외했습니다.</p>
+<h5>3. 선정한 8개 지표와 적합성</h5>
+<p>이번 SNDK 분석에서는 하락 추세, 과매도, 반등의 질, 변동성 위험을 구분하기 위해 다음 지표를 선택했습니다.</p>
+<ol>
+<li><strong>10일 지수이동평균선:</strong> 단기 가격 회복 여부를 빠르게 확인합니다.</li>
+<li><strong>50일 단순이동평균선:</strong> 단기 반등이 중기 추세 개선으로 이어지는지 판단합니다.</li>
+<li><strong>상대강도지수:</strong> 과매도 상태와 매수 모멘텀 회복 여부를 구분합니다.</li>
+<li><strong>MACD 히스토그램:</strong> 하락 모멘텀의 확대·축소를 확인합니다. MACD선과 신호선을 별도 선택하지 않아 중복을 줄였습니다.</li>
+<li><strong>볼린저밴드 상단:</strong> 가격 분포의 상방 범위와 밴드 확장을 확인합니다.</li>
+<li><strong>볼린저밴드 하단:</strong> 가격이 하방 극단에 얼마나 가까운지 살펴봅니다.</li>
+<li><strong>평균진폭:</strong> 손절 거리와 포지션 크기를 변동성에 맞추는 데 사용합니다.</li>
+<li><strong>거래량가중이동평균선:</strong> 거래량을 반영한 추세를 보조적으로 확인합니다. 다만 이번에는 검증 범위의 한계를 반영해 정성적으로만 활용합니다.</li>
+</ol>
+<p>볼린저밴드 두 경계는 하나의 변동성 체계를 구성합니다. 평균진폭은 가격 분포가 아니라 실제 일별 변동 폭과 위험 관리에 초점이 있어 역할이 다릅니다.</p>
+<h5>4. 추세: 단기 반등보다 하락 구조가 우세합니다</h5>
+<p>SNDK의 최신 검증값은 다음 관계를 보입니다.</p>
+<p><strong>종가 859.99 &lt; 10일 지수이동평균선 1,011.26 &lt; 50일 단순이동평균선 1,478.33</strong></p>
+<p>이는 단기와 중기 추세가 모두 약하다는 해석을 뒷받침합니다. 개별 지표 시계열에서도 최근 두 이동평균선의 하락 방향이 확인됩니다.</p>
+<p>최근 종가 흐름도 같은 판단을 지지합니다.</p>
+<ul>
+<li>10월 28일: <strong>1,404.77</strong></li>
+<li>10월 30일: <strong>1,150.89</strong></li>
+<li>11월 4일: <strong>1,037.40</strong></li>
+<li>11월 5일: <strong>806.43</strong></li>
+<li>11월 9일: <strong>886.51</strong></li>
+<li>11월 10일: <strong>859.99</strong></li>
+</ul>
+<p>11월 5일 이후 종가가 회복되기는 했지만, 11월 10일에는 다시 전일보다 낮게 마감했습니다. 따라서 현재 반등을 곧바로 상승 추세의 시작으로 보기는 어렵습니다.</p>
+<p><strong>1,011.26은 단기 회복을 평가할 이동평균 기준점</strong>입니다. 다만 가격이 실제로 여러 차례 이 수준에서 밀렸다는 검증은 없으므로, 확정된 역사적 저항이라고 부르지는 않습니다. 또한 이동평균은 매일 바뀌므로 향후에는 갱신된 값을 적용해야 합니다.</p>
+<h5>5. 모멘텀: 과매도이지만 매수 신호는 불충분합니다</h5>
+<h6>상대강도지수: 29.18</h6>
+<p>SNDK의 상대강도지수는 일반적인 과매도 기준인 30 아래에 있습니다. 이는 단기 매도 압력이 컸다는 뜻이지, 가격이 반드시 반등한다는 뜻은 아닙니다.</p>
+<p>특히 강한 하락장에서는 과매도 상태가 오래 지속될 수 있습니다. 매수 판단에는 다음과 같은 추가 확인이 유용합니다.</p>
+<ul>
+<li>상대강도지수가 30 위로 회복한 뒤 유지되는지</li>
+<li>가격이 최근 저점을 다시 낮추지 않는지</li>
+<li>단기 고점을 돌파한 뒤 재차 무너지지 않는지</li>
+<li>반등 시 거래량이 동반되는지</li>
+</ul>
+<p>현재 자료만으로 확정적인 상승 다이버전스를 선언할 근거는 부족합니다.</p>
+<h6>MACD 히스토그램: −35.727</h6>
+<p>히스토그램이 음수라는 것은 MACD선이 신호선 아래에 있다는 뜻으로, 아직 약세 신호입니다. 다만 최근 개별 지표 시계열에서는 음수 폭이 줄어드는 흐름이 관찰됩니다.</p>
+<p>이를 가장 적절하게 표현하면 **“하락 모멘텀의 완화 가능성”**입니다. **“상승 모멘텀 확정”**과는 다릅니다. 가격이 약세인 상태에서도 히스토그램은 개선될 수 있으므로 가격 회복이 동반돼야 합니다.</p>
+<h5>6. 변동성: 밴드 안쪽 복귀를 안정화로 오해하면 안 됩니다</h5>
+<p>최신 검증된 볼린저밴드는 다음과 같습니다.</p>
+<ul>
+<li><strong>상단: 1,600.92</strong></li>
+<li><strong>하단: 777.508</strong></li>
+<li><strong>종가: 859.99</strong></li>
+</ul>
+<p>SNDK는 밴드 하단에 가까운 위치에 있습니다. 다만 하락장에서 밴드 하단은 자동적인 매수선이 아닙니다. 밴드 자체가 아래로 이동할 수 있고, 가격이 하단 부근을 따라 내려갈 수도 있습니다.</p>
+<p>따라서 가격이 밴드 안에 있다는 사실만으로 매도 압력이 끝났다고 판단해서는 안 됩니다. <strong>777.508 역시 통계적 경계이지, 반복적으로 검증된 지지선은 아닙니다.</strong></p>
+<p>평균진폭은 <strong>104.683</strong>입니다. 현재 주가 수준과 비교하면 일상적인 변동 폭이 상당히 큰 편입니다. 너무 좁은 손절은 통상적인 가격 흔들림에 체결될 수 있고, 반대로 손절을 넓히면서 수량을 그대로 두면 계좌 손실 위험이 커집니다.</p>
+<p>실무적으로는 다음 관계를 먼저 적용하는 편이 합리적입니다.</p>
+<blockquote>
+<p><strong>포지션 수량 = 사전에 정한 최대 허용손실 ÷ 주당 계획 손실폭</strong></p>
+</blockquote>
+<p>평균진폭의 일정 배수를 손절 폭으로 참고할 수는 있지만, 이는 검증된 최적 전략이 아닙니다. 급락이나 갭이 발생하면 실제 체결 손실이 계획을 초과할 수도 있습니다.</p>
+<h5>7. SNDK 대응 시나리오</h5>
+<h6>신규 매수 검토자</h6>
+<p>가장 가까운 가격 확인 기준은 <strong>11월 10일 고가 914.82</strong>입니다. 이를 종가로 회복하고 이후에도 유지한다면 단기 반등의 질이 개선됐다고 볼 수 있습니다. 다만 하루 고가 돌파만으로 추세 전환을 확정해서는 안 됩니다.</p>
+<p>더 보수적인 조건은 다음의 조합입니다.</p>
+<ul>
+<li>갱신된 10일 지수이동평균선 회복</li>
+<li>상대강도지수의 과매도권 이탈과 유지</li>
+<li>MACD 히스토그램 개선 지속</li>
+<li>돌파 이후 가격 유지와 거래량 확인</li>
+</ul>
+<p>현재는 <strong>가격 확인 전 선제 매수보다 관망이 더 타당한 구간</strong>입니다.</p>
+<h6>기존 보유자</h6>
+<p><strong>11월 10일 저가 826.667</strong>과 <strong>11월 5일 종가 806.43</strong>은 하방 재약화를 관찰할 참고점입니다. 두 값은 각각 일중 저가와 종가로 성격이 다르며, 반복적으로 확인된 지지선이라는 뜻은 아닙니다.</p>
+<p>이 구간 아래로 종가가 내려가면 최근 반등의 지속성에 대한 신뢰가 약해집니다. 반대로 반등하더라도 이동평균선 회복이 없다면, 이를 추세 전환보다 위험 노출 조정의 기회로 검토할 수 있습니다. 구체적인 축소 비중은 매입가와 투자기간, 손실 허용 범위에 따라 달라집니다.</p>
+<h6>신규 공매도 검토자</h6>
+<p>추세 방향은 약세지만 상대강도지수가 과매도권이므로, SNDK의 현 수준을 추격 매도하면 급반등에 노출될 수 있습니다.</p>
+<p>보다 신중한 접근은 반등 이후 갱신된 단기 이동평균 부근에서 회복이 실패하는지 확인하는 것입니다. 대차 비용, 차입 가능 여부, 갭 상승 위험은 이번 도구로 확인되지 않았습니다.</p>
+<h5>최종 의견</h5>
+<p>SNDK는 <strong>추세상 약세, 모멘텀상 일부 완화, 위험 관리상 고변동성</strong>으로 정리됩니다. 반등 가능성은 있지만 이를 지속적인 상승 추세로 판단할 증거는 아직 부족합니다.</p>
+<p>기술적 관점에서 우선순위는 바닥 예측보다 <strong>가격 회복 확인과 위험 노출 관리</strong>입니다. 최종 거래 결정 전에는 최신 시세와 기업 관련 재료를 추가 확인해야 합니다.</p>
+<p>최종 매매 제안: WAIT</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>SNDK 확인 근거</th>
+<th>해석</th>
+<th>대응 기준</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>데이터 시점</td>
+<td>최신 확인 행은 2026년 11월 10일</td>
+<td>실시간 시세가 아님</td>
+<td>주문 전 최신 가격 재확인</td>
+</tr>
+<tr>
+<td>단기 추세</td>
+<td>종가 859.99, 10일 지수이동평균 1,011.26</td>
+<td>단기 약세</td>
+<td>갱신된 단기 이동평균 회복 확인</td>
+</tr>
+<tr>
+<td>중기 추세</td>
+<td>50일 단순이동평균 1,478.33</td>
+<td>중기 회복 미확인</td>
+<td>단기 반등과 추세 전환 구분</td>
+</tr>
+<tr>
+<td>과매도</td>
+<td>상대강도지수 29.18</td>
+<td>반등 가능성과 하락 지속 위험 공존</td>
+<td>과매도 단독 매수 지양</td>
+</tr>
+<tr>
+<td>모멘텀</td>
+<td>MACD 히스토그램 −35.727</td>
+<td>약세 지속, 최근 압력 완화 조짐</td>
+<td>개선 지속과 가격 회복 동시 확인</td>
+</tr>
+<tr>
+<td>가격 분포</td>
+<td>볼린저밴드 하단 777.508, 상단 1,600.92</td>
+<td>하단에 가까운 약세 위치</td>
+<td>하단을 확정 지지로 간주하지 않음</td>
+</tr>
+<tr>
+<td>변동성</td>
+<td>평균진폭 104.683</td>
+<td>큰 가격 흔들림 가능</td>
+<td>손절 폭과 포지션 수량 함께 조정</td>
+</tr>
+<tr>
+<td>거래량 보조</td>
+<td>거래량가중이동평균의 최근 하락 흐름, 최신 수치는 미검증</td>
+<td>추세 약세 보조 근거</td>
+<td>정확한 주문 기준으로는 사용하지 않음</td>
+</tr>
+<tr>
+<td>단기 회복 관찰점</td>
+<td>11월 10일 고가 914.82</td>
+<td>초기 반등 확인 기준</td>
+<td>종가 회복과 유지 확인</td>
+</tr>
+<tr>
+<td>하방 위험 관찰점</td>
+<td>11월 10일 저가 826.667, 11월 5일 종가 806.43</td>
+<td>최근 반등 약화 여부 점검</td>
+<td>이탈 시 위험 노출 재평가</td>
+</tr>
+<tr>
+<td>종합 대응</td>
+<td>하락 추세와 과매도 동시 존재</td>
+<td>매수·매도 추격 모두 주의</td>
+<td>신규 진입 관망, 기존 위험 관리 우선</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">투자심리 분석가</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mixed</strong> (Score: 4.6/10)
+<strong>Confidence:</strong> Low</p>
+<h4>SNDK 시장 심리 보고서</h4>
+<p>분석 기간: 2026-11-04~2026-11-11. 분석 기준일: 2026-11-11. 대상: SNDK, Sandisk Corporation, NMS 상장 기술·컴퓨터 하드웨어 기업.</p>
+<p>종합 판단: 장기 성장·저평가 기대와 단기 하락·경쟁 우려가 명확하게 충돌한다. 따라서 심리는 혼조이며, 단기 정서는 약세 쪽으로 다소 기울어 있다. 점수는 4.6/10이다. Reddit 수집 실패, StockTwits의 짧은 관측 시간대, 뉴스 원문 부재로 신뢰도는 낮다. 아래 내용은 제공된 제목·요약·게시물에 대한 평가이며 독립적으로 검증된 실적·가격 보고서가 아니다.</p>
+<h5>1. 출처별 분석</h5>
+<h6>뉴스: 성장 낙관론과 하락 경계론의 공존</h6>
+<p>제공된 뉴스는 20건이다. 동일 매체의 유사 논지 기사와 다른 기업·시장 전반을 중심으로 한 기사도 포함돼 있어, 이를 20개의 독립적인 SNDK 신호로 간주하지 않았다. Yahoo Finance를 통해 모인 매체 보도는 전문가·투자 해설의 프레이밍을 보여주지만, 실제 기관 매매를 직접 측정하지 않는다.</p>
+<p>긍정적인 축은 AI 저장장치 수요, 수익성, 계약 매출과 조정 이후의 가치평가다. Zacks의 두 기사는 각각 SNDK를 높은 수익성과 예상 이익 성장의 수혜 종목으로 제시하고, AI 저장장치 수요·매출 성장·기술 파이프라인·매력적인 가치평가를 강조한다. 다만 요약에 등장하는 63% 초과 순이익률은 기사 주장으로만 취급하며, 제공 자료만으로 SNDK의 개별 재무 수치를 확인할 수 없다. Insider Monkey의 제목은 SNDK가 수십억 달러 규모의 계약 매출을 확보했다고 제시하지만, 계약 기간·조건·고객 구성은 없다. Motley Fool의 고성장 종목 추천, Simply Wall St.의 현금흐름 및 가치평가 기사도 낙관론을 뒷받침한다.</p>
+<p>부정적인 축은 가격 하락의 지속성, NAND 경쟁, 업황 정점 우려다. Motley Fool은 SNDK의 시장점유율 하락과 중국 NAND 업체의 점유율 상승을 보도하는 제목을 제시한다. TIKR은 과거 대형 펀드 매수 이후의 손실을 다루면서 플래시 가격 상승세가 둔화한다고 설명한다. 다른 Motley Fool 기사는 급락 이후에도 매수하지 않겠다는 입장과 경기순환 기업의 주가수익비율 해석 위험을 강조한다. Investor’s Business Daily는 SNDK가 11월 5일 주요 하락 종목이었으며 11월 4일 이후에도 10% 이상 낮다고 설명한다. 이는 분석 기간과 직접 연결되는 부정적 가격 프레이밍이다.</p>
+<p>급락률 54%, 63%, 64%, 65%는 기사마다 다르게 제시된다. 기준일·기준 가격이 통일돼 있지 않으므로 단일한 주간 수익률로 합산하거나 확정할 수 없다. Simply Wall St.의 1년 상승률 211.6% 역시 주간 급락과 다른 기간의 수치다. 함께 읽으면 장기 급등 후 큰 조정을 겪는다는 서사를 보여줄 뿐이다. Trefis 기사는 요약에 실질적인 분석 내용이 없고, 일부 다른 기업 중심 기사는 SNDK에 대한 직접적인 판단 근거가 약하다.</p>
+<h6>StockTwits: 태그는 근소한 매수 우위지만 본문에는 손실 피로가 강함</h6>
+<p>총 30건 중 상승 태그 4건, 하락 태그 3건, 무표기 23건이다. 전체 대비 각각 13.3%, 10.0%, 76.7%이며, 방향 태그가 있는 7건만 보면 상승 대 하락은 57.1 대 42.9, 비율은 약 1.33 대 1이다. 이는 압도적인 낙관론이 아니라 소수 표본에서의 약한 상승 우위다.</p>
+<p>태그와 본문이 어긋나는 사례도 있다. @buttcheekiez는 상승 태그를 붙였지만 연말에 돈을 잃었다는 냉소적인 글을 썼다. @Arthurius의 상승 태그 게시물은 SNDK 표기 외에 논거가 없다. 반면 무표기인 @Tomleeks는 수익이 나면 빨리 팔겠다는 태도와 손실로 세금 걱정이 사라졌다는 말을 남겼다. @Chipmonk1은 매도하지 않은 것을 후회하고 추가 하락을 우려했으며, @HelpIah는 9월 이후의 하락과 800달러 부근의 바닥 가능성을 불안하게 언급했다. 따라서 사용자 태그만으로 계산한 약한 낙관론보다 실제 본문 정서는 더 방어적이다. 전체 게시물에 임의의 재분류 비율을 부여하지는 않았다.</p>
+<p>상승 기대도 분명히 남아 있다. @Intelligence1st는 주식분할 전후의 개인투자자 유입을 기대하고, @Taman95는 다음 날 10% 상승 가능성을 질문한다. @ProfitFirst는 800달러 재시험 위험을 인정하면서도 연말 1,200달러를 기대한다. 900달러 회복이나 1,500달러 복귀를 바라는 게시물도 있다. 이 가격들은 게시자의 기대·관심 수준이지 검증된 지지선·목표가가 아니다.</p>
+<p>@GTA_Terminal은 SNDK 옵션 프리미엄 1억5,110만 달러 중 풋 8,950만 달러, 콜 6,160만 달러로 풋 비중 약 59%라고 주장한다. 또한 당일 2.99% 하락, 종가 859.99달러 및 대규모 장기 풋 거래를 언급한다. 이는 단일 게시물에 의존하는 미검증 정보다. 풋 거래는 헤지나 매도 포지션일 수도 있어 거래 방향과 신규 여부 없이 확정적인 하락 베팅으로 해석할 수 없다.</p>
+<p>표본의 시간 범위는 모두 11월 10일 21:15~22:34 UTC, 약 78분이다. 7일 전체의 심리 변화나 11월 11일의 실시간 정서를 대표하지 않는다. @ycdctx가 6건을 작성해 표본의 20%를 차지하고, 여러 종목을 함께 언급하는 게시물도 있어 독립적인 SNDK 의견의 폭은 총 메시지 수보다 좁다.</p>
+<h6>Reddit: 수집 실패로 평가 불가</h6>
+<p>r/wallstreetbets, r/stocks, r/investing은 모두 수집 실패다. 이는 논의가 없거나 중립적이라는 뜻이 아니다. 커뮤니티별 장기 투자 논거, 반론, 투기적 과열 여부 및 참여 수준을 판단할 수 없으며, 뉴스의 Reddit 관련 제목으로 이 공백을 대체할 수 없다.</p>
+<h5>2. 출처 간 일치와 괴리</h5>
+<p>뉴스와 StockTwits는 SNDK가 큰 조정을 겪고 있다는 인식에서 일치한다. 뉴스의 급락·회복 부진 서술은 게시물의 손실 후회, 빠른 차익 실현 선호, 추가 하락 불안과 연결된다.</p>
+<p>반면 낙관론의 근거는 다르다. 긍정적 뉴스는 AI 저장장치 수요, 계약 매출, 현금흐름과 가치평가를 강조한다. StockTwits의 낙관론은 분할 전후 접근성, 단기 반등, 과거 가격 회복 기대에 더 집중한다. 따라서 장기 사업 기대가 단기 투자 확신으로 충분히 이어졌다고 보기는 어렵다.</p>
+<p>또한 뉴스가 제기하는 SNDK의 NAND 점유율과 가격 상승 둔화 우려와 달리, 일부 소셜 게시물은 다른 AI·반도체 기업의 실적이나 논란을 하락 원인과 반등 계기로 연결한다. 업종 심리 전이는 가능하지만, 제공 자료만으로 SNDK 주가 변동의 인과관계를 확정할 수 없다. 전체적으로는 매체의 견해 자체가 양분돼 있고, 소셜의 표면적 매수 태그와 실제 손실 피로도 사이에도 괴리가 있다.</p>
+<h5>3. 지배적인 서사</h5>
+<ol>
+<li><strong>AI 성장과 메모리 경기순환의 충돌:</strong> 저장 수요·계약 매출에 대한 기대와 NAND 가격 상승 둔화·점유율 우려가 대립한다. 성장 산업에 속한다는 사실과 현재 이익의 지속 가능성은 별개라는 논쟁이다.</li>
+<li><strong>급락 이후 저평가인가, 추가 조정의 시작인가:</strong> 매수 추천과 현금흐름 가치평가 기사에 맞서, 경기순환적 이익에 기반한 낮은 주가수익비율이 착시일 수 있다는 경고가 나온다.</li>
+<li><strong>과거 고점에 대한 집착과 손실 피로:</strong> 소셜의 900·1,200·1,500달러 회복 기대는 현재 기업가치 분석보다 과거 가격을 기준으로 한 심리를 보여준다. 빠른 매도 선호는 반등 때 매도 압력으로 작용할 가능성을 시사할 뿐, 실제 수급을 확인해 주지는 않는다.</li>
+<li><strong>주식분할에 대한 상반된 해석:</strong> 접근성 개선 기대와 추가 개인투자자 손실 우려가 공존한다. 분할 자체는 보유 지분율이나 기업가치를 기계적으로 늘리는 사건이 아니다.</li>
+</ol>
+<h5>4. 촉매와 위험</h5>
+<ul>
+<li><strong>11월 19일로 보도된 8대 1 주식분할:</strong> 분석 기간 이후의 가장 구체적인 일정이다. 소셜은 이를 관심 유입 계기로 본다. 다만 공식 공시는 제공되지 않았으므로 일정과 조건은 기사 기준이며, 실제 가치 상승이나 수급 유입은 보장되지 않는다. 분할 전후 가격 수준을 비교할 때는 반드시 조정이 필요하다.</li>
+<li><strong>NAND 경쟁과 가격 동향:</strong> 시장점유율 하락 및 가격 상승 둔화라는 보도가 후속 자료로 확인되거나 반박되면 심리가 변할 수 있다. 현재는 수치와 지속 기간이 없다.</li>
+<li><strong>AI 저장 수요·계약 매출의 실적 전환:</strong> 낙관론의 핵심이지만 계약의 수익성, 매출 인식 시기, 취소 조건 등이 없어 하방 방어력을 계량화할 수 없다.</li>
+<li><strong>AI 인프라 투자 수익성과 업종 전염:</strong> StockTwits에서 다른 기업의 실적 호조와 차입·설비투자 우려가 동시에 언급된다. 같은 작성자의 반복 게시가 많아 독립적인 확인으로 볼 수 없고, SNDK에 대한 직접적 재무 영향도 불명확하다.</li>
+<li><strong>변동성 및 반등 실패 위험:</strong> 손실 피로와 단기 반등 기대가 공존해 가격 움직임에 민감한 환경으로 해석된다. 그러나 제공 자료에는 검증된 가격 시계열, 거래량, 공식 옵션 체결 자료가 없어 기술적 수준이나 포지션 쏠림을 확정할 수 없다.</li>
+<li><strong>일정 공백:</strong> SNDK의 다음 실적 발표일이나 제품 출시 일정은 제공되지 않았다. 이를 임의의 촉매로 추가하지 않았다.</li>
+</ul>
+<h5>5. 주요 심리 신호 요약</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>주요 신호</th>
+<th>방향</th>
+<th>출처</th>
+<th>근거 및 해석상 한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SNDK의 AI 저장 수요·성장 기대</td>
+<td>긍정</td>
+<td>Zacks, Motley Fool</td>
+<td>수요·기술 파이프라인·성장 잠재력 강조. 추천성 해설이며 원문 재무 검증은 없음</td>
+</tr>
+<tr>
+<td>SNDK 계약 매출 기대</td>
+<td>긍정</td>
+<td>Insider Monkey</td>
+<td>수십억 달러 규모 계약 매출이라는 제목. 조건·기간·수익성은 미제공</td>
+</tr>
+<tr>
+<td>SNDK의 경쟁 및 업황 둔화 우려</td>
+<td>부정</td>
+<td>Motley Fool, TIKR</td>
+<td>NAND 점유율 하락과 플래시 가격 상승 둔화 서술. 정량적 검증 자료는 없음</td>
+</tr>
+<tr>
+<td>SNDK 하락 후 회복 부진</td>
+<td>부정</td>
+<td>Investor’s Business Daily</td>
+<td>11월 4일 이후 10% 이상 하락했다는 요약. 별도 가격 시계열은 없음</td>
+</tr>
+<tr>
+<td>SNDK 사용자 태그의 약한 상승 우위</td>
+<td>약한 긍정·불확실</td>
+<td>StockTwits</td>
+<td>상승 4, 하락 3, 무표기 23. 방향 태그 표본은 7건에 불과</td>
+</tr>
+<tr>
+<td>SNDK 손실 후회와 추가 하락 불안</td>
+<td>부정</td>
+<td>StockTwits 본문</td>
+<td>빠른 매도 선호, 매도하지 않은 후회, 800달러 재시험 우려. 일부 상승 태그도 냉소적</td>
+</tr>
+<tr>
+<td>SNDK 분할 관련 관심</td>
+<td>혼조</td>
+<td>Motley Fool, StockTwits</td>
+<td>11월 19일 8대 1 분할 보도와 개인 유입 기대, 손실 우려가 병존</td>
+</tr>
+<tr>
+<td>SNDK 풋 프리미엄 우위 주장</td>
+<td>경계</td>
+<td>StockTwits 단일 게시물</td>
+<td>풋 약 59%라는 주장. 체결 방향·헤지 여부·데이터 정확성 미확인</td>
+</tr>
+<tr>
+<td>SNDK 커뮤니티 검증 공백</td>
+<td>평가 불가</td>
+<td>Reddit</td>
+<td>세 커뮤니티 모두 수집 실패. 무관심이나 중립의 증거가 아님</td>
+</tr>
+</tbody>
+</table></div>
+<p>결론적으로 SNDK의 장기 성장 낙관론은 남아 있지만, 관측된 단기 소셜 본문에는 손실 피로와 하락 경계가 더 뚜렷하다. 혼조·약세 편향이라는 판단을 다른 분석과 함께 활용해야 하며, 이 보고서는 매매 결정이나 가격 예측을 제시하지 않는다.</p>
+<h3 id="s1-3">뉴스 분석가</h3>
+<h4>SNDK 주간 뉴스·거시경제 분석</h4>
+<p><strong>기준일: 2026년 11월 11일 | 분석 기간: 11월 4~11일</strong><br />
+<strong>대상: SNDK — Sandisk Corporation, 나스닥 상장, 기술·컴퓨터 하드웨어</strong></p>
+<h5>1. 핵심 판단</h5>
+<p><strong>SNDK의 단기 핵심 변수는 ‘인공지능 저장장치 수요 성장’보다 ‘낸드 가격 상승 둔화와 경쟁 심화가 현재 이익 수준을 얼마나 훼손하는가’로 이동하고 있다.</strong> 여기에 금리 인상 기대가 겹치면서, 주가 급락만으로 저평가를 판단하기 어려운 상황이다.</p>
+<p>이번 주 기사들은 장기 수요와 계약 매출을 긍정적으로 평가하는 한편, 시장점유율 하락·메모리 가격 상승세 둔화·큰 폭의 주가 조정을 동시에 다뤘다. 따라서 현재 뉴스 흐름은 <strong>장기 성장 논리와 단기 이익 정상화 우려가 충돌하는 국면</strong>으로 해석한다.</p>
+<p>다만 이번 조회는 기사 제목과 요약 중심이다. <strong>실시간 주가·거래량·공식 실적자료·회사 공시는 확보하지 못했으며, FRED 지표도 인증키 부재로 조회되지 않았다.</strong> 아래 수치와 일정 중 언론 보도에만 근거한 사항은 별도로 구분했다.</p>
+<h5>2. SNDK 관련 주요 뉴스와 의미</h5>
+<h6>가. 시장점유율 하락 보도: 업황과 별개인 기업 고유 위험</h6>
+<p>11월 10일 Motley Fool은 SNDK의 주가 하락을 다루면서, SNDK의 시장점유율이 줄고 중국 낸드 업체의 점유율이 늘었다고 보도했다.</p>
+<ul>
+<li><strong>의미:</strong> 낸드 수요가 증가하더라도 SNDK가 같은 속도로 성장한다는 보장은 없다. 경쟁 확대는 판매량뿐 아니라 가격 협상력과 제품 구성에도 영향을 줄 수 있다.</li>
+<li><strong>확인할 항목:</strong> 점유율 측정 기간, 매출 기준인지 출하량 기준인지, 기업용 고부가 제품에서도 하락했는지 여부.</li>
+<li><strong>매매 시사점:</strong> 업종 반등만을 근거로 SNDK의 상대적 강세를 가정하지 말고, 경쟁사 대비 실적 전망 변화와 주가 회복력을 비교해야 한다.</li>
+</ul>
+<p>출처: <a href="https://www.fool.com/investing/2026/11/10/why-sandisk-stock-dropped-again-on-tuesday/">Motley Fool, 11월 10일</a></p>
+<h6>나. 낸드 가격 상승 둔화: 낮은 주가수익비율의 함정</h6>
+<p>TIKR의 이번 주 기사 요약은 높은 플래시 가격이 SNDK의 이익 급증을 이끌었지만, 가격 상승 속도가 둔화하고 있다고 설명했다. Motley Fool 역시 경기순환 기업의 주가수익비율 해석에 주의를 요구했다.</p>
+<p><strong>가격 상승률 둔화와 가격 하락은 다르다.</strong> 그러나 주식시장은 이익의 절대 수준보다 향후 변화에 먼저 반응할 수 있다. 현재 이익이 매우 높다면, 낮은 주가수익비율은 저평가가 아니라 이익 정점에 대한 시장의 우려를 반영할 수도 있다.</p>
+<p><strong>실행 기준:</strong> 신규 매수를 검토할 때는 현재 이익 배수보다 다음 항목을 우선 확인하는 편이 타당하다.</p>
+<ol>
+<li>낸드 평균판매가격의 전분기 대비 변화</li>
+<li>비트 출하량 증가율과 재고 추이</li>
+<li>매출총이익률 전망</li>
+<li>설비투자 이후 잉여현금흐름</li>
+<li>향후 분기 이익 추정치의 상향·하향 방향</li>
+</ol>
+<p>출처: <a href="https://www.tikr.com/blog/leopold-aschenbrenner-and-10-other-big-funds-bought-sandisk-its-down-54-since-time-to-buy?ref=yahoofinance&amp;tlnk=yf-261110-cc9248fx">TIKR</a>, <a href="https://www.fool.com/investing/2026/11/10/sandisk-stock-has-collapsed-65-and-is-undergoing-a/">Motley Fool, 11월 10일</a></p>
+<h6>다. 계약 매출·인공지능 수요: 긍정적 근거는 남아 있다</h6>
+<p>Insider Monkey는 투자펀드 서한을 인용해 SNDK가 수십억 달러 규모의 계약 매출을 확보했다고 소개했다. Zacks도 인공지능 기반 저장 수요와 기술 제품군을 긍정적으로 평가했다.</p>
+<p>이는 장기 수요와 매출 가시성을 지지하는 보도다. 다만 <strong>계약 규모가 곧 확정적인 고수익을 의미하지는 않는다.</strong> 계약 기간, 가격 조정 조건, 최소 구매 의무, 취소 가능성, 공급에 필요한 투자 규모가 중요하다.</p>
+<p><strong>매매 시사점:</strong> 회사가 계약의 수익성과 현금흐름 기여도를 확인해 준다면 긍정적 촉매가 될 수 있다. 현재 확보한 기사 요약만으로 이익 전망을 상향할 근거는 부족하다.</p>
+<p>출처: <a href="https://finance.yahoo.com/markets/stocks/articles/sandisk-corporation-sndk-secured-billions-162150175.html">Insider Monkey</a>, <a href="https://finance.yahoo.com/technology/articles/sandisk-appears-highly-lucrative-investment-121800753.html">Zacks</a></p>
+<h6>라. 급락과 주식분할 보도: 가격 착시 경계</h6>
+<p>이번 주 기사에는 SNDK의 하락 폭이 54%, 63%, 64%, 65% 등으로 서로 다르게 제시됐다. 기준일과 비교 가격이 일치하는지 확인되지 않아 <strong>어느 수치도 검증된 현재 낙폭으로 채택하지 않는다.</strong></p>
+<p>또한 Motley Fool은 <strong>11월 19일 8대 1 주식분할 예정</strong>이라고 보도했다. 이 일정 역시 회사 공시로 재확인이 필요하다.</p>
+<p>분할 자체는 기업가치를 늘리지 않는다. 일정이 확인된다면 주문 가격·수량과 차트의 분할 조정 여부를 확인해야 하며, 분할에 따른 낮아진 주당 가격을 저평가로 해석해서는 안 된다.</p>
+<h5>3. 세계 시장·거시경제 환경</h5>
+<h6>가. 인플레이션과 금리 인상 기대가 주요 부담</h6>
+<p>글로벌 뉴스 조회에서는 높은 물가 지표에 따라 미국 10년물 국채금리가 상승하고 금리 인상 기대가 커졌다는 보도가 확인됐다.</p>
+<p>다만 FRED의 소비자물가와 10년물 국채금리를 직접 조회한 결과, 인증키 부재로 자료를 얻지 못했다. 따라서 <strong>물가 상승률, 금리 수준 및 주간 변화 폭은 제시하지 않는다.</strong> 기사 제목이 시사하는 방향성과 검증된 경제지표를 구분해야 한다.</p>
+<p>SNDK에 대한 일반적인 전달 경로는 다음과 같다.</p>
+<ul>
+<li><strong>할인율 상승:</strong> 미래 성장에 대한 높은 평가 배수에 부담.</li>
+<li><strong>고객 투자비용 상승:</strong> 데이터센터 및 기업용 저장장치 투자 일정에 하방 위험.</li>
+<li><strong>경기민감 수요 압박:</strong> 개인용 컴퓨터·소비자 저장장치 수요에 부담.</li>
+</ul>
+<p>이는 경제적 해석이며, 이번 주 SNDK 실적에 실제로 발생한 영향으로 확인된 것은 아니다.</p>
+<p>출처: <a href="https://finance.yahoo.com/markets/article/10-year-treasury-yield-jumps-as-odds-of-rate-hike-rise-amid-hot-inflation-print-alphacheck-144120699.html">Yahoo Finance의 금리·물가 관련 보도</a></p>
+<h6>나. 예측시장은 연말 긴축 위험을 크게 반영</h6>
+<p>조회 시점의 Polymarket 결과는 다음과 같다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>사건</th>
+<th style="text-align:right">시장 내재 확률</th>
+<th style="text-align:right">최근 1주 변화</th>
+<th style="text-align:right">보고된 거래 규모</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026년 12월 연준 0.25%포인트 인상</td>
+<td style="text-align:right">86%</td>
+<td style="text-align:right">+11.0%포인트</td>
+<td style="text-align:right">약 678만 달러</td>
+</tr>
+<tr>
+<td>2026년 12월 연준 0.50%포인트 이상 인상</td>
+<td style="text-align:right">11%</td>
+<td style="text-align:right">+9.0%포인트</td>
+<td style="text-align:right">약 405만 달러</td>
+</tr>
+<tr>
+<td>2026년 12월 연준 동결</td>
+<td style="text-align:right">4%</td>
+<td style="text-align:right">-18.9%포인트</td>
+<td style="text-align:right">약 646만 달러</td>
+</tr>
+<tr>
+<td>2027년 1월 연준 0.25%포인트 인상</td>
+<td style="text-align:right">48%</td>
+<td style="text-align:right">+22.0%포인트</td>
+<td style="text-align:right">약 59만 달러</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>해석:</strong> 해당 예측시장 참가자들은 최근 일주일 동안 추가 긴축 쪽으로 기대를 이동시켰다. 이는 SNDK의 성장 기대에 적용되는 할인율 측면에서 부정적인 배경이다.</p>
+<p>다만 이 수치는 <strong>연준 공식 전망이나 금리선물 확률이 아니다.</strong> 개별 시장의 호가·반올림·계약 구조 때문에 확률 합계가 정확히 100%가 아닐 수 있으므로 단순 합산하지 않는다. 보고된 거래 규모 역시 현재 호가 유동성과 동일하지 않다.</p>
+<h6>다. 세계 정세에 대한 판단 범위</h6>
+<p>글로벌 뉴스 결과는 특정 게임 기업 관련 기사에 크게 편중됐다. 따라서 이번 자료만으로 지정학·유가·중국 경기·세계 교역의 최신 상황을 포괄적으로 평가하기는 어렵다. 이 영역은 <strong>위험이 없다는 뜻이 아니라, 확인할 자료가 부족한 영역</strong>이다.</p>
+<h5>4. SNDK 거래에 활용할 조건부 시나리오</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>시나리오</th>
+<th>확인 조건</th>
+<th>SNDK에 대한 해석과 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>상승</td>
+<td>낸드 가격 안정, 점유율 방어, 계약 수익성 확인, 금리 부담 완화</td>
+<td>실적 전망과 가격·거래량이 함께 개선되는지 확인한 뒤 분할 진입 검토</td>
+</tr>
+<tr>
+<td>중립</td>
+<td>실적은 양호하나 가격 상승률 둔화 지속</td>
+<td>급락 후 반등을 추세 전환으로 단정하지 않고 추격 매수 자제</td>
+</tr>
+<tr>
+<td>하락</td>
+<td>점유율 추가 하락, 가격 하락 전환, 이익 전망 하향, 긴축 기대 강화</td>
+<td>신규 위험 확대 보류, 기존 보유분의 집중도와 손실 한도 점검</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>단기 우선순위는 다음과 같다.</strong></p>
+<ul>
+<li>SNDK의 11월 5일 급락 이후 회복 수준을 실제 시세로 확인한다. IBD는 SNDK가 당시 주요 하락 종목이었다고 보도했지만, 현재 가격은 별도로 검증해야 한다.</li>
+<li>회사 공시에서 주식분할 일정과 계약 관련 내용을 확인한다.</li>
+<li>금리 상승일에도 SNDK가 저점을 지키는지, 반등 시 거래량이 동반되는지 관찰한다.</li>
+<li>진입 전 무효화 가격과 허용 손실을 정한다. <strong>보유 수량은 허용 손실액을 주당 진입가와 손절 기준가의 차이로 나누어 산정</strong>할 수 있으나, 급격한 가격 공백이 발생하면 실제 손실은 더 커질 수 있다.</li>
+</ul>
+<h5>5. 종합 결론</h5>
+<p><strong>SNDK는 장기 저장 수요 확대라는 긍정적 논리를 유지하지만, 현재 뉴스 흐름에서는 이익의 지속 가능성과 긴축 위험을 먼저 확인해야 한다.</strong> 큰 낙폭, 유명 투자자의 과거 보유, 주식분할은 각각 독립적인 매수 근거가 되기 어렵다.</p>
+<p>뉴스 연구 관점의 결론은 <strong>공격적 저가매수보다 확인 우선</strong>이다. 이는 최종 매매 지시가 아니라, 실시간 가격·공식 공시·실적 전망을 결합해 다음 판단을 내리기 위한 조건부 평가다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 쟁점</th>
+<th>확보한 근거</th>
+<th>SNDK 영향</th>
+<th>실행·확인 사항</th>
+<th>근거의 한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시장점유율</td>
+<td>SNDK 하락·중국 업체 상승 보도</td>
+<td>경쟁·가격 협상력 위험</td>
+<td>점유율 기준과 고부가 제품 동향 확인</td>
+<td>기사 요약, 원자료 미확인</td>
+</tr>
+<tr>
+<td>낸드 가격</td>
+<td>상승 속도 둔화 보도</td>
+<td>이익 성장 둔화 가능성</td>
+<td>평균판매가격·재고·이익률 추적</td>
+<td>실제 가격 시계열 없음</td>
+</tr>
+<tr>
+<td>장기 계약</td>
+<td>수십억 달러 계약 매출 보도</td>
+<td>매출 가시성에 긍정적</td>
+<td>가격 조건·취소 조항·수익성 검증</td>
+<td>펀드 서한의 재인용</td>
+</tr>
+<tr>
+<td>주가 급락</td>
+<td>기사별 서로 다른 낙폭</td>
+<td>높은 변동성 시사</td>
+<td>검증된 시세로 낙폭·회복 수준 재계산</td>
+<td>가격·거래량 미확보</td>
+</tr>
+<tr>
+<td>주식분할</td>
+<td>11월 19일 8대 1 예정 보도</td>
+<td>가치 변화 없이 거래 단위 변화</td>
+<td>회사 공시와 주문 조정 확인</td>
+<td>공식 일정 미확인</td>
+</tr>
+<tr>
+<td>거시경제</td>
+<td>물가·국채금리 상승 보도</td>
+<td>할인율·수요에 부담 가능</td>
+<td>공식 물가·금리 지표 재확인</td>
+<td>FRED 조회 실패</td>
+</tr>
+<tr>
+<td>통화정책 기대</td>
+<td>12월 0.25%포인트 인상 확률 86%</td>
+<td>긴축 위험 부각</td>
+<td>후속 지표와 시장 확률 변화 관찰</td>
+<td>예측시장 수치, 확정 전망 아님</td>
+</tr>
+<tr>
+<td>종합 대응</td>
+<td>긍정적 수요와 이익 정상화 우려 공존</td>
+<td>방향성 불확실</td>
+<td>추격 매수보다 공시·실적·가격 확인 우선</td>
+<td>최종 매매 판단에 추가 자료 필요</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-4">재무 분석가</h3>
+<h4>SNDK 펀더멘털 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 11일</strong><br />
+<strong>최근 일주일 검토 범위: 2026년 11월 5일~11일</strong><br />
+<strong>대상: SNDK — Sandisk Corporation, 나스닥 NMS, 기술 / 컴퓨터 하드웨어</strong></p>
+<p><strong>투자 의견</strong>: NOT RATED</p>
+<h5>1. 핵심 결론</h5>
+<p><strong>SNDK는 제공된 재무자료상 매출·이익·현금창출력이 급격히 개선되고 있습니다. 다만 이익률의 지속 가능성, 대규모 재무활동 현금유출의 성격, 재무정보 공급원 간 수치 정합성을 확인하기 전에는 낮은 주가수익비율만으로 저평가를 확정하기 어렵습니다.</strong></p>
+<p>핵심 판단은 다음과 같습니다.</p>
+<ul>
+<li><strong>실적 개선은 강력합니다.</strong> 2026년 10월 2일 종료 분기 매출은 <strong>110억 3,100만 달러</strong>, 영업이익은 <strong>87억 8,000만 달러</strong>입니다. 전년 동기 대비 각각 약 <strong>378%, 4,889%</strong> 증가했습니다.</li>
+<li><strong>현금창출도 개선됐지만 순이익에는 미달합니다.</strong> 최신 분기 영업현금흐름은 <strong>63억 6,300만 달러</strong>, 단순 잉여현금흐름은 <strong>63억 900만 달러</strong>입니다. 영업현금흐름의 순이익 대비 비율은 약 **78.5%**입니다.</li>
+<li><strong>유동성은 양호하지만 현금만으로 유동부채를 모두 충당하지는 못합니다.</strong> 유동비율은 <strong>2.58배</strong>, 현금성자산/유동부채는 <strong>0.86배</strong>입니다.</li>
+<li><strong>표면적 밸류에이션은 낮습니다.</strong> 종합정보의 후행 주가수익비율은 <strong>6.87배</strong>, 선행 주가수익비율은 <strong>2.98배</strong>입니다. 그러나 일부 지표가 서로 다른 기준시점이나 주식 수를 반영할 가능성이 있습니다.</li>
+<li><strong>최근 일주일의 새로운 사건은 확인할 수 없습니다.</strong> 도구에는 해당 기간의 공시 발표일별 목록이나 뉴스가 없으며, 내부자 거래 자료에도 해당 기간의 거래가 표시되지 않습니다. 따라서 아래 내용은 <strong>기준일 현재 확인 가능한 최신 재무정보의 분석</strong>이지, 지난 일주일에 새롭게 발생한 사건의 확정 목록은 아닙니다.</li>
+</ul>
+<hr />
+<h5>2. SNDK 회사 개요와 분석 범위</h5>
+<p>SNDK는 Sandisk Corporation이며, 제공된 분류는 <strong>기술 / 컴퓨터 하드웨어</strong>입니다. 사업 이해의 기본 축은 플래시 저장장치와 관련 제품이지만, 이번 도구 응답에는 제품별·고객별·지역별 매출, 생산능력, 고객 집중도, 사업부별 이익이 포함되지 않았습니다.</p>
+<p>따라서 다음을 구분해야 합니다.</p>
+<ul>
+<li><strong>확인 가능한 사실:</strong> 연결 손익, 자산·부채·자본, 현금흐름, 요약 밸류에이션, 일부 내부자 거래.</li>
+<li><strong>추가 확인이 필요한 요인:</strong> 매출 급증이 판매가격 상승, 출하량 증가, 제품 구성 변화 중 무엇에 의해 발생했는지와 그 지속성.</li>
+<li><strong>현재 확인 불가능한 사항:</strong> 최근 일주일의 수주·계약·실적 전망 변경, 전체 공시 본문, 감사 주석, 최신 시장가격.</li>
+</ul>
+<p>재무제표 도구는 <strong>2026년 11월 11일까지 제출된 미국 증권거래위원회 전자공시 자료의 수치</strong>라고 표시합니다. 다만 원문 공시 링크와 개별 제출일은 제공되지 않아 별도 대조가 필요합니다.</p>
+<hr />
+<h5>3. SNDK 실적: 급격한 매출 확대와 이익률 상승</h5>
+<p>아래 금액 단위는 <strong>백만 달러</strong>, 주당순이익은 <strong>달러</strong>입니다. 각 행은 표시된 종료일의 분기 자료이며, 누락된 분기가 있습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>분기 종료일</th>
+<th style="text-align:right">매출</th>
+<th style="text-align:right">매출총이익</th>
+<th style="text-align:right">영업이익</th>
+<th style="text-align:right">순이익</th>
+<th style="text-align:right">희석 주당순이익</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2024-12-27</td>
+<td style="text-align:right">1,876</td>
+<td style="text-align:right">606</td>
+<td style="text-align:right">195</td>
+<td style="text-align:right">104</td>
+<td style="text-align:right">0.72</td>
+</tr>
+<tr>
+<td>2025-03-28</td>
+<td style="text-align:right">1,695</td>
+<td style="text-align:right">382</td>
+<td style="text-align:right">-1,881</td>
+<td style="text-align:right">-1,933</td>
+<td style="text-align:right">-13.33</td>
+</tr>
+<tr>
+<td>2025-10-03</td>
+<td style="text-align:right">2,308</td>
+<td style="text-align:right">687</td>
+<td style="text-align:right">176</td>
+<td style="text-align:right">112</td>
+<td style="text-align:right">0.75</td>
+</tr>
+<tr>
+<td>2026-01-02</td>
+<td style="text-align:right">3,025</td>
+<td style="text-align:right">1,541</td>
+<td style="text-align:right">1,065</td>
+<td style="text-align:right">803</td>
+<td style="text-align:right">5.15</td>
+</tr>
+<tr>
+<td>2026-04-03</td>
+<td style="text-align:right">5,950</td>
+<td style="text-align:right">4,662</td>
+<td style="text-align:right">4,111</td>
+<td style="text-align:right">3,615</td>
+<td style="text-align:right">23.03</td>
+</tr>
+<tr>
+<td>2026-10-02</td>
+<td style="text-align:right">11,031</td>
+<td style="text-align:right">9,378</td>
+<td style="text-align:right">8,780</td>
+<td style="text-align:right">8,101</td>
+<td style="text-align:right">52.60</td>
+</tr>
+</tbody>
+</table></div>
+<h6>최신 분기의 수익성</h6>
+<p>2026년 10월 2일 종료 분기의 계산값은 다음과 같습니다.</p>
+<ul>
+<li>매출총이익률: <strong>85.0%</strong></li>
+<li>영업이익률: <strong>79.6%</strong></li>
+<li>순이익률: <strong>73.4%</strong></li>
+<li>전년 동기 대비 매출 증가율: <strong>378.0%</strong></li>
+<li>전년 동기 대비 순이익: 약 <strong>72.3배</strong></li>
+</ul>
+<p>특히 매출이 전년 동기 <strong>23억 800만 달러에서 110억 3,100만 달러로 증가</strong>한 반면, 매출원가는 <strong>16억 2,100만 달러에서 16억 5,300만 달러로 약 2.0% 증가</strong>하는 데 그쳤습니다.</p>
+<p>이는 보고된 이익 급증의 핵심입니다. 그러나 이러한 원가·매출 관계를 설명할 제품별 판매가격, 출하량, 재고평가 및 일회성 항목이 제공되지 않았으므로, <strong>85%의 매출총이익률을 정상적이고 지속 가능한 수준으로 바로 가정해서는 안 됩니다.</strong></p>
+<p>또한 2026년 7월 종료 분기 손익이 누락돼 있어 최신 분기의 <strong>직전 분기 대비 증가율은 계산하지 않았습니다.</strong></p>
+<h6>과거 실적이 보여주는 변동성</h6>
+<p>SNDK는 2023년 12월 종료 분기 순손실 <strong>3억 100만 달러</strong>, 2025년 3월 종료 분기 순손실 <strong>19억 3,300만 달러</strong>를 기록했습니다.</p>
+<p>특히 2025년 3월 분기는 매출총이익이 흑자임에도 영업손실이 매우 컸습니다. 대규모 비용의 성격을 확인해야 하며, 자료만으로 손상차손이나 구조조정 비용이라고 단정할 수 없습니다.</p>
+<p><strong>투자 시사점:</strong> SNDK의 최근 고수익성과 과거 손실을 함께 고려해, 최근 분기 이익을 단순 연율화하기보다 중간 수준의 이익률에서도 투자 논리가 성립하는지 검토해야 합니다.</p>
+<hr />
+<h5>4. SNDK 재무상태: 자본 확충과 유동부채 증가가 동시 진행</h5>
+<p>금액 단위는 백만 달러입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025-10-03</th>
+<th style="text-align:right">2026-07-03</th>
+<th style="text-align:right">2026-10-02</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>총자산</td>
+<td style="text-align:right">12,749</td>
+<td style="text-align:right">22,507</td>
+<td style="text-align:right">25,793</td>
+</tr>
+<tr>
+<td>유동자산</td>
+<td style="text-align:right">4,984</td>
+<td style="text-align:right">12,780</td>
+<td style="text-align:right">15,352</td>
+</tr>
+<tr>
+<td>현금 및 현금성자산</td>
+<td style="text-align:right">1,442</td>
+<td style="text-align:right">4,762</td>
+<td style="text-align:right">5,136</td>
+</tr>
+<tr>
+<td>총부채</td>
+<td style="text-align:right">3,368</td>
+<td style="text-align:right">6,771</td>
+<td style="text-align:right">7,659</td>
+</tr>
+<tr>
+<td>유동부채</td>
+<td style="text-align:right">1,516</td>
+<td style="text-align:right">5,581</td>
+<td style="text-align:right">5,951</td>
+</tr>
+<tr>
+<td>자기자본</td>
+<td style="text-align:right">9,381</td>
+<td style="text-align:right">15,736</td>
+<td style="text-align:right">18,134</td>
+</tr>
+</tbody>
+</table></div>
+<h6>긍정적 요인</h6>
+<p>최신 분기 기준:</p>
+<ul>
+<li><strong>순운전자본:</strong> 94억 100만 달러</li>
+<li><strong>유동비율:</strong> 2.58배</li>
+<li><strong>총부채/총자산:</strong> 29.7%</li>
+<li><strong>자기자본/총자산:</strong> 70.3%</li>
+<li><strong>현금 및 현금성자산:</strong> 전년 동기 대비 약 256% 증가</li>
+</ul>
+<p>재무상태표상 자기자본 비중이 높고 유동자산이 유동부채를 상당 폭 웃돌아, 단기 지급능력의 기본 완충력은 양호합니다.</p>
+<h6>주의할 요인</h6>
+<p>유동부채는 전년 동기 <strong>15억 1,600만 달러에서 59억 5,100만 달러로 약 293% 증가</strong>했습니다. 특히 2026년 4월에서 7월 사이 급증했으며, 그 구성이 제공되지 않았습니다.</p>
+<p>현금/유동부채 비율은 <strong>0.86배</strong>입니다. 따라서 유동자산 중 현금 이외 항목의 회수 가능성과 회전 속도를 확인해야 합니다.</p>
+<p>종합정보에 제시된 부채/자기자본 **1.108%**는 이자부 차입금 기준일 가능성이 있습니다. 재무상태표의 **전체 부채/자기자본 약 42.2%**와는 개념이 다르므로, 이를 혼동해 “부채가 거의 없다”고 해석하면 안 됩니다. 차입금 세부 내역이 없어 정확한 순차입금도 산출할 수 없습니다.</p>
+<hr />
+<h5>5. SNDK 현금흐름: 강력한 창출력과 대규모 자금 유출</h5>
+<h6>누적 수치와 분기 수치의 구분</h6>
+<p>현금흐름 자료에는 분기와 누적 수치가 섞여 있습니다.</p>
+<ul>
+<li>2026년 1월 2일의 영업현금흐름 <strong>1,507</strong>은 <strong>6개월 누적</strong></li>
+<li>2026년 4월 3일의 <strong>4,545</strong>는 <strong>9개월 누적</strong></li>
+<li>2026년 10월 2일의 <strong>6,363</strong>은 분기 수치로 표시</li>
+</ul>
+<p>따라서 이를 모두 독립된 분기처럼 비교하거나 합산하지 않았습니다.</p>
+<p>누적 차감으로 계산한 영업현금흐름은 다음과 같습니다.</p>
+<ul>
+<li>2026년 1월 종료 단독 분기: <strong>10억 1,900만 달러</strong></li>
+<li>2026년 4월 종료 단독 분기: <strong>30억 3,800만 달러</strong></li>
+</ul>
+<h6>최신 분기의 현금창출</h6>
+<ul>
+<li>영업현금흐름: <strong>63억 6,300만 달러</strong></li>
+<li>설비투자: <strong>5,400만 달러</strong></li>
+<li>단순 잉여현금흐름: <strong>63억 900만 달러</strong></li>
+<li>영업현금흐름/순이익: <strong>78.5%</strong></li>
+<li>단순 잉여현금흐름/매출: <strong>57.2%</strong></li>
+</ul>
+<p>여기서 단순 잉여현금흐름은 <strong>영업현금흐름－설비투자</strong>입니다. 합작사업 출자나 기타 투자성 지출이 모두 반영된 현금지표라고 단정할 수 없습니다. 표시된 설비투자가 매출의 약 **0.5%**에 불과하므로, 전체 생산 관련 현금부담을 이해하려면 투자 주석이 필요합니다.</p>
+<h6>재무활동 현금유출의 확인이 중요</h6>
+<p>최신 분기의 재무활동 현금흐름은 <strong>-57억 5,500만 달러</strong>입니다.</p>
+<p>영업·투자·재무활동 현금흐름 합계는 <strong>3억 7,000만 달러</strong>이며, 실제 현금 증가액 <strong>3억 7,400만 달러</strong>와 대체로 일치합니다. 차이는 환율 등 조정항목일 수 있으나 내역은 제공되지 않았습니다.</p>
+<p>동시에 최신 분기 순이익은 <strong>81억 100만 달러</strong>인데 자기자본 증가액은 <strong>23억 9,800만 달러</strong>에 그칩니다. 이는 상당한 자본 변동이 있었음을 시사하지만, <strong>자사주 매입·배당·차입 상환 중 무엇인지는 확정할 수 없습니다.</strong></p>
+<p><strong>투자 시사점:</strong> 현금창출력 자체보다도, 창출한 현금이 어디로 배분됐는지를 확인하는 것이 다음 분석의 우선순위입니다.</p>
+<hr />
+<h5>6. SNDK 밸류에이션: 낮은 배수와 데이터 불일치</h5>
+<p>종합정보 도구가 제공한 주요 지표입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align:right">제공값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시가총액</td>
+<td style="text-align:right">약 1,223.7억 달러</td>
+</tr>
+<tr>
+<td>최근 12개월 매출</td>
+<td style="text-align:right">약 289.7억 달러</td>
+</tr>
+<tr>
+<td>최근 12개월 순이익</td>
+<td style="text-align:right">약 194.2억 달러</td>
+</tr>
+<tr>
+<td>최근 12개월 주당순이익</td>
+<td style="text-align:right">125.12달러</td>
+</tr>
+<tr>
+<td>후행 주가수익비율</td>
+<td style="text-align:right">6.87배</td>
+</tr>
+<tr>
+<td>선행 주가수익비율</td>
+<td style="text-align:right">2.98배</td>
+</tr>
+<tr>
+<td>예상 주당순이익</td>
+<td style="text-align:right">289.05달러</td>
+</tr>
+<tr>
+<td>주가순자산비율</td>
+<td style="text-align:right">6.83배</td>
+</tr>
+<tr>
+<td>최근 12개월 잉여현금흐름</td>
+<td style="text-align:right">약 112.4억 달러</td>
+</tr>
+<tr>
+<td>배당수익률</td>
+<td style="text-align:right">0.0%</td>
+</tr>
+</tbody>
+</table></div>
+<p>제공된 시가총액과 현금흐름을 이용하면:</p>
+<ul>
+<li>시가총액/매출: 약 <strong>4.22배</strong></li>
+<li>잉여현금흐름 수익률: 약 <strong>9.19%</strong></li>
+<li>시가총액/순이익: 약 <strong>6.30배</strong></li>
+</ul>
+<h6>반드시 확인해야 할 정합성 문제</h6>
+<ol>
+<li>
+<p><strong>주가수익비율 불일치</strong><br />
+시가총액/순이익으로 계산한 6.30배와 제공된 6.87배가 다릅니다. 산출 시점과 주식 수 기준을 확인해야 합니다.</p>
+</li>
+<li>
+<p><strong>순자산 배수 불일치</strong><br />
+시가총액/최신 자기자본은 약 <strong>6.75배</strong>로, 제공된 6.83배와 소폭 차이가 있습니다.</p>
+</li>
+<li>
+<p><strong>주당순이익·주당순자산이 암시하는 가격</strong><br />
+후행 주가수익비율×주당순이익은 약 <strong>860달러</strong>를 암시합니다. 이는 실시간 현재가가 아니므로 주문 기준가격으로 사용해서는 안 됩니다.</p>
+</li>
+<li>
+<p><strong>잉여현금흐름 기준 차이</strong><br />
+종합정보의 최근 12개월 잉여현금흐름은 계산 방식이 명시되지 않았고, 분기 현금흐름도 일부 누락돼 독립적인 재구성이 어렵습니다.</p>
+</li>
+</ol>
+<p>선행 주당순이익 289.05달러는 후행 수치보다 약 <strong>131% 높습니다.</strong> 그러나 예측 대상 회계연도, 추정기관 수와 갱신일이 없습니다. 따라서 <strong>선행 2.98배를 확정적인 저평가 근거로 쓰기에는 증거가 부족합니다.</strong></p>
+<hr />
+<h5>7. SNDK 내부자 거래와 최근 일주일의 정보 한계</h5>
+<p>최근 일주일인 <strong>11월 5일~11일</strong>에 해당하는 내부자 거래는 제공된 목록에 없습니다. 이는 <strong>거래가 전혀 없었다는 확정</strong>이 아니라, 조회 결과에서 확인되지 않았다는 뜻입니다.</p>
+<p>가장 최근 표시 거래는 다음과 같습니다.</p>
+<ul>
+<li><strong>11월 2일:</strong> 임원 Bernard Shek, <strong>600주 매도</strong>, 약 <strong>69만 5천 달러</strong></li>
+<li><strong>9월 17일:</strong> 최고경영자 David Goeckeler, <strong>33,841주 매도</strong>, 약 <strong>5,327만 달러</strong></li>
+<li><strong>9월 14일:</strong> 같은 최고경영자, <strong>33,838주 매도</strong>, 약 <strong>5,170만 달러</strong></li>
+</ul>
+<p>두 최고경영자 매도의 합계는 <strong>67,679주, 약 1억 497만 달러</strong>입니다.</p>
+<p>다만 거래 후 보유량, 사전 매매계획 여부, 세금 납부 목적이 제공되지 않았습니다. 무상 주식보상과 증여도 섞여 있으므로 이를 공개시장 매수와 동일하게 취급해서는 안 됩니다.</p>
+<p><strong>해석:</strong> 경영진 매도는 관찰할 위험 신호이지만, 이 자료만으로 실적 악화나 고평가에 대한 내부 판단을 확정할 수 없습니다.</p>
+<hr />
+<h5>8. SNDK 투자 검토를 위한 실행 가능한 점검 사항</h5>
+<p>최종 매매 판단에 앞서 다음 순서로 검증하는 것이 합리적입니다.</p>
+<ol>
+<li>
+<p><strong>원문 분기보고서에서 이익률 상승의 원인을 확인합니다.</strong><br />
+판매가격, 출하량, 제품 구성, 재고 관련 효과를 분리해야 최근 수익성의 지속성을 판단할 수 있습니다.</p>
+</li>
+<li>
+<p><strong>57억 5,500만 달러 재무활동 유출을 분해합니다.</strong><br />
+자사주 매입이라면 주식 수 감소를, 차입 상환이라면 차입금 감소를 확인해야 합니다.</p>
+</li>
+<li>
+<p><strong>유동부채 증가와 운전자본을 점검합니다.</strong><br />
+매출채권·재고·매입채무 세부 내역을 통해 높은 회계이익이 실제 현금으로 전환되는지 확인해야 합니다.</p>
+</li>
+<li>
+<p><strong>현재가와 주식 수를 같은 시점으로 맞춰 배수를 재계산합니다.</strong><br />
+공급원별 주가수익비율과 시가총액의 불일치를 해소하기 전에는 목표가격을 제시하지 않는 편이 적절합니다.</p>
+</li>
+<li>
+<p><strong>최근 이익을 그대로 연율화하지 않고 정상화 시나리오를 적용합니다.</strong><br />
+매출총이익률이 하락해도 잉여현금흐름과 가치평가가 견딜 수 있는지 검토해야 합니다.</p>
+</li>
+</ol>
+<p><strong>종합하면 SNDK의 보고 실적과 현금창출력은 긍정적이지만, 지속 가능한 이익과 자본배분을 검증하는 절차가 필요합니다. 본 보고서는 펀더멘털 연구 결과이며 최종 거래 판단은 유보합니다.</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>SNDK 확인 결과</th>
+<th>투자상 의미</th>
+<th>다음 확인 사항</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최근 일주일 정보</td>
+<td>해당 기간의 신규 사건·거래 확인 불가</td>
+<td>단기 촉매 판단 제한</td>
+<td>공시 제출일과 최신 뉴스</td>
+</tr>
+<tr>
+<td>매출 성장</td>
+<td>최신 분기 110.31억 달러, 전년 대비 약 378% 증가</td>
+<td>강한 실적 확대</td>
+<td>가격·물량·제품 구성별 기여</td>
+</tr>
+<tr>
+<td>수익성</td>
+<td>매출총이익률 85.0%, 영업이익률 79.6%</td>
+<td>높은 보고 수익성</td>
+<td>일회성 효과와 지속 가능성</td>
+</tr>
+<tr>
+<td>실적 변동성</td>
+<td>2025년 3월 분기 순손실 19.33억 달러</td>
+<td>최근 이익의 단순 연율화 위험</td>
+<td>과거 손실의 비용 내역</td>
+</tr>
+<tr>
+<td>영업현금흐름</td>
+<td>최신 분기 63.63억 달러, 순이익 대비 78.5%</td>
+<td>현금창출 개선</td>
+<td>운전자본·비현금 항목</td>
+</tr>
+<tr>
+<td>단순 잉여현금흐름</td>
+<td>최신 분기 63.09억 달러</td>
+<td>강한 현금 여력</td>
+<td>합작사업·기타 투자 부담</td>
+</tr>
+<tr>
+<td>유동성</td>
+<td>유동비율 2.58배, 현금/유동부채 0.86배</td>
+<td>기본 완충력 양호</td>
+<td>비현금 유동자산의 질</td>
+</tr>
+<tr>
+<td>유동부채</td>
+<td>전년 대비 약 293% 증가</td>
+<td>단기 의무 확대</td>
+<td>부채 구성과 지급 일정</td>
+</tr>
+<tr>
+<td>자본배분</td>
+<td>재무활동 현금유출 57.55억 달러</td>
+<td>자금 사용처가 중요</td>
+<td>자사주·배당·차입 상환 내역</td>
+</tr>
+<tr>
+<td>밸류에이션</td>
+<td>제공 후행 6.87배, 선행 2.98배</td>
+<td>표면적으로 낮은 배수</td>
+<td>가격·주식 수·이익 기준 통일</td>
+</tr>
+<tr>
+<td>내부자 거래</td>
+<td>최근 일주일 표시 거래 없음, 9월 경영진 매도 확인</td>
+<td>보조적 위험 신호</td>
+<td>사전 매매계획·잔여 지분</td>
+</tr>
+<tr>
+<td>최종 연구 판단</td>
+<td>실적 개선은 긍정적이나 검증 필요</td>
+<td>확정 매매 의견 유보</td>
+<td>원문 공시와 수치 정합성 검증</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. 투자 검토팀 판단</h2><h3 id="s2-1">상승론 분석가</h3>
+<p>Bull Analyst: # SNDK 강세 논증: 시장은 이익 정상화를 걱정하지만, 현금창출력까지 과소평가해서는 안 됩니다</p>
+<p><strong>투자 의견</strong>: BULLISH</p>
+<p><strong>분석 기준: 제공된 2026년 11월 11일자 연구자료. 가격 기준은 최신 제공 종가인 11월 10일의 859.99달러이며, 실시간 시세가 아닙니다.</strong></p>
+<p>제 강세 논지는 “많이 떨어졌으니 반등한다”가 아닙니다. <strong>SNDK는 보고된 매출과 현금창출력이 크게 확대된 반면, 시장은 이미 상당한 이익 감소 가능성을 반영하는 낮은 이익 배수를 부여하고 있습니다.</strong> 투자 판단의 핵심은 최고 이익률이 영원히 유지되느냐가 아니라, 이익이 정상화된 뒤에도 현재 가격을 정당화할 수 있느냐입니다.</p>
+<p>아직 약세 분석가의 직접적인 주장은 없으므로, 제공된 연구에서 제기한 가장 강한 우려부터 짚겠습니다.</p>
+<h5>1. “낸드 업황 정점 아닌가?” — 맞는 질문이지만, 성장의 규모도 함께 봐야 합니다</h5>
+<p>제공된 재무자료상 SNDK의 2026년 10월 2일 종료 분기는 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">제공 자료상 실적</th>
+<th>강세 관점의 의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">110억 3,100만 달러</td>
+<td>전년 동기 대비 약 378% 증가</td>
+</tr>
+<tr>
+<td>영업이익</td>
+<td style="text-align:right">87억 8,000만 달러</td>
+<td>큰 폭의 영업 레버리지 발생</td>
+</tr>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">63억 6,300만 달러</td>
+<td>이익 확대가 상당한 현금 유입으로 연결</td>
+</tr>
+<tr>
+<td>단순 잉여현금흐름</td>
+<td style="text-align:right">63억 900만 달러</td>
+<td>보고된 설비투자 차감 후에도 높은 현금창출</td>
+</tr>
+</tbody>
+</table></div>
+<p>물론 매출총이익률 85%를 장기 정상 수준으로 가정하지는 않겠습니다. 매출이 약 4.8배로 늘었는데 매출원가는 약 2% 증가하는 데 그쳤다는 점은 <strong>가격·제품 구성·재고 효과 등을 원문 공시로 반드시 확인해야 하는 대목</strong>입니다.</p>
+<p>그렇더라도 “이익률이 너무 높다”는 이유만으로 영업현금흐름 63억 6,300만 달러까지 무시할 수는 없습니다. 순이익 대비 현금 전환율은 약 78.5%입니다. 완벽한 전환은 아니지만, 보고된 성과가 회계이익에만 머물렀다는 주장과는 거리가 있습니다.</p>
+<p>약세 측에 되묻고 싶습니다. <strong>이익이 줄어들 수 있다는 점과, 현재 가격에서도 투자 매력이 없다는 점은 정말 같은 주장입니까?</strong></p>
+<h5>2. 낮은 배수의 함정? 정상화 이익으로 직접 시험해 볼 수 있습니다</h5>
+<p>제공된 후행 주당순이익 125.12달러와 기준 종가 859.99달러를 이용하면 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>가정</th>
+<th style="text-align:right">가정한 연간 주당순이익</th>
+<th style="text-align:right">기준 가격 대비 주가수익비율</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>후행 이익 유지</td>
+<td style="text-align:right">125.12달러</td>
+<td style="text-align:right">약 6.9배</td>
+</tr>
+<tr>
+<td>후행 대비 30% 감소</td>
+<td style="text-align:right">87.58달러</td>
+<td style="text-align:right">약 9.8배</td>
+</tr>
+<tr>
+<td>후행 대비 50% 감소</td>
+<td style="text-align:right">62.56달러</td>
+<td style="text-align:right">약 13.7배</td>
+</tr>
+<tr>
+<td>후행 대비 60% 감소</td>
+<td style="text-align:right">50.05달러</td>
+<td style="text-align:right">약 17.2배</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>이는 이익 전망이나 목표가격이 아니라, 이익 감소에 대한 민감도 분석입니다.</strong> 주식 수와 주당순이익 기준도 재확인이 필요합니다.</p>
+<p>그럼에도 이 분석의 메시지는 명확합니다. SNDK의 강세 논리가 성립하려고 반드시 현재의 초고수익성이 유지될 필요는 없습니다. 후행 이익이 절반으로 줄어드는 가정에서도 배수는 약 13.7배입니다. 그것이 자동으로 저평가를 뜻하지는 않지만, 성장 여지가 있는 저장장치 사업에 적용하기에 명백히 과도한 수준이라고 단정하기도 어렵습니다.</p>
+<p>반대로 이익이 60% 이상 줄고 회복도 지연된다면 투자 매력은 크게 약해집니다. <strong>강세 논리는 무제한적인 낙관이 아니라, 시장이 반영한 정상화 폭이 지나친지 검증하는 데 있습니다.</strong></p>
+<p>제공된 선행 주가수익비율 2.98배는 추정 기간과 갱신일이 불분명하므로 핵심 근거에서 제외하겠습니다.</p>
+<h5>3. 성장 기회는 단순한 가격 상승을 넘어섭니다</h5>
+<p>SNDK에 대한 긍정적 보도는 인공지능 저장 수요, 기술 제품군, 수십억 달러 규모의 계약 매출 가능성을 공통으로 지목합니다.</p>
+<p>인공지능 인프라는 연산뿐 아니라 데이터를 저장하고 반복적으로 읽는 기반도 필요합니다. 따라서 SNDK의 기회는 낸드 가격 상승만이 아니라 <strong>저장 용량 확대와 고부가 제품 수요 증가</strong>에도 있습니다.</p>
+<p>다만 구분은 필요합니다.</p>
+<ul>
+<li><strong>확인된 자료:</strong> 연결 매출과 현금흐름의 큰 폭 개선.</li>
+<li><strong>보도된 성장 근거:</strong> 인공지능 저장 수요와 대규모 계약 매출.</li>
+<li><strong>아직 입증되지 않은 부분:</strong> 계약의 최소 구매 의무, 가격 조건, 수익성, 제품별 성장률.</li>
+</ul>
+<p>계약 조건이 확인된다면 매출 가시성이 개선될 수 있습니다. 그러나 현재 자료만으로 확정적인 장기 매출 전망을 제시하지는 않겠습니다.</p>
+<h5>4. “중국 업체에 점유율을 빼앗긴다” — 중요한 위험이지만, 전체 결론은 아닙니다</h5>
+<p>점유율 하락 보도는 가볍게 볼 사안이 아닙니다. 다만 제공 자료에는 그것이 매출 기준인지 출하량 기준인지, 어느 제품군에서 발생했는지 나오지 않습니다.</p>
+<p>시장점유율과 절대 매출은 다릅니다. 시장 자체가 충분히 성장한다면 점유율이 일부 하락해도 매출은 증가할 수 있습니다. 반대로 고부가 제품에서 경쟁력을 잃고 있다면 강세 논리는 훨씬 약해집니다.</p>
+<p>SNDK의 경쟁우위에 대해서도 과장하지 않겠습니다. 이번 자료만으로 독점적 기술이나 가격 결정력을 입증할 수는 없습니다. 대신 강세 측이 주목할 기반은 다음입니다.</p>
+<ul>
+<li>이미 상당한 매출을 창출하는 사업 규모</li>
+<li>보도된 기술 제품군과 대규모 계약 기회</li>
+<li>기술 개발과 경쟁 대응을 뒷받침할 현금창출 능력</li>
+</ul>
+<p><strong>이는 경쟁우위의 기반이지, 영구적인 해자의 증명은 아닙니다.</strong> 다음 확인 지점은 전체 점유율 숫자 하나보다 기업용·고부가 제품의 매출, 고객 유지, 수익성입니다.</p>
+<h5>5. 재무상태는 하락 국면을 버틸 완충력을 제공합니다</h5>
+<p>제공 자료상 SNDK는 현금 및 현금성자산 51억 3,600만 달러, 유동비율 2.58배, 자기자본비율 70.3%를 보유합니다. 이는 업황 둔화가 곧바로 유동성 위기로 이어지는 구조와는 다릅니다.</p>
+<p>물론 유동부채 증가와 57억 5,500만 달러의 재무활동 현금유출은 확인해야 합니다. 이를 자사주 매입이나 주주환원이라고 임의로 해석해서는 안 됩니다. 단순 잉여현금흐름 역시 합작사업 출자 등 전체 생산 관련 부담을 모두 반영했는지 불명확합니다.</p>
+<p>그럼에도 현재 확인되는 재무구조는 <strong>성장 투자와 경기 대응을 위한 실질적인 완충력이 있다</strong>는 평가를 지지합니다.</p>
+<h5>6. “차트가 무너졌다” — 단기 경고는 인정하지만, 기업가치 판정과는 다릅니다</h5>
+<p>SNDK가 10일·50일 이동평균 아래에 있다는 점은 명백한 약세 신호입니다. 저는 이를 부정하지 않습니다.</p>
+<p>다만 상대강도지수 29.18과 MACD 히스토그램의 음수 폭 축소는 매도 압력 완화 가능성을 보여줍니다. 바닥 확인은 아니지만, 현 수준에서 추가 하락만 추격하는 전략에도 위험이 있다는 뜻입니다.</p>
+<p>강세 관점의 실행은 한 번에 크게 매수하는 방식이 아니라 <strong>검증에 따라 나누어 접근하는 방식</strong>이 적절합니다.</p>
+<ul>
+<li>원문 재무자료와 최신 가격 확인 후 제한적인 초기 진입 검토</li>
+<li>914.82달러 회복·유지와 거래량 개선 시 추가 진입 검토</li>
+<li>갱신된 10일 이동평균 회복 시 추세 개선 재평가</li>
+<li>826.667달러와 806.43달러 아래로 약화되면 위험 노출 재검토</li>
+</ul>
+<p>이 가격들은 제공된 과거 관찰점이지 확정 지지선이나 손절 보장선이 아닙니다. 평균진폭이 약 104.68달러에 달하므로 포지션 규모는 작게 가져갈 필요가 있습니다.</p>
+<h5>결론: SNDK의 강세 논리는 최고 이익의 영구 지속을 요구하지 않습니다</h5>
+<p>약세 측은 이익률 정상화, 경쟁 심화, 금리 부담, 하락 추세를 지적할 것입니다. 모두 타당한 위험입니다. 그러나 <strong>그 위험이 존재한다는 사실만으로, 상당한 이익 감소를 반영할 여지가 있는 현재 배수와 강한 현금창출력을 무효화할 수는 없습니다.</strong></p>
+<p>제 판단은 <strong>중장기·고위험 감내 투자자에게 검증 후 소규모 분할 매수</strong>입니다. 근거는 주식분할이나 과거 고점 회복 기대가 아니라, 성장하는 저장 수요와 현금창출력, 그리고 정상화 이익에서도 검토할 만한 가치평가입니다.</p>
+<p>반대로 원문 공시에서 보고 수치가 크게 수정되거나, 고부가 제품 경쟁력 훼손과 지속적인 현금흐름 악화가 확인된다면 강세 의견을 철회해야 합니다. <strong>현재 자료에서 강세 측이 주장할 수 있는 가장 설득력 있는 결론은 “위험이 없다”가 아니라 “위험만큼이나 가격에 반영된 비관도 검증해야 한다”입니다.</strong></p>
+<p>최종 매매 제안: 매수</p>
+<h3 id="s2-2">하락론 분석가</h3>
+<p>Bear Analyst: # SNDK 약세 반론: 낮은 배수는 안전마진이 아니라, 정점 이익에 대한 경고일 수 있습니다</p>
+<p><strong>투자 의견</strong>: BEARISH</p>
+<p><strong>분석 기준은 제공된 2026년 11월 11일자 연구자료입니다. 가격은 최신 제공 종가인 11월 10일의 859.99달러이며 실시간 시세가 아닙니다. 재무수치는 제공 자료 기준이고, 원문 공시와의 대조가 필요합니다.</strong></p>
+<p>강세 분석가님, SNDK의 현금창출력이 크게 개선됐다는 점은 인정합니다. 제 약세 논리는 “이익이 전부 회계상 허상이다”가 아닙니다.</p>
+<p><strong>문제는 현재의 높은 이익이 얼마나 지속되는지 입증되지 않았는데도, 그 이익으로 계산한 낮은 배수를 안전마진으로 받아들이고 있다는 점입니다.</strong> SNDK는 업황 정상화, 경쟁 심화, 현금 사용처의 불확실성에 동시에 노출돼 있습니다. 이 상황에서 소규모 매수는 위험을 줄일 수는 있어도, 투자 논리의 빈틈을 메워주지는 못합니다.</p>
+<h5>1. “이익이 절반으로 줄어도 13.7배”라는 계산에는 중요한 가정이 빠져 있습니다</h5>
+<p>강세 측 질문에 먼저 답하겠습니다.</p>
+<blockquote>
+<p>“이익이 줄어들 수 있다는 점과 현재 가격에서도 투자 매력이 없다는 점은 같은 주장입니까?”</p>
+</blockquote>
+<p>같은 주장은 아닙니다. 하지만 <strong>이익 감소의 바닥과 적정 배수 모두 불확실하다면, 낮은 후행 배수만으로 투자 매력이 있다고 결론 내릴 수도 없습니다.</strong></p>
+<p>강세 측은 후행 주당순이익 125.12달러가 절반으로 줄면 현재 가격의 주가수익비율이 약 13.7배라고 설명했습니다. 산술적으로 맞습니다. 그러나 이는 현재 가격을 유지한 채 배수를 계산한 것이지, 정상화 이후 적정가치를 입증한 것은 아닙니다.</p>
+<p>같은 가정에 배수 변화까지 적용해 보겠습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>가상 시나리오</th>
+<th style="text-align:right">연간 주당순이익</th>
+<th style="text-align:right">적용 배수</th>
+<th style="text-align:right">산술적 주당 가치</th>
+<th style="text-align:right">기준 종가 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>후행 이익 50% 감소</td>
+<td style="text-align:right">62.56달러</td>
+<td style="text-align:right">12배</td>
+<td style="text-align:right">750.72달러</td>
+<td style="text-align:right">약 −12.7%</td>
+</tr>
+<tr>
+<td>후행 이익 50% 감소</td>
+<td style="text-align:right">62.56달러</td>
+<td style="text-align:right">10배</td>
+<td style="text-align:right">625.60달러</td>
+<td style="text-align:right">약 −27.3%</td>
+</tr>
+<tr>
+<td>후행 이익 70% 감소</td>
+<td style="text-align:right">37.54달러</td>
+<td style="text-align:right">12배</td>
+<td style="text-align:right">약 450.43달러</td>
+<td style="text-align:right">약 −47.6%</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>이는 목표가격이나 실적 전망이 아니라 민감도 분석입니다. 적용 배수 역시 검증된 적정 배수가 아닙니다.</strong></p>
+<p>핵심은 명확합니다. 이익이 감소하고 시장이 경기민감성과 경쟁 위험을 더 크게 평가하면, 낮아 보였던 배수에서도 추가 손실이 발생할 수 있습니다. 강세 측의 분석은 정상화 가능성을 보여주지만, 충분한 안전마진을 증명하지는 못합니다.</p>
+<h5>2. 매출 378% 증가보다 중요한 것은, 그 증가의 원천입니다</h5>
+<p>제공 자료상 최신 분기 SNDK의 매출총이익률은 <strong>85.0%</strong>, 영업이익률은 **79.6%**입니다. 매출은 전년 동기 약 4.8배로 증가했지만 매출원가는 약 2% 증가하는 데 그쳤습니다.</p>
+<p>강세 측은 이를 강한 영업 레버리지로 평가합니다. 저는 먼저 묻겠습니다.</p>
+<p><strong>얼마나 많은 부분이 지속 가능한 출하량·제품 구성 개선이고, 얼마나 많은 부분이 유리한 판매가격이나 재고 관련 효과입니까?</strong></p>
+<p>현재 자료에는 이를 구분할 정보가 없습니다. 따라서 다음 두 설명을 분리할 수 없습니다.</p>
+<ul>
+<li>경쟁력과 고부가 제품 비중 상승에 따른 구조적 수익성 개선</li>
+<li>유리한 가격 환경 등에 따른 경기순환적 수익 급증</li>
+</ul>
+<p>이 차이는 가치평가의 핵심입니다. 예를 들어 매출이 동일하다고 가정하면, 매출총이익률이 85%에서 65%로 내려가는 것만으로도 분기 매출총이익은 약 <strong>22억 600만 달러</strong> 감소합니다. 이는 보고된 분기 영업이익 87억 8,000만 달러의 약 25%에 해당합니다. 다른 조건을 고정한 단순 계산이지만, 이익률 정상화에 대한 민감도가 크다는 점을 보여줍니다.</p>
+<p>낸드 가격 상승 둔화 보도가 곧 가격 하락을 뜻하지는 않습니다. 그러나 <strong>비정상적으로 높은 수익성이 유지돼야 하는 기업에는 가격 상승의 둔화만으로도 기대이익 하향 위험이 생깁니다.</strong></p>
+<h5>3. 현금은 실제로 들어왔습니다. 다만 그 현금이 반복 가능한 주주 몫인지는 별개입니다</h5>
+<p>영업현금흐름 63억 6,300만 달러를 무시할 이유는 없습니다. 하지만 강세 측이 강조한 단순 잉여현금흐름 63억 900만 달러를 그대로 지속 가능한 현금창출력으로 받아들이기도 어렵습니다.</p>
+<p>확인해야 할 사항이 세 가지입니다.</p>
+<p><strong>첫째, 표시된 설비투자는 5,400만 달러로 매출의 약 0.5%입니다.</strong><br />
+제공 보고서도 합작사업 출자 등 전체 생산 관련 투자 부담이 이 계산에 포함됐는지 불명확하다고 지적합니다. 누락된 비용이 있다고 단정할 수는 없지만, 전체 재투자 부담이 검증되지 않은 현금흐름에 높은 확신을 부여해서도 안 됩니다.</p>
+<p><strong>둘째, 영업현금흐름은 순이익보다 약 17억 3,800만 달러 적습니다.</strong><br />
+전환율 78.5% 자체가 위험 신호라는 뜻은 아닙니다. 다만 운전자본과 비현금 항목의 구성이 없으므로 향후 전환율을 낙관할 근거도 부족합니다.</p>
+<p><strong>셋째, 재무활동에서 57억 5,500만 달러가 유출됐습니다.</strong><br />
+이는 같은 분기 영업현금흐름의 약 90%입니다. 현금잔액은 전분기 대비 3억 7,400만 달러 증가하는 데 그쳤습니다.</p>
+<p>이 유출이 자사주 매입인지, 차입 상환인지, 다른 지급인지 확인되지 않았습니다. 좋은 자본배분일 수도 있습니다. 그러나 <strong>용도를 모르는 대규모 유출을 주주가치 창출로 선반영할 수는 없습니다.</strong></p>
+<h5>4. “시장이 커지면 점유율 하락을 상쇄한다”는 반론은 이익을 설명하지 못합니다</h5>
+<p>강세 분석가님 말씀대로 시장이 충분히 성장하면 점유율이 내려가도 절대 매출은 증가할 수 있습니다. 하지만 투자자가 받는 것은 시장 전체의 성장률이 아니라 <strong>SNDK에 남는 이익과 현금흐름</strong>입니다.</p>
+<p>제공된 기사 요약에는 SNDK의 점유율 하락과 중국 낸드 업체의 점유율 상승이 보도돼 있습니다. 측정 기준과 제품군이 없어 확정적인 경쟁력 훼손으로 단정하지는 않겠습니다. 다만 보도가 확인된다면 다음 위험이 있습니다.</p>
+<ul>
+<li>점유율 방어를 위한 가격 양보</li>
+<li>고객의 대체 공급처 확보에 따른 협상력 약화</li>
+<li>제품 개발과 생산 경쟁력 유지를 위한 추가 투자</li>
+</ul>
+<p>결국 <strong>출하량이 늘어도 단위당 수익과 투자 후 현금흐름은 줄어들 수 있습니다.</strong></p>
+<p>인공지능 저장 수요와 수십억 달러 계약 보도도 이 문제를 자동으로 해결하지 않습니다. 계약 기간, 가격 조정, 최소 구매 의무, 취소 조건, 공급 투자액이 없습니다. 매출 가시성과 이익 가시성은 다릅니다.</p>
+<p>강세 측도 지속적인 가격 결정력이나 고부가 제품 경쟁우위가 입증되지 않았다고 인정했습니다. 그렇다면 현재의 높은 이익률에 대한 신뢰 역시 제한해야 일관적입니다.</p>
+<h5>5. 건전한 재무상태는 인정하지만, 주가의 하방 방어선은 아닙니다</h5>
+<p>SNDK의 유동비율 2.58배와 자기자본비율 70.3%는 분명한 완충력입니다. 저는 단기 유동성 위기나 지급불능을 기본 시나리오로 주장하지 않습니다.</p>
+<p>다만 다음을 구분해야 합니다.</p>
+<blockquote>
+<p><strong>회사가 불황을 버틸 수 있다는 것과, 현재 주가에서 투자자가 손실을 피할 수 있다는 것은 다릅니다.</strong></p>
+</blockquote>
+<p>유동부채는 전년 대비 약 293% 늘어난 59억 5,100만 달러이며 구성은 확인되지 않았습니다. 현금은 51억 3,600만 달러입니다. 이것만으로 위기라고 할 수는 없지만, 비현금 유동자산의 질과 지급 일정을 점검해야 합니다.</p>
+<p>제공 시가총액과 자기자본으로 계산한 주가순자산비율도 약 6.75배입니다. 낮은 이익 배수와 달리, <strong>순자산 대비 가격 자체가 극히 낮은 상태는 아닙니다.</strong> 높은 수익성이 훼손되면 재무적 완충력만으로 현재 평가를 지탱하기 어렵습니다.</p>
+<h5>6. 차트와 거시는 “지금 매수해야 한다”는 주장을 더 약하게 만듭니다</h5>
+<p>최신 제공 종가 859.99달러는 다음 수준에 있습니다.</p>
+<ul>
+<li>10일 지수이동평균 1,011.26달러보다 약 <strong>15.0% 아래</strong></li>
+<li>50일 단순이동평균 1,478.33달러보다 약 <strong>41.8% 아래</strong></li>
+<li>10월 28일 종가 1,404.77달러 대비 약 <strong>38.8% 하락</strong></li>
+</ul>
+<p>주가 하락이 기업가치 훼손을 증명하지는 않습니다. 그러나 아직 매수세가 하락 추세를 뒤집지 못했다는 증거는 됩니다.</p>
+<p>상대강도지수 29.18과 음수 폭이 줄어드는 MACD 히스토그램은 급반등 가능성을 시사합니다. <strong>그것은 추격 공매도를 경계할 이유이지, 중장기 매수를 정당화하는 근거는 아닙니다.</strong> 평균진폭 104.683달러도 기준 종가의 약 12.2%로, 진입 시점의 위험이 작지 않습니다.</p>
+<p>여기에 물가·국채금리 상승과 긴축 기대 보도가 겹칩니다. 공식 지표 확인에 한계가 있어 구체적인 금리 경로를 단정하지 않겠습니다. 다만 할인율 상승과 고객 투자비용 증가는 이익 정상화 위험을 완화하기보다 악화시킬 수 있습니다.</p>
+<h5>결론: 검증이 매수 조건이라면, 검증 전 결론은 매수가 아닙니다</h5>
+<p>강세 측은 원문 공시, 계약 수익성, 투자 부담, 경쟁력을 확인한 뒤 소규모로 접근하자고 합니다. 그러나 현재 확보된 자료로는 그 확인이 끝나지 않았습니다.</p>
+<p><strong>분할 매수는 포지션 관리 방식이지, 불확실한 정상화 이익을 확실하게 만드는 방법이 아닙니다.</strong></p>
+<p>제 판단은 다음과 같습니다.</p>
+<ul>
+<li><strong>신규 투자자:</strong> SNDK 매수를 보류하는 편이 타당합니다.</li>
+<li><strong>기존 보유자:</strong> 높은 이익률의 지속을 전제로 한 보유 논리라면 비중 축소와 집중도 완화를 검토해야 합니다.</li>
+<li><strong>공매도 검토자:</strong> 과매도와 급반등 위험 때문에 현재 수준의 추격 매도는 별개로 경계해야 합니다.</li>
+</ul>
+<p>약세 의견을 재검토할 조건은 명확합니다. 판매가격·물량·제품 구성별 실적 설명, 전체 생산 관련 투자 이후의 현금흐름, 계약 수익성, 경쟁력 방어가 확인돼야 합니다.</p>
+<p><strong>SNDK는 강한 과거 실적을 보여줬습니다. 하지만 강한 과거 실적과 매력적인 현재 투자기회는 같은 말이 아닙니다. 현재 자료에서는 낮은 배수보다, 그 배수의 분모가 얼마나 줄어들 수 있는지를 먼저 봐야 합니다.</strong></p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s2-3">투자 검토 책임자</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>판단 근거</strong>: SNDK는 강세 측이 제시한 큰 폭의 매출 증가, 영업현금흐름 63억 6,300만 달러, 유동비율 2.58배가 의미 있는 방어 요인입니다. 후행 이익이 절반 감소해도 제공 기준가격 대비 주가수익비율은 약 13.7배라는 계산도 맞습니다. 다만 이는 적정가치를 입증하지 않습니다. 매출총이익률 85%의 발생 원인과 지속성, 합작사업 등을 포함한 전체 생산 투자 부담, 대규모 재무활동 현금유출의 용도가 확인되지 않아 정상화 이익과 주주에게 남는 현금흐름을 신뢰하기 어렵다는 약세 측 주장이 더 설득력 있습니다. 경쟁 관련 보도와 하락 추세는 보조적 위험이지 경쟁력 훼손의 확증은 아닙니다. 따라서 완전 매도보다는 비중 축소가 적절합니다. 제공된 2026년 11월 자료와 859.99달러는 검증된 현재 정보가 아니며, 판단은 제시된 자료에 한정됩니다.</p>
+<p><strong>대응 계획</strong>: SNDK 목표 노출을 표준 배분의 50%로 낮춥니다. 실제 보유량은 알 수 없으므로 트레이더가 현재 비중과 비교해 적용하고, 이미 목표 이하라면 자동으로 매수해 채우지 않습니다. 목표 초과분은 최신 가격·유동성·기업행사 확인 후 2~3회 지정가 주문으로 축소하되, 확인 지연을 무기한 축소 연기의 근거로 삼지 않습니다. 신규 매수와 물타기는 보류하고, 과매도 및 제공 평균진폭 약 12.2%를 고려해 신규 공매도나 레버리지 확대는 하지 않습니다. 과거 914.82달러, 826.667달러, 806.43달러는 현재 자동 주문 기준으로 사용하지 않습니다. 원문 공시의 매출·이익·희석주식수 대조, 판매가격·물량·제품 구성별 이익 설명, 합작사업 부담을 포함한 현금흐름, 재무활동 유출 용도와 계약 수익성을 확인한 뒤 재평가합니다. 정상화 후 이익과 투자 후 현금흐름이 가격을 지지하면 표준 배분 복원을 검토하고, 수치의 중대한 오류나 지속적인 현금흐름·경쟁력 악화가 확인되면 추가 축소 또는 청산을 검토합니다.</p>
+</section><section id="s3"><h2>III. 매매 계획</h2><h3 id="s3-1">매매 담당</h3>
+<p><strong>대응</strong>: 매도</p>
+<p><strong>판단 근거</strong>: SNDK는 연구 계획의 비중 축소 판단에 따라 전량 청산이 아닌 목표 초과 보유분 매도를 권고합니다. 제공 종가 859.99달러가 10일 지수이동평균 1,011.26달러와 50일 단순이동평균 1,478.33달러 아래에 있어 약세 구조가 유지되며, 이익과 투자 후 현금흐름의 지속성도 확인되지 않았습니다. 다만 상대강도지수 29.18과 평균진폭 104.683달러는 과매도 반등과 큰 가격 변동 위험을 시사하므로 신규 공매도나 일괄 청산 대신 분할 축소가 적절합니다. 최신 가격과 유동성이 없어 과거 가격을 현재 지정가나 손절가로 사용하지 않습니다.</p>
+<p><strong>진입 가격</strong>: 제시되지 않음</p>
+<p><strong>손절 기준</strong>: 제시되지 않음</p>
+<p><strong>보유 비중 계획</strong>: SNDK 목표 비중은 투자자 본인의 표준 배분의 50%로 설정합니다. 현재 비중이 목표를 초과할 때만 초과분을 최신 가격·유동성·기업행사 확인 후 2~3회 지정가 주문으로 축소하고, 이미 목표 이하이면 추가 매도나 목표 충족을 위한 자동 매수를 하지 않습니다. 신규 매수·물타기·공매도·레버리지 확대는 보류합니다.</p>
+<p>최종 매매 제안: <strong>매도</strong></p>
+</section><section id="s4"><h2>IV. 위험 관리팀 판단</h2><h3 id="s4-1">적극적 위험 분석가</h3>
+<p>적극적 위험 분석가: 저는 SNDK의 목표 초과 보유분 매도에 찬성합니다. 공격적 투자란 변동성이 큰 종목을 무조건 더 사는 것이 아닙니다. 기대수익의 근거가 약해진 초과 노출은 과감히 줄이면서, 큰 상승이 가능한 핵심 포지션은 남기는 것입니다. 이번 매도은 SNDK의 성장성을 포기하는 결정이 아니라, 반등 참여권과 다음 투자 기회를 동시에 확보하는 자본배분 전략입니다.</p>
+<p>아직 보수적·중립적 분석가의 실제 발언은 없으므로, 아래 반론은 제공된 보고서에서 도출할 수 있는 예상 주장에 대한 것입니다.</p>
+<p>먼저 보수적 관점에서 “추세가 무너졌으니 전량 청산해야 한다”고 주장한다면, 저는 그 결론이 상승 기회를 지나치게 희생한다고 반박하겠습니다. SNDK의 제공된 최신 분기 매출은 전년 대비 약 378% 증가했고, 영업현금흐름은 63억 6,300만 달러입니다. AI 저장 수요와 수십억 달러 규모 계약 매출에 관한 보도도 있습니다. 계약 조건과 재무자료의 정합성은 추가 검증이 필요하지만, 이 정도의 사업 확장 가능성을 단순히 주가 하락만으로 지워서는 안 됩니다. 지속성이 미확인이라는 것은 현금창출력이 없다는 뜻이 아닙니다. 따라서 표준 배분의 절반에 해당하는 목표 비중을 남기는 접근은, 검증되지 않은 낙관론에 계좌를 맡기지 않으면서도 성장의 상방에 참여하는 선택입니다.</p>
+<p>기술적으로도 전량 청산과 신규 공매도는 구분해야 합니다. 제공된 SNDK 상대강도지수는 29.18이고, MACD 히스토그램의 음수 폭은 최근 줄어드는 흐름입니다. 상승 전환의 증거는 아니지만, 매도 압력이 완화될 가능성은 있습니다. 제공 종가 859.99달러에서 당시 10일 지수이동평균 1,011.26달러까지의 거리는 약 17.6%입니다. 이는 목표수익률이나 도달 예측이 아니라, 하락 추세 안에서도 반등 폭이 상당할 수 있음을 보여주는 비교입니다. 이 구간에서 상승 노출을 모두 없애거나 새로 공매도하는 것은 공격적인 판단이라기보다 한 방향에 과도하게 베팅하는 판단일 수 있습니다.</p>
+<p>반대로 중립적 관점의 “확인될 때까지 WAIT가 최선”이라는 주장에는, 신규 진입과 기존 초과 보유를 혼동해서는 안 된다고 답하겠습니다. SNDK를 새로 살지 기다리는 것과, 목표보다 많이 보유한 상태를 그대로 유지하는 것은 전혀 다릅니다. 제공 가격은 10일·50일 이동평균을 모두 밑돌고, 10월 28일 종가 1,404.77달러에서 11월 10일 859.99달러까지 약 38.8% 하락했습니다. 추세 확인을 기다리는 동안에도 초과 포지션에는 계속 위험이 누적됩니다. 기다림은 중립적인 무행동이 아니라, 현재 노출을 유지하는 투자 결정입니다. 초과분을 줄이는 편이 이후 더 설득력 있는 기회에 대응할 선택권을 확보합니다.</p>
+<p>“과매도이니 반등할 때까지 매도를 미루자”는 주장도 설득력이 부족합니다. SNDK의 평균진폭 104.683달러는 제공 종가의 약 12.2%에 해당합니다. 평균진폭은 하루 수익률 예측이나 최대 손실 한도가 아니지만, 가격 흔들림이 크다는 점은 분명합니다. 반등을 기다리다가 추가 하락을 감수할 수도 있고, 한 번에 팔았다가 급반등을 놓칠 수도 있습니다. 그래서 초과 보유분만 2~3회로 나누어 지정가 주문으로 축소하는 방식이 낫습니다. 다만 분할 주문이 더 좋은 평균 체결가를 보장하는 것은 아니므로, 최신 호가와 유동성을 보고 실행해야 합니다.</p>
+<p>저평가 논리 역시 SNDK를 과다 보유할 충분한 근거는 아닙니다. 제공된 후행 주가수익비율 6.87배와 선행 2.98배는 매력적으로 보입니다. 그러나 최신 분기 매출총이익률 85%의 지속성을 설명할 자료가 부족하고, 주식 수와 산출 시점에도 불일치가 있습니다. 제 입장은 “낮은 배수는 함정이니 모두 팔자”도, “싸 보이니 물타기하자”도 아닙니다. 재평가 가능성은 핵심 포지션으로 확보하되, 정상화 이익을 검증하기 전까지 초과 자본을 묶어두지 말자는 것입니다.</p>
+<p>심리와 거시환경도 이 선택을 뒷받침합니다. SNDK 심리 점수는 4.6/10으로 혼조·약세 편향이지만 신뢰도가 낮아, 이를 투매의 끝이나 추가 급락의 확증으로 쓸 수는 없습니다. 손실 피로는 반등 시 매도 압력으로 이어질 가능성이 있고, AI 수요 기대는 반대로 회복 촉매가 될 수 있습니다. 금리 인상 기대와 NAND 경쟁 우려까지 고려하면 집중 보유를 정당화할 증거는 부족합니다. 다만 예측시장 확률은 공식 금리 전망이 아니며, 보도된 주식분할도 공식 확인이 필요합니다. 분할 자체를 기업가치 상승으로 계산해서는 안 됩니다.</p>
+<p>결론적으로 SNDK에서는 “전부 지키거나 전부 버리는” 선택보다, 초과 노출은 줄이고 성장의 상방은 남기는 전략이 더 경쟁력 있습니다. 목표 비중은 투자자 본인의 표준 배분의 50%로 적용하되, 이것이 개인별 최적 비중으로 검증된 수치는 아니라는 점은 분명히 해야 합니다. 현재 비중이 목표를 넘을 때만 초과분을 축소하고, 이미 목표 이하라면 추가 매도도 자동 매수도 하지 않습니다. 실제 보유량과 현금은 알 수 없으므로 매도 수량을 임의로 정하지 않겠습니다. 주문 전에는 최신 가격·유동성·기업행사를 확인하고, 제공된 과거 가격을 현재 지정가나 손절가로 사용하지 않습니다. 신규 매수·물타기·공매도·레버리지 확대도 보류합니다.</p>
+<p>공격적 투자자의 강점은 모든 위험을 떠안는 데 있지 않습니다. SNDK의 성장 가능성에는 참여하되, 아직 입증되지 않은 가정에 배정한 초과 자본은 회수할 수 있어야 합니다. 그런 의미에서 이번 조건부 매도은 소극적 후퇴가 아니라 다음 상승 기회를 위한 적극적인 선택입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-2">보수적 위험 분석가</h3>
+<p>보수적 위험 분석가: <strong>투자 의견</strong>: BEARISH</p>
+<p>저는 SNDK의 조건부 매도에 동의하지만, “표준 배분의 절반은 남긴다”는 원칙보다 “남긴 포지션의 손실을 감당할 수 있는가”를 우선하겠습니다. 공격적 분석가와의 핵심 차이는 매도 방향이 아니라 잔여 보유분을 정당화하는 기준입니다. 성장 가능성에 참여한다는 이유만으로 일정 비중을 유지하면, 위험 축소 이후에도 과도한 노출이 남을 수 있습니다.</p>
+<p>먼저 공격적 분석가가 제시한 “상승 노출을 모두 없애는 것도 한 방향에 과도하게 베팅하는 판단”이라는 주장에는 동의하기 어렵습니다. SNDK 보유분을 매도해 현금으로 전환하는 것은 신규 공매도와 다릅니다. 전자는 향후 상승을 놓칠 기회비용이 있지만, 후자는 가격 상승에 따른 직접적인 손실 위험을 부담합니다. 저는 일괄 전량 청산을 권하지 않지만, 상승 참여권을 유지하는 것 자체가 자산 보호에 필수라는 전제도 받아들이지 않습니다. 보수적 운용에서는 반등을 놓치는 비용보다 추가 손실로 투자 여력이 훼손되는 비용이 더 중요할 수 있습니다.</p>
+<p>SNDK의 매출 증가율 약 378%와 분기 영업현금흐름 63억 6,300만 달러는 분명 긍정적입니다. 다만 공격적 분석가에게 묻고 싶습니다. 이 수치가 어느 정도 정상화되어도 현재 잔여 포지션을 유지할 수 있습니까? 제공 자료상 매출총이익률은 85%인데, 매출 급증에도 매출원가는 전년 대비 약 2% 증가하는 데 그쳤습니다. 이것이 지속적인 경쟁력인지, 가격 사이클이나 다른 요인의 영향인지 설명할 자료가 없습니다. 낮은 선행 주가수익비율 2.98배도 추정치의 기준과 갱신일이 불명확합니다. 따라서 “현금창출력이 존재한다”는 사실과 “현재 이익을 근거로 보유 위험을 감수할 만하다”는 판단은 구분해야 합니다.</p>
+<p>현금흐름 역시 크기만으로 안전성을 판단해서는 안 됩니다. SNDK의 단순 잉여현금흐름은 강하지만, 합작사업 출자 등 생산 관련 투자 부담이 충분히 반영됐는지는 확인되지 않았습니다. 재무활동 현금유출 57억 5,500만 달러의 용도도 불분명합니다. 유동비율 2.58배는 완충력을 보여주므로 유동성 위기를 주장할 근거는 없지만, 유동부채가 전년 대비 약 293% 증가한 만큼 구성과 만기를 검증해야 합니다. 이 불확실성을 파산 위험으로 과장해서도 안 되지만, 핵심 포지션을 반드시 유지해야 한다는 근거로 넘겨서도 안 됩니다.</p>
+<p>기술적 반등에 대한 설명에도 같은 기준을 적용하겠습니다. 제공된 SNDK 종가에서 당시 10일 지수이동평균까지 약 17.6%의 거리가 있다는 것은 가능한 수익의 확률이나 하방 대비 보상을 보여주지 않습니다. 상대강도지수 29.18과 MACD 히스토그램 개선은 매도 압력 완화의 단서이지, 손실 위험이 충분히 줄었다는 증거가 아닙니다. 평균진폭이 제공 종가의 약 12.2%라는 점은 반등 기회보다 먼저 포지션 크기를 재검토하게 만드는 신호입니다. 평균진폭은 최대 손실이 아니므로, 갭 하락이 발생하면 계획한 손실을 초과할 수 있습니다.</p>
+<p>중립적 분석가의 실제 발언은 아직 없으므로 입장을 대신 만들어 반박하지는 않겠습니다. 다만 기술 보고서의 WAIT는 신규 진입과 기존 보유를 구분해 적용해야 합니다. SNDK 신규 매수를 기다리는 것은 신중한 선택이지만, 허용 위험을 초과한 기존 포지션까지 그대로 유지하는 것은 신중함과 다릅니다. 반대로 최신 가격과 기업행사를 확인하기 위해 주문을 잠시 보류하는 것은 필요한 절차입니다. 정보 확인을 위한 대기와 반등을 기대하며 위험 축소를 미루는 대기는 구별해야 합니다.</p>
+<p>그래서 저는 트레이더의 SNDK 목표 비중을 “표준 배분의 50%로 고정”하기보다 “표준 배분의 50%를 잠정 상한으로 설정”하도록 조정하겠습니다. 실제 상한은 여기에 투자자 자신의 손실 예산, 현금 필요, 다른 기술주·AI 관련 자산과의 집중도를 반영해 더 낮아질 수 있습니다. 예를 들어 투자자 스스로 설정한 SNDK 추가 하락 스트레스가 30%이고 해당 위험에 허용한 전체 자산 손실이 0.5%라면, 단순 계산상 비중 상한은 약 1.7%입니다. 이는 하락 예측이나 권장 비중이 아니라 위험 예산을 적용하는 예시이며, 실제 손실은 스트레스를 초과할 수 있습니다.</p>
+<p>이렇게 정한 위험 상한을 현재 SNDK 비중이 넘을 때만 초과분을 축소하는 것이 제 제안입니다. 기존의 50% 목표 이하라도 위험 예산을 초과한다면 재평가가 필요하고, 최종 상한 이하라면 추가 매도나 목표 충족을 위한 자동 매수를 하지 않습니다. 현재 보유량과 현금이 없으므로 구체적인 매도 수량은 정할 수 없습니다.</p>
+<p>실행에서도 “2~3회 지정가 주문”을 안전장치로 과신해서는 안 됩니다. 분할은 체결 시점을 분산하지만 잔여 물량의 하락 위험을 없애지 않으며, 지정가 주문은 미체결될 수 있습니다. 최신 시세·호가·유동성을 확인한 뒤 초과분 축소를 시작하되, 반등이 와야만 다음 주문을 내는 방식은 피하겠습니다. 미체결 시 재검토 시점과 위험 한도 초과 시 대응도 미리 정해야 합니다. 제공된 가격은 2026년 11월 10일 자료이므로 현재 주문가나 손절가로 사용하지 않으며, 보도된 SNDK 주식분할도 공식 확인과 가격·수량 조정 점검이 필요합니다.</p>
+<p>마지막으로 AI 수요, 계약 매출, 혼조인 투자심리 어느 것도 현재 확인되지 않은 하방을 상쇄한다고 단정할 수 없습니다. NAND 경쟁과 금리 부담 역시 확정된 실적 악화로 취급해서는 안 되지만, 불확실성이 겹친 상황에서 상방 참여를 우선할 이유는 약합니다. 저는 SNDK의 성장 가능성을 부정하는 것이 아니라, 그 가능성을 보유 의무로 바꾸는 데 반대합니다. 신규 매수·물타기·공매도·레버리지 확대는 보류하고, 검증된 손실 감내 범위 안에서만 잔여 보유를 허용하는 조건부 축소가 자산 보호에 더 적합합니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-3">중립적 위험 분석가</h3>
+<p>중립적 위험 분석가: <strong>투자 의견</strong>: BEARISH</p>
+<p>저는 SNDK의 조건부 매도에 동의합니다. 다만 매도 이유는 “앞으로 더 떨어질 것이 확실해서”가 아니라, 약세 추세와 실적 검증의 공백을 고려할 때 목표를 초과한 위험을 유지할 근거가 부족하기 때문입니다. 공격적 분석가의 상승 참여 논리와 보수적 분석가의 손실 예산 논리를 함께 적용하되, 어느 쪽도 잔여 보유나 추가 매도를 의무로 만들어서는 안 됩니다.</p>
+<p>공격적 분석가에게 먼저 반박하겠습니다. SNDK의 상승 가능성을 남겨두자는 취지는 타당하지만, “전량 매도도 한 방향에 과도하게 베팅하는 것”이라는 표현은 위험의 성격을 흐립니다. 현금화는 반등을 놓칠 수 있지만, 공매도처럼 상승으로 직접 손실이 발생하는 포지션은 아닙니다. SNDK의 핵심 포지션은 상승 참여권이라는 이유가 아니라, 투자기간과 정상화된 이익 전망, 포트폴리오 손실 감내 범위로 정당화해야 합니다. 표준 배분의 50%가 그 검토를 대신할 수는 없습니다.</p>
+<p>또한 제공 종가에서 당시 10일 지수이동평균까지 약 17.6%의 거리가 있다는 사실만으로 SNDK를 남길 경제적 근거가 충분해지지는 않습니다. 이동평균 자체가 내려올 수도 있고, 가격이 회복하기 전에 추가 하락할 수도 있습니다. 반면 상대강도지수 29.18과 MACD 히스토그램의 음수 폭 축소를 무시하고 초과분을 한꺼번에 처분하는 것도 체결 시점 위험을 키울 수 있습니다. 이 지표들의 적절한 용도는 반등 수익을 예상하는 것이 아니라, 매도 속도와 주문 방식을 조절하는 것입니다.</p>
+<p>보수적 분석가에게는 불확실성을 지나치게 한 방향으로 해석하지 말자고 말씀드리겠습니다. SNDK의 매출총이익률 85%는 검증이 필요하지만, 지속성이 확인되지 않았다는 사실이 곧 급격한 이익 붕괴의 증거는 아닙니다. 제공 자료상 분기 영업현금흐름 63억 6,300만 달러와 유동비율 2.58배는 실질적인 완충력을 보여줍니다. 재무활동 현금유출 57억 5,500만 달러도 용도를 확인하기 전에는 사업 부진에 따른 현금 소진으로 볼 수 없습니다. 합리적인 주의는 필요하지만, 여러 미확인 항목을 각각 독립적인 악재처럼 합산하면 과도한 축소로 이어질 수 있습니다.</p>
+<p>보수적 분석가가 제안한 위험 예산 방식에는 동의합니다. 다만 SNDK의 추가 하락 스트레스를 얼마로 정하느냐에 따라 상한이 크게 달라집니다. 예시로 사용한 30% 하락은 예측도, 최악의 손실 한도도 아닙니다. 하나의 스트레스 숫자로 정밀한 최적 비중을 얻었다고 생각해서는 안 됩니다. 완만한 업황 둔화와 급격한 가격·이익 조정을 함께 검토하고, 다른 기술주·AI 관련 자산이 동시에 하락할 때도 감당 가능한지를 확인해야 합니다. 반대로 이미 작고 분산된 SNDK 포지션이라면, 불확실성이 존재한다는 이유만으로 계속 매도할 필요도 없습니다.</p>
+<p>거시환경에서도 양쪽의 확신을 낮출 필요가 있습니다. 금리 상승과 긴축 기대는 SNDK의 평가 배수와 고객 투자에 부담을 줄 수 있지만, 제공된 예측시장 확률은 공식 정책 전망이 아니며 경제지표 직접 검증도 부족합니다. NAND 가격 상승 둔화 역시 가격 하락과는 다릅니다. AI 저장 수요와 계약 매출이 가격 압력을 일부 상쇄할 가능성도 남아 있습니다. 결국 확인할 것은 낙관적·비관적 기사 수가 아니라 판매가격, 출하량, 재고, 이익률 전망, 전체 투자 부담을 반영한 현금흐름입니다. 심리 점수 4.6/10은 신뢰도가 낮으므로 매도 규모를 결정하는 핵심 근거로 쓰지 않겠습니다.</p>
+<p>따라서 SNDK의 표준 배분 50%는 확정 목표나 반드시 유지할 최소 비중이 아니라 잠정적인 배분 기준으로 사용하겠습니다. 여기에 개인의 손실 예산과 기술주·AI 관련 자산의 집중도에서 도출한 상한을 비교해 더 낮은 수준을 적용하는 방식이 합리적입니다. 현재 SNDK 비중이 이 기준을 초과할 때만 초과분을 줄이고, 기준 이하라면 추가 매도나 목표를 채우기 위한 자동 매수를 하지 않습니다. 표준 배분이나 손실 예산이 아직 없다면 먼저 이를 정해야 하며, 현재 보유량과 현금을 모르는 상태에서 구체적인 매도 수량을 제시할 수는 없습니다.</p>
+<p>실행은 최신 가격·호가·유동성과 공식 기업행사를 확인한 뒤 초과분을 2~3회로 나누는 기존 계획을 유지하겠습니다. 다만 반등이 와야만 다음 매도를 실행하는 조건은 붙이지 않겠습니다. 주문 전에 재검토 시점과 미체결 시 대응을 정하고, 위험 한도를 크게 초과했다면 분할 횟수보다 초과 노출 해소를 우선해야 합니다. 반대로 한도 안에 있다면 일중 급락이나 저신뢰도 소셜 게시물에 반응해 매도를 서두르지 않는 편이 낫습니다. 지정가 주문은 가격을 통제하지만 체결을 보장하지 않고, 분할 매도도 더 좋은 평균 가격을 보장하지 않습니다.</p>
+<p>제공된 SNDK 가격은 2026년 11월 10일 기준이므로 현재 지정가나 손절가로 사용하지 않겠습니다. 보도된 8대 1 주식분할도 공식 확인 후 가격·수량과 차트 조정 여부를 점검해야 합니다. 잔여 보유분은 갱신된 추세와 실적 전망이 함께 악화되는지, 또는 가격 회복과 정상화 이익의 근거가 함께 개선되는지에 따라 재평가하겠습니다. 매도 대금 역시 다른 고변동성 AI 종목으로 곧바로 옮기기보다 현금 필요와 전체 분산 수준을 먼저 점검해야 실제 위험 축소가 됩니다.</p>
+<p>결론적으로 SNDK의 성장 가능성은 보유 의무가 아니고, 불확실성은 청산 의무도 아닙니다. 초과 위험은 줄이되 허용 범위의 잔여 포지션은 증거에 따라 관리하는 것이 중립적 접근입니다. 따라서 매도은 유지하지만, 그 의미는 전량 매도나 신규 공매도가 아니라 개인별 위험 기준을 초과한 보유분의 조건부 축소입니다. 신규 매수·물타기·공매도·레버리지 확대는 보류하겠습니다.</p>
+<p>최종 매매 제안: 매도</p>
+</section><section id="s5"><h2>V. 최종 투자 판단</h2><h3 id="s5-1">투자 총괄</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>핵심 요약</strong>: SNDK는 전량 청산보다 초과 노출 축소가 타당하며, 표준 배분의 50%와 개인별 손실 예산·기술주 집중도에 따른 상한 중 더 낮은 수준을 잠정 상한으로 적용합니다. 현재 비중이 상한을 초과할 때만 최신 가격·호가·유동성·공식 기업행사를 확인한 뒤 초과분을 2~3회 지정가 주문으로 축소하고, 상한 이하라면 추가 매도나 자동 매수를 하지 않습니다. 신규 진입·물타기·공매도·레버리지 확대는 보류하며, 제공된 과거 가격은 주문가나 손절가로 사용하지 않고 미체결 시 재검토 절차와 위험 한도 초과 대응을 사전에 정합니다. 잔여 SNDK의 보유기간은 고정하지 않고 원문 공시와 최신 실적·추세 확인 시 재평가합니다.</p>
+<p><strong>투자 근거</strong>: SNDK의 비중 축소 논거가 보유 확대 논거보다 강하지만, 전량 청산을 정당화할 증거는 부족합니다. 공격적 분석가가 강조한 제공 분기 매출의 전년 대비 약 378% 증가, 영업현금흐름 63억 6,300만 달러와 유동비율 2.58배는 성장 가능성과 재무 완충력을 뒷받침합니다. 그러나 보수적 분석가가 지적한 매출총이익률 85%와 매출원가 증가율 약 2%의 배경, 합작사업을 포함한 생산 투자 부담, 재무활동 현금유출 57억 5,500만 달러의 용도가 확인되지 않았습니다. 따라서 낮은 후행·선행 주가수익비율 6.87배·2.98배만으로 정상화 이익이나 투자 후 주주에게 남는 현금흐름이 가격을 지지한다고 판단하기 어렵습니다. 이는 수익성 붕괴나 유동성 위기가 확인됐다는 뜻은 아닙니다.</p>
+<p>기술적 증거도 초과 위험 축소를 지지합니다. 제공 가격 859.99달러는 당시 10일 지수이동평균 1,011.26달러와 50일 단순이동평균 1,478.33달러를 밑돌았습니다. 다만 상대강도지수 29.18과 MACD 히스토그램의 음수 폭 축소는 반등 가능성을 남기며, 평균진폭 104.683달러가 제공 가격의 약 12.2%라는 점은 일괄 매도나 신규 공매도보다 위험 예산에 맞춘 축소를 지지합니다. 평균진폭은 최대 손실 한도가 아니며, 이동평균까지 약 17.6%의 거리는 기대수익률이 아닙니다. 중립적·보수적 분석가의 지적대로 현금화는 공매도와 다르므로, 상승 참여만을 위해 잔여 포지션을 반드시 유지할 필요도 없습니다.</p>
+<p>표준 배분의 50%는 최적 비중으로 검증된 수치가 아니라 잠정 상한입니다. 실제 보유량·현금·손실 감내 범위가 제공되지 않아 수량과 고정 손절가는 정할 수 없습니다. 개인별 위험 예산과 동반 하락 스트레스를 반영해 더 낮은 상한을 적용할 수 있으며, 반등을 기다린다는 이유로 초과 노출 축소를 무기한 미루지 않습니다. 지정가 주문은 체결을, 분할 매도는 유리한 평균 가격을 보장하지 않습니다.</p>
+<p>제공된 2026년 11월 자료와 가격은 검증된 현재 정보가 아닙니다. 보도된 주식분할도 공식 확인과 가격·수량 조정 점검이 필요합니다. SNDK의 원문 공시에서 매출·이익·희석주식수를 대조하고, 판매가격·출하량·제품 구성별 이익 설명, 합작사업 부담을 포함한 투자 후 현금흐름, 재무활동 유출 용도와 계약 수익성을 확인해야 합니다. 정상화 이익과 투자 후 현금흐름이 갱신된 가격을 지지하면 비중 복원을 검토하고, 중대한 수치 오류 또는 지속적인 현금흐름·경쟁력 악화가 확인되면 추가 축소나 청산을 검토합니다. 저신뢰도 심리 점수와 경쟁·금리 관련 보도는 보조 정보이며 결정적 근거로 삼지 않습니다.</p>
+<p><strong>목표 가격</strong>: 제시되지 않음</p>
+<p><strong>투자 기간</strong>: 제시되지 않음</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">맨 위로</a>
+</body>
+</html>
