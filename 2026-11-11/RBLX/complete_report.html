@@ -1,0 +1,1386 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>RBLX 2026-11-11 비중 축소: 주식 분석 보고서</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">RBLX</span> <span class="rating down">비중 축소</span></h1><p style="font:16px/1.6 system-ui"><strong>항목별 매수 매력도: 39.5~49.5점 / 100점</strong><br>점수는 기존 TradingAgents 보고서에 동일한 8개 항목을 적용한 별도 AI 평가입니다. 1~3년 관점의 매수 매력도를 비교하며, 높을수록 긍정적입니다. 가격 20 · 성장 20 · 수익성 15 · 재무 10 · 주가 흐름 15 · 관심·수급 5 · 향후 재료 5 · 하락 위험 관리 10점. 각 항목을 0~5점으로 평가한 뒤 배점에 맞춰 합산합니다. 자료가 부족하면 가능한 총점 범위로 표시합니다. 프로그램의 최종 매매 의견과 별도이며, 상승 확률·예상 수익률이나 검증된 수익 예측 모형이 아닙니다. 기존의 등급별 고정 점수(비중 축소 25점)는 더 이상 사용하지 않습니다.</p>
+<p class="date">분석 기준일 2026-11-11</p>
+<dl class="run"><div class="detail"><dt>생성 시각</dt><dd>2026-11-11 07:36</dd></div><div class="detail"><dt>심층 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>빠른 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>분석 담당</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">뉴스</span> <span class="field">재무</span></dd></div><div class="detail"><dt>토론 횟수</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>자료 출처</dt><dd><span class="group"><span class="name">시세</span><span class="field">yfinance</span></span> <span class="group"><span class="name">기술지표</span><span class="field">yfinance</span></span> <span class="group"><span class="name">재무</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">뉴스</span><span class="field">yfinance</span></span> <span class="group"><span class="name">거시경제</span><span class="field">fred</span></span> <span class="group"><span class="name">예측시장</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>버전</dt><dd>TradingAgents 0.7.1</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">분석팀 보고서</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">시장 분석가</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">투자심리 분석가</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">뉴스 분석가</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">재무 분석가</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">투자 검토팀 판단</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">상승론 분석가</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">하락론 분석가</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">투자 검토 책임자</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">매매 계획</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">매매 담당</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">위험 관리팀 판단</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">적극적 위험 분석가</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">보수적 위험 분석가</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">중립적 위험 분석가</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">최종 투자 판단</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">투자 총괄</span></a></li></ul></li></ul></nav>
+<main><section><h2>항목별 매수 매력도: 39.5~49.5점 / 100점</h2><p>2026년 11월 11일 기준 1~3년 상대 매수 매력은 매출 확대와 양의 현금창출력이 지지하지만, 성장 둔화·회계상 적자·취약한 자본 완충력과 현금흐름의 질에 대한 불확실성이 제약한다. 단기 반등은 사업 전망 개선의 증거와 구분한다. 성장률 안정 또는 재가속, 분기 영업수익성 및 전년 대비 현금흐름 회복, 주식보상 반영 후 주당 현금창출 개선, 부채 구성 확인은 평가를 높일 조건이다. 둔화와 현금흐름 감소 지속, 희석 확대 또는 비용 증가에 따른 수익성 정체는 평가를 낮출 조건이다. 이는 보고서의 최종 등급과 별개인 주관적 평가이며, 종합점수나 확률은 산출하지 않았다.</p><p>보고서 기준 시세: 2026년 11월 10일 종가 51.19달러. 제공 기술적 보고서의 최신 확인 시세이며 실시간 가격이나 11월 11일 시세가 아니다.</p><p>자료 한계: 제공 보고서만 사용했다. 최신 재무기간은 2026년 9월 30일이나 실제 제출일과 원문은 없어 기준일까지의 신규 정보 여부를 검증할 수 없다. 가치평가 집계 지표와 최신 종가의 시점 일치도 불명확하다. 자산·부채 차감 자본과 보고 자본이 불일치하고, 소셜의 3분기 잉여현금흐름 3.64억 달러 주장은 재무 보고서 계산치 3.67억 달러와 다르므로 동일한 확정 수치로 취급하지 않았다. 뉴스의 약 2% 당일 하락 보도와 기술 보고서 종가 흐름도 정확히 일치하지 않아 기술 흐름은 검증 스냅샷을 우선했다. 공식 예약매출 전망·이용자 지표·주식보상·차입금 만기 및 대표성 있는 수급 자료가 부족하다. 금리 방향 보도와 법률·안전 관련 소셜 의혹은 검증된 정량 사실로 사용하지 않았다.</p><details><summary>8개 항목과 평가 근거 보기</summary><ul><li><strong>가격 매력도: 8 / 20점</strong><p>보고서의 시가총액/매출 6.21배, 시가총액/잉여현금흐름 21.4배는 양의 현금창출력을 반영하지만, 성장 둔화·지속 적자·최근 분기 현금흐름 감소를 고려하면 1~3년 관점에서 저평가 근거가 약하다. 비교기업 배수와 정상화 주당 현금흐름이 없고, 해당 시가총액이 최신 종가와 같은 시점인지 불명확해 정밀 비교에는 한계가 있다.</p><blockquote>시가총액/매출: 약 **6.21배**
+- 시가총액/잉여현금흐름: 약 **21.4배**</blockquote></li><li><strong>사업 성장성: 12 / 20점</strong><p>보고 재무수치상 1~9월 매출은 29.0%, 3분기는 15.6% 성장해 사업 확장은 여전히 긍정적이다. 다만 분기 성장률이 상반기보다 크게 둔화했고, 이용자·결제·예약매출 공식 자료가 없어 지속 가능한 성장과 경쟁우위를 충분히 입증하지 못한다. 기사상의 예약매출 전망 감소는 비교 기준 미확인으로 회사의 확정 성장 전망과 구분한다.</p><blockquote>- 2026년 1분기: 전년 대비 **39.3%**
+- 2026년 2분기: **35.9%**
+- 2026년 3분기: **15.6%**</blockquote></li><li><strong>기업 수익성: 6 / 15점</strong><p>누적 영업이익률 개선과 양의 잉여현금흐름은 강점이나, 3분기 영업이익률 -18.0%로 적자가 지속되고 전분기보다 손실이 확대됐다. 누적 잉여현금흐름 증가는 설비투자 축소에도 의존하며 최근 분기는 전년 대비 감소했다. 주식보상·이연수익 조정이 없어 현금흐름의 지속성과 주주 귀속 경제적 이익의 질을 보수적으로 평가한다.</p><blockquote>또한 순손실과 양의 영업현금흐름 사이 차이를 설명할 주식보상, 감가상각, 이연수익 및 운전자본 조정 내역이 없습니다.</blockquote></li><li><strong>재무건전성: 3 / 10점</strong><p>현금 10.93억 달러와 양의 영업현금흐름이 완충 역할을 하지만, 유동비율 0.797배와 순운전자본 적자 확대, 사실상 소진된 자기자본은 불리하다. 유동부채에 이연수익이 포함될 수 있어 즉각적인 지급불능으로 해석하지 않는다. 차입금 만기·투자자산·순희석 자료가 없고 자본 수치 대사도 불일치한다. 자사주 매입 보도만으로 희석 해소를 인정하지 않는다.</p><blockquote>보고된 주주자본은 2025년 말 **394**에서 2026년 9월 말 **-1**로 하락했습니다.</blockquote></li><li><strong>주가 흐름: 7.5 / 15점</strong><p>11월 10일 종가는 10일·50일 이동평균 위이고 RSI 54.7491로 회복을 뒷받침한다. 반면 200일선은 소폭 하회하고 MACD 히스토그램은 여전히 음수이며 거래량 확인도 부족하다. 실제 긍정·부정 신호가 공존하므로 균형으로 평가하되, 이 단기 기술 신호는 1~3년 판단의 보조 근거로만 사용한다.</p><blockquote>그러나 **200일선 아래의 최신 종가, 음수인 MACD 히스토그램, 높은 변동성** 때문에 적극적인 추격 매수를 뒷받침하는 조건은 아직 충분하지 않습니다.</blockquote></li><li><strong>관심·수급의 질: 자료 부족</strong><p>대표성 있는 관심·수급의 질을 평가할 근거가 부족하다. 소셜 방향 태그는 7건뿐이고 약세 게시물은 동일 계정에 집중됐으며 Reddit은 수집에 실패했다. 옵션·다크풀 주장은 미검증이고 시장 거래량도 평균 대비 강도가 검증되지 않아, 약세 심리 점수나 단기 인기를 수급의 질로 환산하지 않는다.</p></li><li><strong>향후 재료: 자료 부족</strong><p>연말 예약매출과 수익화 지표는 중요한 확인 대상이지만 공식 가이던스 범위·비교 기준·발표 일정이 없다. 예약매출 15% 감소는 기사 해석이며 검증된 회사 전망이 아니고, 자사주 매입은 집행 기간과 순주식 수 변화가 불명확한 과거 보도다. 1~3년 내 촉매의 방향·실현 시점·가격 반영 정도를 평가할 충분한 근거가 없다.</p></li><li><strong>하락 위험 관리: 3 / 10점</strong><p>성장 둔화와 최근 분기 현금흐름 약화가 동반되고 자본 완충력이 얇아 실적 실망과 가치평가 축소에 취약하다. 베타 1.534와 평균진폭 3.20039달러도 큰 가격 변동 위험을 뒷받침한다. 양의 현금흐름은 일부 완충 요인이지만 안전·개인정보 비용과 경쟁은 구조적 위험이다. 신규 규제 사건·소송 손실이나 실제 경쟁 피해는 확인되지 않아 확정 악재로 취급하지 않는다.</p><blockquote>미성년자 보호, 개인정보 및 콘텐츠 관리 등은 사업 구조상 중요한 위험입니다. 다만 이번 자료에서 새로운 규제 사건이나 관련 비용은 확인되지 않았습니다.</blockquote></li></ul></details></section>
+<section id="s1"><h2>I. 분석팀 보고서</h2><h3 id="s1-1">시장 분석가</h3>
+<h4>RBLX 기술적 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 11일 | 최신 확인 시세: 2026년 11월 10일</strong></p>
+<p><strong>투자 의견</strong>: 보유 유지</p>
+<h5>1. 핵심 판단: 단기 회복은 진행 중이지만 장기 추세 전환은 미확인</h5>
+<p>RBLX는 급락 이후 단기 회복을 이어가고 있지만, <strong>200일 단순이동평균선 부근에서 상승 지속성을 확인해야 하는 구간</strong>입니다. 최신 검증 종가는 <strong>51.19달러</strong>로, 10일 지수이동평균선과 50일 단순이동평균선보다 높지만 200일 단순이동평균선 <strong>51.259달러</strong>에는 조금 못 미칩니다.</p>
+<p>긍정적인 점은 상대강도지수가 중립선 위에 있고, MACD 히스토그램의 음수 폭이 줄어들고 있다는 것입니다. 반면, MACD 히스토그램은 아직 음수이고 최근 거래량도 회복의 지속성을 확정하기에는 충분한 근거를 제공하지 않습니다.</p>
+<p>따라서 RBLX의 현재 상태는 **“상승 추세 확정”보다는 “단기 회복과 장기 저항 시험이 동시에 진행되는 상태”**로 해석하는 것이 적절합니다. 신규 진입은 돌파 또는 눌림목 확인을 기다리고, 기존 보유자는 단기 추세 유지 여부를 중심으로 위험을 관리하는 접근이 합리적입니다.</p>
+<blockquote>
+<p><strong>자료 기준:</strong> 11월 11일 시세는 제공되지 않아 11월 10일 검증 스냅샷을 사용했습니다. 일부 지표 도구는 11월 11일을 비거래일로 표시했지만, 이를 실제 거래소 휴장 여부의 확정 근거로 사용하지 않습니다. 아래 가격은 실시간 시세가 아닙니다.</p>
+</blockquote>
+<hr />
+<h5>2. 선택한 지표와 선정 이유</h5>
+<p>이번 분석에는 상호 보완적인 <strong>7개 지표</strong>를 사용했습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>선택 지표</th>
+<th>분석 목적</th>
+<th>RBLX의 현재 상황에 적합한 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>close_10_ema</code></td>
+<td>단기 추세와 진입 시점</td>
+<td>급락 이후 회복 흐름이 유지되는지 빠르게 확인</td>
+</tr>
+<tr>
+<td><code>close_50_sma</code></td>
+<td>중기 추세</td>
+<td>단기 반등이 중기 흐름으로 연결되는지 구분</td>
+</tr>
+<tr>
+<td><code>close_200_sma</code></td>
+<td>장기 추세</td>
+<td>현재 가격이 장기 추세 기준선에 근접해 있어 핵심 판단 기준</td>
+</tr>
+<tr>
+<td><code>macdh</code></td>
+<td>모멘텀 변화</td>
+<td>하락 압력이 줄어드는 것과 상승 신호 확정을 구분</td>
+</tr>
+<tr>
+<td><code>rsi</code></td>
+<td>상승·하락 힘의 균형</td>
+<td>회복이 과열인지, 중립 이상 수준의 개선인지 판단</td>
+</tr>
+<tr>
+<td><code>atr</code></td>
+<td>변동성과 위험 관리</td>
+<td>급락 이후에도 큰 가격 변동에 대비할 필요</td>
+</tr>
+<tr>
+<td><code>vwma</code></td>
+<td>거래량을 반영한 추세</td>
+<td>가격 회복이 거래량을 반영한 평균 흐름과 부합하는지 보조 확인</td>
+</tr>
+</tbody>
+</table></div>
+<p>MACD 본선·신호선·히스토그램을 별도 선택 지표로 모두 나열하지 않고, 변화 방향을 보여주는 히스토그램에 집중했습니다. 볼린저 밴드는 이번에는 제외해 이동평균과 변동성 지표의 중복을 줄였습니다.</p>
+<p><strong>검증상 한계:</strong> 거래량가중이동평균은 개별 지표 도구에서 조회했지만 최종 검증 스냅샷에는 포함되지 않았습니다. 따라서 해당 지표의 정확한 수치를 확정 근거로 제시하거나 핵심 진입 조건에 사용하지 않습니다. 나머지 선택 지표의 최신 값은 검증 스냅샷과 일치합니다.</p>
+<hr />
+<h5>3. 추세 분석: 단기·중기는 개선, 장기는 아직 경계</h5>
+<h6>단기 추세: 회복 흐름 유지</h6>
+<p>검증된 RBLX의 10일 지수이동평균선은 <strong>49.5519달러</strong>입니다. 종가 <strong>51.19달러</strong>가 이를 웃돈다는 점은 단기 회복 흐름에 유리합니다.</p>
+<p>최근 검증 종가는 다음과 같습니다.</p>
+<ul>
+<li><strong>11월 2일:</strong> 42.88달러</li>
+<li><strong>11월 4일:</strong> 49.31달러</li>
+<li><strong>11월 5일:</strong> 47.65달러</li>
+<li><strong>11월 6일:</strong> 49.30달러</li>
+<li><strong>11월 9일:</strong> 51.60달러</li>
+<li><strong>11월 10일:</strong> 51.19달러</li>
+</ul>
+<p>이 흐름은 회복 과정에 되돌림이 섞여 있음을 보여줍니다. 11월 10일에는 전일보다 종가가 낮아졌지만, 이것만으로 단기 회복이 종료됐다고 볼 근거는 부족합니다.</p>
+<p><strong>관찰 기준:</strong> 49.55달러 부근은 현재 10일 지수이동평균선이 위치한 단기 추세 점검 구간입니다. 다만 과거 여러 차례 지지력이 검증된 수평 지지선이라는 뜻은 아닙니다.</p>
+<h6>중기 추세: 가격은 50일선 위에 위치</h6>
+<p>50일 단순이동평균선은 <strong>47.6706달러</strong>로, 현재 종가보다 낮습니다. 이는 급락 이후 가격이 중기 평균 위로 복귀했다는 점에서 긍정적입니다.</p>
+<p>하지만 50일선이 200일선보다 아래에 있어, <strong>중장기 이동평균 배열이 완전히 강세로 전환된 상태는 아닙니다.</strong> 현재 배치만으로 새로운 골든크로스나 데드크로스 발생 시점을 주장할 수도 없습니다.</p>
+<h6>장기 추세: 200일선 회복 여부가 중요</h6>
+<p>200일 단순이동평균선은 <strong>51.259달러</strong>입니다. RBLX는 11월 9일 <strong>51.60달러</strong>에 마감했지만, 다음 날에는 <strong>51.19달러</strong>로 내려와 최신 200일선 아래에 위치합니다.</p>
+<p>가격과 평균선 사이의 간격이 작기 때문에 단 하루의 상회·하회만으로 의미 있는 돌파를 판단하기 어렵습니다. <strong>200일선 위에서 종가가 유지되고, 후속 거래에서도 매수세가 이어지는지</strong>를 함께 확인해야 합니다.</p>
+<hr />
+<h5>4. 모멘텀: 매도 압력 약화와 강세 확정은 다르다</h5>
+<h6>상대강도지수: 완만한 강세 우위</h6>
+<p>RBLX의 상대강도지수는 <strong>54.7491</strong>입니다.</p>
+<ul>
+<li>중립 기준인 50보다 높아 매수 측에 소폭 유리합니다.</li>
+<li>통상적인 과매수 기준인 70에는 못 미칩니다.</li>
+<li>그렇다고 과매도 반등을 노릴 정도로 눌린 상태도 아닙니다.</li>
+</ul>
+<p>현재 상대강도지수는 <strong>과열 없는 회복</strong>과 부합하지만, 강력한 상승 가속을 단독으로 입증하지는 않습니다. 가격이 장기 기준선을 넘지 못하는 상황에서 상대강도지수까지 50 아래로 밀린다면 회복의 질을 재평가할 필요가 있습니다.</p>
+<h6>MACD 히스토그램: 개선 중이지만 아직 음수</h6>
+<p>최신 MACD 히스토그램은 <strong>-0.141844</strong>입니다. 개별 지표의 일별 자료에서는 11월 초보다 음수 폭이 축소되는 흐름이 확인됩니다.</p>
+<p>이는 하락 모멘텀이 약해지고 있다는 해석을 지지합니다. 다만 히스토그램이 여전히 음수이므로, <strong>MACD의 상승 교차가 이미 확정됐다고 해석해서는 안 됩니다.</strong></p>
+<p>RBLX의 가격 회복이 지속되면서 히스토그램까지 양수로 전환한다면 상승 시나리오의 신뢰도가 높아질 수 있습니다. 반대로 음수 폭이 다시 확대된다면 회복 동력 약화에 주의해야 합니다.</p>
+<hr />
+<h5>5. 거래량과 변동성: 추격 진입의 위험이 남아 있다</h5>
+<h6>거래량 확인은 아직 부족</h6>
+<p>검증된 11월 10일 RBLX 거래량은 <strong>8,281,694주</strong>입니다. 원시 시세 자료의 11월 9일 거래량은 <strong>14,876,700주</strong>로, 다음 날 가격 조정과 함께 거래량도 줄었습니다.</p>
+<p>이는 강한 매도 압력이 새롭게 확대됐다고 단정할 근거는 아닙니다. 그러나 거래량 감소만으로 매도 물량 소진이나 기관 매집을 주장할 수도 없습니다. 특히 평균 거래량 대비 상대적인 강도를 별도로 검증하지 않았으므로, 현재 거래량을 “이례적”이라고 평가하지 않습니다.</p>
+<h6>평균진폭: 작은 가격 차이를 과신하면 안 됨</h6>
+<p>최신 평균진폭은 <strong>3.20039달러</strong>입니다. 이는 가격과 200일선 사이의 작은 차이보다 훨씬 큰 변동성 규모입니다.</p>
+<p>따라서 다음과 같은 접근이 필요합니다.</p>
+<ul>
+<li>200일선을 약간 넘었다는 이유만으로 즉시 추격하지 않기</li>
+<li>지나치게 짧은 손절 폭으로 정상적인 변동에 청산되지 않도록 하기</li>
+<li>손절 폭을 넓혀야 한다면 보유 수량을 줄이기</li>
+<li>갭 하락 시 지정한 손절 가격보다 불리하게 체결될 가능성 고려하기</li>
+</ul>
+<p>평균진폭은 향후 하루의 최대 움직임이나 가격 범위를 보장하는 지표가 아닙니다.</p>
+<hr />
+<h5>6. RBLX의 조건별 대응 계획</h5>
+<h6>시나리오 A: 장기 기준선 회복 이후 진입 검토</h6>
+<p><strong>확인할 조건</strong></p>
+<ol>
+<li>RBLX가 최신 200일선인 <strong>51.259달러</strong> 위에서 종가를 형성</li>
+<li>후속 거래에서도 해당 평균선 위의 가격 유지</li>
+<li>MACD 히스토그램 개선 지속 또는 양수 전환</li>
+<li>거래량이 함께 뒷받침되는지 확인</li>
+</ol>
+<p><strong>상단 관찰 구간</strong></p>
+<ul>
+<li><strong>52.35~52.55달러:</strong> 10월 20~21일 검증 종가가 위치한 구간</li>
+<li><strong>54.37~54.47달러:</strong> 10월 26~27일 검증 종가가 위치한 구간</li>
+</ul>
+<p>이 가격대는 과거 종가에 근거한 <strong>잠재적 공급 관찰 구간</strong>이며, 반복적으로 검증된 저항선이나 확정 목표가는 아닙니다.</p>
+<p>현재 가격에서 첫 관찰 구간까지의 여유는 평균진폭에 비해 크지 않습니다. 따라서 돌파가 나와도 진입가·손절가·목표가를 먼저 정해 손익비를 검토해야 합니다.</p>
+<h6>시나리오 B: 눌림목에서 회복 지속 여부 확인</h6>
+<p><strong>관찰 구간</strong></p>
+<ul>
+<li>단기 기준: <strong>49.55달러 부근</strong></li>
+<li>중기 기준: <strong>47.67달러 부근</strong></li>
+</ul>
+<p>RBLX가 이 구간으로 내려올 때 단순히 가격이 도달했다는 이유로 매수하기보다, 하락이 멈추고 종가가 안정되는지 확인하는 편이 낫습니다. 해당 이동평균선은 매일 바뀌므로 실행 시점에 다시 확인해야 합니다.</p>
+<h6>시나리오 C: 회복 실패에 대비</h6>
+<p>RBLX가 10일선 아래로 내려오고 재진입에 실패하면 단기 회복이 약해졌다는 경고로 볼 수 있습니다. 이어 50일선까지 잃는다면 중기 회복 시나리오도 재평가해야 합니다.</p>
+<p>추가 하락 시에는 다음 검증 종가 구간을 관찰할 수 있습니다.</p>
+<ul>
+<li><strong>45.45달러:</strong> 11월 3일 종가</li>
+<li><strong>42.88~42.99달러:</strong> 11월 2일 및 10월 30일 종가</li>
+</ul>
+<p>이들 역시 확정 지지선은 아닙니다. 특히 변동성이 큰 상태에서는 해당 가격을 건너뛰는 움직임도 가능합니다.</p>
+<h6>포지션 관리 원칙</h6>
+<p>RBLX의 신규 거래 수량은 다음 원칙으로 산정할 수 있습니다.</p>
+<p><strong>매수 수량 = 거래당 허용 손실액 ÷ 주당 계획 손절 폭</strong></p>
+<p>손절 폭은 임의로 좁히기보다 실제 진입 조건과 추세 무효화 지점에 맞춰야 합니다. 기존 보유자는 추가 매수 여부와 별개로, 단기선·중기선 이탈 시 각각 어떤 조치를 취할지 미리 정하는 것이 중요합니다.</p>
+<h5>7. 종합 의견</h5>
+<p>RBLX는 <strong>단기 회복과 모멘텀 개선이라는 긍정적 근거</strong>를 갖고 있습니다. 그러나 <strong>200일선 아래의 최신 종가, 음수인 MACD 히스토그램, 높은 변동성</strong> 때문에 적극적인 추격 매수를 뒷받침하는 조건은 아직 충분하지 않습니다.</p>
+<p>기술적 관점에서는 <strong>보유·관망을 기본으로 하되, 장기 기준선 안착 또는 눌림목 안정화를 확인한 뒤 대응</strong>하는 접근이 더 타당합니다. 이 보고서는 기술적 근거를 제공하는 것이며, 실적·밸류에이션·기업 뉴스와 개인별 위험 한도를 반영한 최종 거래 결정은 별도로 필요합니다.</p>
+<p>최종 매매 제안: 보유 유지</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>RBLX 확인 내용</th>
+<th>해석 및 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시세 기준</td>
+<td>2026년 11월 10일 종가 51.19달러</td>
+<td>11월 11일 실시간 가격으로 해석하지 않음</td>
+</tr>
+<tr>
+<td>단기 추세</td>
+<td>10일 지수이동평균 49.5519달러 상회</td>
+<td>회복 우위이나 이탈 후 복귀 실패에 주의</td>
+</tr>
+<tr>
+<td>중기 추세</td>
+<td>50일 단순이동평균 47.6706달러 상회</td>
+<td>중기 회복 유지 여부의 점검 기준</td>
+</tr>
+<tr>
+<td>장기 추세</td>
+<td>200일 단순이동평균 51.259달러 소폭 하회</td>
+<td>장기 기준선 안착 확인 필요</td>
+</tr>
+<tr>
+<td>상대강도지수</td>
+<td>54.7491</td>
+<td>중립 이상, 과열은 아니지만 강한 추세 확정도 아님</td>
+</tr>
+<tr>
+<td>MACD 히스토그램</td>
+<td>-0.141844</td>
+<td>매도 압력 완화, 상승 교차는 아직 미확정</td>
+</tr>
+<tr>
+<td>거래량</td>
+<td>최신 8,281,694주</td>
+<td>단일 수치로 매집·돌파 강도 단정 불가</td>
+</tr>
+<tr>
+<td>평균진폭</td>
+<td>3.20039달러</td>
+<td>손절 폭과 수량을 함께 조절</td>
+</tr>
+<tr>
+<td>상단 관찰 구간</td>
+<td>52.35~52.55달러, 54.37~54.47달러</td>
+<td>과거 종가 기반 잠재적 공급 구간</td>
+</tr>
+<tr>
+<td>하단 관찰 기준</td>
+<td>49.55달러, 47.67달러 부근</td>
+<td>고정 지지선이 아닌 이동평균 기준</td>
+</tr>
+<tr>
+<td>종합 대응</td>
+<td>보유·관망 중심</td>
+<td>돌파 안착 또는 눌림목 안정 확인 후 재평가</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">투자심리 분석가</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mildly Bearish</strong> (Score: 3.9/10)
+<strong>Confidence:</strong> Low</p>
+<h4>RBLX 시장 심리 보고서</h4>
+<p>분석 기간: 2026-11-04~2026-11-11. 기준일: 2026-11-11. 대상: RBLX, Roblox Corporation, NYQ 상장, 커뮤니케이션 서비스 / 전자 게임·멀티미디어.</p>
+<p>종합 판단은 완만한 약세다. 실적 이후의 주가 반등과 단기 갭 메우기 기대가 존재하지만, 전망 하향·수익화·안전 비용을 둘러싼 우려가 더 구체적이고 반복적이다. 다만 Reddit 수집 실패, 소수 계정에 집중된 게시물, 일부 주변 업종 기사 때문에 신뢰도는 낮다. 아래 수치는 제공된 기사 발췌와 게시물의 내용이며, 별도 공시·시세 검증을 거치지 않았다.</p>
+<h5>1. 출처별 분석</h5>
+<h6>뉴스: 반등과 재무 개선보다 전망 부담이 우세</h6>
+<p>제공된 뉴스는 5건이다. 이 가운데 RBLX 투자 서사·전망을 직접 다루는 기사는 2건, RBLX 하락을 제목에서 언급한 비교 기사는 1건이다. 나머지 2건은 광고업체 실적과 광범위한 애널리스트 의견 모음으로, 발췌문만으로는 RBLX에 대한 직접적인 판단 근거가 약하다.</p>
+<ul>
+<li>Simply Wall St. 기사는 RBLX의 2026년 3분기 매출 15억7,200만 달러, 순손실 2억2,700만 달러, 기본 주당손실 0.32달러를 제시한다. 매출 증가와 분기 순손실 축소라는 개선 요소가 있지만, 첫 9개월에도 적자가 지속됐다는 점은 부담이다. 1,258만9,000주를 5억8,018만 달러에 매입·소각했다는 내용은 주식 수 감소 측면의 긍정 요인이다. 다만 이것만으로 영업 수익성의 개선을 뜻하지는 않는다.</li>
+<li>TIKR의 RBLX 기사는 제목에서 연말 예약매출 전망의 15% 하향을 부각하는 한편, 본문 발췌에서는 실적 발표 후 급락을 겪은 RBLX가 해당 주간 약 15% 반등해 49달러에 도달했다고 설명한다. 기사에 제시된 평균 목표가격 49.33달러와의 근접성은 당시 반등 폭에 대한 경계 논거가 될 수 있으나, 최신 목표가격 분포나 상승 여력의 확정치는 아니다. 제목의 15% 하락이 어떤 비교 기준에 따른 것인지는 발췌문으로 확인되지 않는다.</li>
+<li>11월 10일 24/7 Wall St. 기사는 다른 게임업체의 대형 신작 사전예약 호조와 대비해 RBLX가 2% 하락했다고 전한다. 이는 상대적 투자 관심의 약세 신호지만, 해당 신작이 RBLX의 이용자나 지출을 직접 잠식했다는 증거는 아니다.</li>
+<li>광고업체의 실적 급증 기사는 광고 시장에 관한 배경 정보에 가깝다. 이를 RBLX 광고 매출의 개선으로 전이해 해석할 근거는 없다. 애널리스트 의견 모음 역시 제공된 발췌에 RBLX 관련 조정 내용이 없다.</li>
+</ul>
+<p>따라서 뉴스의 중심은 ‘회복 중인 주가와 일부 재무 개선’ 대 ‘약해진 연말 전망과 지속 적자’이며, 후자가 소폭 우세하다.</p>
+<h6>StockTwits: 태그상 근소한 약세, 본문에서는 구조적 우려와 단기 반등 기대가 공존</h6>
+<p>표본은 30건으로, 강세 3건·약세 4건·무표기 23건이다. 전체 대비 강세는 10.0%, 약세는 13.3%, 무표기는 76.7%다. 방향 태그가 있는 7건만 보면 강세 42.9% 대 약세 57.1%, 강세/약세 건수 비율은 0.75다. 약세가 앞서지만, 7건만으로 광범위한 투자자 합의를 주장할 수는 없다. 무표기 역시 중립과 동일하지 않다.</p>
+<p>계정 집중도는 중요한 제약이다. 약세 태그 4건은 모두 @AI_bubble에서 나왔다. 이 계정의 35달러·42달러 언급과 상승분 반납 주장은 개인의 가격 전망이지 검증된 지지선이나 예측이 아니다. 강세 3건 중 @Trackdips는 RBLX 회복을 긍정적으로 평가했지만, @wisdon의 글은 단순 상승 구호이며, 다른 1건은 도발적 표현으로 투자 논거가 없다. 따라서 태그 수를 그대로 독립적인 투자자 신념의 분포로 해석하면 안 된다.</p>
+<p>무표기 본문에는 다음 신호가 있다.</p>
+<ul>
+<li>단기 상승 기대: @TopOptionsAIerts와 @OMillionaires는 50.80달러 갭 메우기를 강조한다. 전자는 11월 6일 종가를 49.30달러로 제시했다. 이 가격들은 게시물에 등장한 과거 기준치이며, 11월 11일 현재 시세나 검증된 저항선이 아니다.</li>
+<li>옵션 관련 기대: @GTA_Terminal은 11월 8일 콜 중심의 이례적 옵션 활동과 해당 주 만기 거래를 언급했다. 반면 11월 6일에는 콜·풋이 섞인 활동을 언급했다. 원자료가 없고 서비스 홍보 문구가 반복되므로, 기관의 순매수나 확정적인 상승 포지셔닝으로 볼 수 없다. 다크풀 거래량 주장 역시 매수·매도 방향을 입증하지 못한다.</li>
+<li>실적과 현금흐름 우려: @Techdamentals는 3분기 예약매출이 11.7% 감소한 17억 달러, 잉여현금흐름이 4억4,300만 달러에서 3억6,400만 달러로 감소했다고 주장한다. 10월 30일 18.1% 급락도 반복 언급한다. 이는 분석 기간 중 재소환된 과거 사건이며, 제공된 공시 원문으로 확인된 수치는 아니다. 뉴스의 매출 증가와 게시물의 예약매출 감소는 서로 다른 지표이므로 곧바로 모순으로 볼 수 없다.</li>
+<li>수익화와 비용 우려: @KryptonResearch14는 일간 사용자 1억3,800만 명과 일간 결제 사용자 약 180만 명, 사용자당 일간 예약매출 0.13달러를 제시한다. 이 주장이 정확하다면 결제 사용자 비중은 약 1.3%로, 이용자 규모가 실제 결제로 이어지는지가 핵심 쟁점이다. 다만 수치의 정의와 원자료는 제공되지 않았다.</li>
+<li>안전·법률·경쟁 우려: @openclassaction2는 7건에서 안전·모더레이션 비용, 연령 확인에 따른 성장 둔화 주장, 부모의 지출 여력, 생성형 콘텐츠에 따른 희소성 약화를 반복한다. 별도의 법률사무소 관련 링크도 1건 있다. 소송과 성장 영향은 게시물 속 주장 또는 의혹이며 확정 사실이 아니다. 동일 계정의 반복은 서사의 존재를 보여주지만, 그 확산 범위를 입증하지는 않는다.</li>
+</ul>
+<p>30건은 11월 4~9일에 걸쳐 있으며, 11월 10~11일의 StockTwits 게시물은 제공되지 않았다. 반복 홍보와 무관한 다른 종목 홍보도 섞여 있어 최신성·대표성 모두 제한적이다.</p>
+<h6>Reddit: 판단 불가</h6>
+<p>r/wallstreetbets, r/stocks, r/investing은 모두 수집 실패다. 이는 토론이 없다는 뜻이 아니다. 게시물 본문, 방향성, 장기 투자 논거를 확인할 수 없으며, 다른 출처의 약세를 지지하거나 반박하는 근거로 사용하지 않았다.</p>
+<h5>2. 출처 간 일치와 괴리</h5>
+<p>뉴스의 연말 전망 부담과 StockTwits의 전망 하향·예약매출·수익화 우려는 방향이 대체로 일치한다. 다만 일부 게시물이 동일 실적 사건을 재인용하는 것으로 보여, 완전히 독립된 증거가 반복 확인된 것으로 계산해서는 안 된다.</p>
+<p>괴리는 출처 전체 사이보다 투자 시간축 사이에 있다. 뉴스에 나타난 약 15% 반등과 StockTwits의 50.80달러 갭 기대는 단기 회복 서사를 만든다. 반면 적자 지속, 전망 부담, 안전 비용 논의는 중기 신뢰 회복의 제약을 나타낸다. 즉 ‘가격 반등’과 ‘사업 전망 개선’이 동일한 것으로 받아들여지지 않는 상태다. 뉴스는 약세인데 소셜이 압도적으로 강세인 구도는 아니므로 종합 등급을 혼조로 분류할 정도의 출처 간 대립은 아니다.</p>
+<h5>3. 지배적인 서사</h5>
+<ol>
+<li>실적 충격 이후의 반등이 지속 가능한가: 긍정 심리는 구체적인 사업 촉매보다 회복 흐름과 갭 메우기에 집중돼 있다.</li>
+<li>큰 이용자 기반이 결제로 전환되는가: 매출, 예약매출, 결제 사용자, 현금흐름을 구분해서 봐야 하며, 이용자 규모만으로 수익화 개선을 단정할 수 없다.</li>
+<li>안전과 성장의 비용 충돌: 연령 확인·모더레이션이 비용과 참여도에 부담을 줄 수 있다는 주장이 반복된다. 실제 영향의 크기는 확인되지 않았다.</li>
+<li>생성형 콘텐츠와 경쟁 속 주의력의 가치: 콘텐츠 공급 증가가 RBLX의 차별화와 결제 의향을 약화할 수 있다는 우려가 있으나, 정량적인 경쟁 피해는 제시되지 않았다.</li>
+<li>자사주 매입과 지속 적자의 대비: 주식 수 축소는 긍정적이지만 영업 성과 개선과 별개다.</li>
+</ol>
+<h5>4. 촉매와 위험</h5>
+<ul>
+<li>단기 관찰 요인: 게시물의 해당 주 옵션 만기 언급과 50.80달러 갭 논의는 변동성에 대한 관심을 보여준다. 실제 미결제약정, 거래 방향, 최신 시세가 없어 예상 변동 폭은 판단할 수 없다.</li>
+<li>사업 관련 확인 요인: 연말 예약매출, 이용자 참여·결제 전환, 안전 조치의 영향에 관한 후속 공식 정보는 현재 서사를 강화하거나 약화할 수 있다. 제공 자료에는 새로운 실적 발표나 회사 행사 일정이 없다.</li>
+<li>법률·평판 위험: 증권소송 및 안전 관련 논의가 할인 요인이 될 수 있으나, 소송의 실체·진행 단계·재무적 영향은 확인되지 않았다.</li>
+<li>상대 성과 위험: 다른 게임업체의 강한 신작 수요는 투자 관심의 비교 기준이 된다. RBLX의 실제 수요 손실로 연결됐는지는 알 수 없다.</li>
+<li>해석 위험: 반복 계정과 홍보성 옵션 게시물이 부정 서사와 상승 기대를 각각 과장할 수 있다. Reddit 부재와 최신 소셜 공백은 이러한 편향을 교차 검증할 기회를 줄인다.</li>
+</ul>
+<h5>5. 핵심 신호 요약</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 신호</th>
+<th>방향</th>
+<th>출처</th>
+<th>근거 및 제한</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>연말 전망 부담</td>
+<td>약세</td>
+<td>TIKR 기사·StockTwits</td>
+<td>기사 제목의 예약매출 전망 15% 하향, 게시물의 가이던스 우려. 하향 비교 기준은 미확인</td>
+</tr>
+<tr>
+<td>실적 이후 반등</td>
+<td>단기 강세</td>
+<td>TIKR 기사·StockTwits</td>
+<td>기사상 주간 약 15% 상승과 49달러, 회복 및 갭 메우기 논의. 현재 시세 아님</td>
+</tr>
+<tr>
+<td>매출 증가·순손실 축소</td>
+<td>완만한 강세</td>
+<td>Simply Wall St.</td>
+<td>3분기 매출 15억7,200만 달러, 순손실 2억2,700만 달러. 적자는 지속</td>
+</tr>
+<tr>
+<td>자사주 매입·소각</td>
+<td>완만한 강세</td>
+<td>Simply Wall St.</td>
+<td>1,258만9,000주, 5억8,018만 달러. 영업 수익성 개선과 구분 필요</td>
+</tr>
+<tr>
+<td>태그 기반 소셜 심리</td>
+<td>근소한 약세</td>
+<td>StockTwits</td>
+<td>강세 3건·약세 4건, 표기 7건 중 약세 57.1%. 약세 전부 동일 계정</td>
+</tr>
+<tr>
+<td>예약매출·현금흐름 우려</td>
+<td>약세</td>
+<td>StockTwits</td>
+<td>예약매출 11.7% 감소와 잉여현금흐름 감소 주장. 공시 원문 미제공</td>
+</tr>
+<tr>
+<td>갭·콜옵션 기대</td>
+<td>단기 강세·불확실</td>
+<td>StockTwits</td>
+<td>50.80달러 논의와 콜 중심 활동 주장. 홍보성·미검증 자료</td>
+</tr>
+<tr>
+<td>안전 비용·법률·수익화</td>
+<td>약세</td>
+<td>StockTwits</td>
+<td>동일 계정의 반복 우려와 법률 링크. 의혹·의견을 사실과 구분</td>
+</tr>
+<tr>
+<td>경쟁사 대비 약한 당일 성과</td>
+<td>약세</td>
+<td>24/7 Wall St.</td>
+<td>11월 10일 기사상 RBLX 2% 하락. 경쟁 피해의 인과관계 미확인</td>
+</tr>
+<tr>
+<td>커뮤니티 교차 검증</td>
+<td>판단 불가</td>
+<td>Reddit</td>
+<td>세 커뮤니티 수집 실패. 토론 부재로 해석 불가</td>
+</tr>
+</tbody>
+</table></div>
+<p>결론적으로 RBLX의 심리는 단기 반등 기대를 남겨둔 완만한 약세다. 점수는 10점 만점에 3.9점이며 신뢰도는 낮다. 이는 제공된 심리 자료의 평가이지 가격 예측이나 매매 지시가 아니다. 실제 거래 판단은 최신 시세·공시·유동성·위험 한도와 결합해 별도로 내려야 한다.</p>
+<h3 id="s1-3">뉴스 분석가</h3>
+<h4>RBLX 주간 뉴스·거시경제 분석</h4>
+<p><strong>기준일: 2026년 11월 11일 | 분석 기간: 11월 4일~11월 11일</strong><br />
+<strong>대상: RBLX — Roblox Corporation, 뉴욕증권거래소, 커뮤니케이션 서비스·전자게임 및 멀티미디어</strong></p>
+<p><strong>투자 의견</strong>: Neutral</p>
+<h5>1. 핵심 판단</h5>
+<p>RBLX의 단기 투자 쟁점은 <strong>실적 발표 이후 반등이 연말 예약매출 우려를 충분히 반영했는지</strong>다. 이번 주 보도에는 매출 확대와 순손실 축소라는 긍정적 내용이 있었지만, 연말 예약매출 전망에 대한 부정적 해석과 경쟁 게임의 강한 수요가 함께 나타났다.</p>
+<p>거시경제 측면에서는 <strong>인플레이션 우려에 따른 국채금리 상승과 금리 인하 기대 약화</strong>가 RBLX 같은 성장주의 가치평가에 부담을 줄 수 있다. 다만, 이번 조회에서는 FRED 자료에 접근하지 못했으므로 실제 물가상승률·정책금리·국채금리 수준은 확인하지 못했다.</p>
+<p><strong>연구 관점의 결론은 추격 매수보다 추가 확인을 우선하는 중립이다.</strong> 최신 주가, 거래량, 공식 실적자료가 확보되지 않아 구체적 진입 가격이나 최종 매매 판단을 제시할 근거는 부족하다.</p>
+<h5>2. RBLX 기업 뉴스: 개선된 실적과 낮아진 기대의 충돌</h5>
+<h6>매출과 손실: 개선 신호지만 수익성 검증은 계속 필요</h6>
+<p>Simply Wall St.의 이번 주 기사 요약에 따르면 RBLX의 2026년 3분기 실적은 다음과 같다.</p>
+<ul>
+<li>매출: <strong>15억 7,200만 달러</strong></li>
+<li>순손실: <strong>2억 2,700만 달러</strong></li>
+<li>기본 주당손실: <strong>0.32달러</strong></li>
+</ul>
+<p>기사는 매출 증가와 분기 순손실 축소를 강조했다. 다만 전년 동기 수치, 시장 예상치, 영업현금흐름이 제공되지 않아 <strong>실적 개선의 정도와 시장 기대 대비 성과는 별도로 확인해야 한다.</strong></p>
+<p>RBLX 분석에서는 회계상 매출뿐 아니라 예약매출, 이용자 활동, 결제 전환, 현금흐름을 함께 봐야 한다. 매출이 증가하더라도 향후 지출을 보여주는 예약매출 전망이 약해지면 주가 반응은 부정적일 수 있다.</p>
+<h6>연말 예약매출 전망: 가장 중요한 확인 대상</h6>
+<p>11월 7일자 TIKR 기사는 RBLX가 실적 발표 후 급락에서 반등해 한 주 동안 약 <strong>15% 상승한 49달러</strong>에 도달했다고 보도했다. 기사에 제시된 애널리스트 평균 목표가는 <strong>49.33달러</strong>였다.</p>
+<p>동일 기사 제목은 RBLX의 연말 예약매출 가이던스가 <strong>15% 감소</strong>한다고 표현했다. 그러나 제공된 요약에는 그 비교 기준이 전년 동기인지, 기존 전망인지 명시되지 않았다.</p>
+<p>따라서 다음과 같이 구분해야 한다.</p>
+<ul>
+<li><strong>확인된 보도 내용:</strong> 실적 후 급락과 반등, 연말 예약매출 전망에 대한 부정적 해석이 있었다.</li>
+<li><strong>미확인 사항:</strong> 감소율의 정확한 비교 기준, 공식 가이던스 범위, 환율 영향 및 원인.</li>
+<li><strong>거래 시사점:</strong> 15%라는 수치를 곧바로 전년 대비 성장률로 사용하지 말고 공식 실적자료를 확인해야 한다.</li>
+</ul>
+<p>또한 <strong>49달러는 기사 시점 가격이지 11월 11일의 확인된 현재가가 아니다.</strong> 기사 속 목표가 역시 최신 시장 컨센서스로 간주하기 어렵다.</p>
+<h6>자사주 매입: 주당가치에는 긍정적일 수 있으나 현금흐름 확인 필요</h6>
+<p>Simply Wall St.는 <strong>1,258만 9,000주를 약 5억 8,018만 달러에 매입·소각</strong>했다고 보도했다.</p>
+<p>주식 수 감소는 주당가치와 희석 관리에 도움이 될 수 있다. 반면 적자 기업의 자사주 매입은 현금 사용의 적절성을 함께 검토해야 한다. <strong>매입 집행 기간, 주식보상에 따른 신규 발행, 순주식 수 변화, 현금흐름 대비 규모</strong>가 확인되지 않았으므로 이를 독립적인 강세 근거로 삼기는 어렵다.</p>
+<p>출처: <a href="https://finance.yahoo.com/markets/stocks/articles/q3-earnings-roblox-rblx-changed-011107264.html">Simply Wall St. 실적 분석</a>, <a href="https://www.tikr.com/blog/roblox-just-gained-15-in-a-week-after-its-earnings-crash-take-profits-or-buy-more?ref=yahoofinance&amp;tlnk=yf-261107-8cwrg7hr">TIKR 반등·예약매출 분석</a></p>
+<h5>3. 게임 산업: 강한 수요가 RBLX에 동일하게 유리하지는 않다</h5>
+<p>11월 10일 24/7 Wall St.는 대형 신작 GTA VI의 예약판매가 기대를 크게 웃돌면서 해당 개발사 주가가 장중 급등한 반면, <strong>RBLX는 약 2% 하락</strong>했다고 보도했다.</p>
+<p>RBLX에 대한 함의는 양면적이다.</p>
+<ul>
+<li><strong>긍정적:</strong> 대형 게임의 강한 예약판매는 게임 소비 전체가 급격히 위축됐다는 해석을 약화한다.</li>
+<li><strong>부정적:</strong> 이용자의 시간과 지출이 대형 신작으로 이동하면 RBLX의 이용시간이나 결제 수요에 부담이 될 수 있다.</li>
+<li><strong>주의점:</strong> 하루의 상대 주가 움직임만으로 실제 이용자 이탈이나 매출 잠식을 입증할 수는 없다.</li>
+</ul>
+<p>RBLX는 단일 게임 판매와 다른 플랫폼 사업이므로, 경쟁작 판매량보다 <strong>일간 활성 이용자, 이용시간, 결제 이용자 및 이용자당 예약매출</strong>의 실제 변화가 중요하다.</p>
+<p>출처: <a href="https://247wallst.com/investing/2026/11/10/take-two-jumps-8-as-gta-vi-preorders-run-far-in-excess-of-expectations-sony-and-roblox-slide-2/">24/7 Wall St., 11월 10일</a></p>
+<h5>4. 거시경제: 할인율 부담이 주요 외부 변수</h5>
+<h6>인플레이션·금리: 방향성 보도는 있지만 수치 검증은 불가</h6>
+<p>조회된 글로벌 뉴스에는 <strong>높은 인플레이션 수치로 금리 인상 가능성이 부각되며 미국 10년물 국채금리가 상승했다</strong>는 Yahoo Finance 기사가 포함됐다.</p>
+<p>이러한 환경은 RBLX에 두 경로로 작용할 수 있다.</p>
+<ol>
+<li><strong>가치평가:</strong> 할인율 상승은 미래 성장에 대한 현재가치를 낮출 수 있다.</li>
+<li><strong>소비:</strong> 높은 금융비용이 지속되면 가계의 재량적 디지털 지출이 압박받을 수 있다.</li>
+</ol>
+<p>다만 해당 뉴스는 제목만 제공됐고, CPI와 미국 10년물 금리의 FRED 조회는 API 키 부재로 실패했다. 따라서 <strong>물가 재가속의 크기나 금리 상승폭은 확인된 사실로 제시할 수 없다.</strong></p>
+<h6>예측시장: 금리 인하 기대가 낮다는 보조 신호</h6>
+<p>조회 시점 Polymarket에서는 다음 계약이 제시됐다.</p>
+<ul>
+<li><strong>“2026년에 연준 금리 인하가 한 번도 없을 것인가?”의 ‘예’ 확률: 98%</strong></li>
+<li>최근 일주일 변화: <strong>+1.2%포인트</strong></li>
+<li>누적 거래대금: 약 <strong>956만 달러</strong></li>
+<li>결산일: <strong>2027년 1월 1일</strong></li>
+</ul>
+<p>이는 완화 기대가 낮다는 보조 신호다. 그러나 <strong>연간 금리 인하 횟수 계약은 다음 회의의 동결·인상 확률과 다르며</strong>, 정확한 계약 조건도 확인해야 한다. 이 확률을 RBLX의 하락 확률로 해석해서는 안 된다.</p>
+<p>이번 글로벌 뉴스 결과는 게임·기업 실적에 편중됐다. 따라서 선거, 지정학, 에너지, 환율 및 주요 지역 경기까지 포괄하는 세계경제 판단에는 자료가 부족하다.</p>
+<h5>5. RBLX 거래에 활용할 조건부 점검 사항</h5>
+<p><strong>상방 판단을 강화할 조건</strong></p>
+<ul>
+<li>공식 자료에서 연말 예약매출 우려가 기사 해석보다 제한적임을 확인.</li>
+<li>이용자·이용시간 증가가 결제와 현금흐름 개선으로 연결.</li>
+<li>국채금리가 안정되고 RBLX가 게임 업종 대비 상대 강도를 회복.</li>
+</ul>
+<p><strong>하방 판단을 강화할 조건</strong></p>
+<ul>
+<li>공식 가이던스가 실질적인 예약매출 둔화를 확인.</li>
+<li>대형 신작 출시 전후 이용시간과 결제 지표가 함께 약화.</li>
+<li>금리 상승 속에서 실적 후 반등이 거래량을 동반해 되돌려짐.</li>
+</ul>
+<p><strong>실행상 우선순위:</strong> 공식 실적자료와 최신 가격·거래량을 확인하기 전에는 기사 시점의 49달러를 매매 기준으로 고정하지 않는 것이 합리적이다. 현재 증거만으로는 최종 거래 방향보다 <strong>예약매출 전망의 정확한 의미와 반등의 지속성 확인</strong>이 우선이다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>확보된 근거</th>
+<th>RBLX 관련 해석</th>
+<th>다음 확인·대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3분기 실적</td>
+<td>매출 15.72억 달러, 순손실 2.27억 달러라는 2차 보도</td>
+<td>성장·손실 축소 신호이나 수익성 검증 필요</td>
+<td>공식 실적, 예상치 대비 성과, 현금흐름 확인</td>
+</tr>
+<tr>
+<td>연말 예약매출</td>
+<td>기사 제목에 15% 감소 표현</td>
+<td>가장 중요한 하방 쟁점</td>
+<td>비교 기준과 공식 가이던스 확인</td>
+</tr>
+<tr>
+<td>실적 후 반등</td>
+<td>11월 7일 기사 기준 주간 약 15% 상승, 49달러</td>
+<td>반등 후 추가 상승 근거 점검 필요</td>
+<td>최신 주가·거래량 확인, 추격 판단 유보</td>
+</tr>
+<tr>
+<td>자사주 매입</td>
+<td>약 5.80억 달러 매입·소각 보도</td>
+<td>주당가치 지지 가능, 현금 사용 부담 병존</td>
+<td>매입 기간·순희석·현금흐름 확인</td>
+</tr>
+<tr>
+<td>게임 경쟁</td>
+<td>경쟁 신작 강세 속 RBLX 약 2% 하락 보도</td>
+<td>이용시간·지출 경쟁 우려</td>
+<td>실제 이용자·결제 지표로 검증</td>
+</tr>
+<tr>
+<td>물가·국채금리</td>
+<td>인플레이션 우려와 10년물 금리 상승 뉴스</td>
+<td>성장주 할인율 부담 가능</td>
+<td>수치 미확인, 공식 지표 확보 필요</td>
+</tr>
+<tr>
+<td>금리 예측시장</td>
+<td>연간 무인하 계약 98%, 주간 +1.2%포인트</td>
+<td>완화 기대가 낮다는 보조 신호</td>
+<td>다음 회의 확률과 구분</td>
+</tr>
+<tr>
+<td>종합 연구 판단</td>
+<td>기업 전망 불확실성과 금리 부담 공존</td>
+<td>RBLX 중립</td>
+<td>공식 가이던스와 가격 흐름 확인 후 재평가</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-4">재무 분석가</h3>
+<h4>RBLX 펀더멘털 분석 보고서</h4>
+<p><strong>기준일: 2026년 11월 11일</strong><br />
+<strong>최근 1주 검토 구간: 2026년 11월 5일~11월 11일</strong><br />
+<strong>분석 대상: RBLX — 로블록스 코퍼레이션, 뉴욕증권거래소 상장</strong></p>
+<p><strong>투자 의견</strong>: Neutral</p>
+<blockquote>
+<p><strong>핵심 판단:</strong> RBLX는 매출 성장과 양의 현금흐름이 강점이지만, 최근 분기에는 성장 둔화와 현금흐름 감소가 동시에 나타났습니다. 회계상 적자가 지속되고 자기자본도 사실상 소진된 만큼, 현재 자료만으로 적극적인 저평가 매수 논리를 확립하기는 어렵습니다. <strong>추가 투자 판단의 핵심은 매출 성장률 자체보다 현금흐름의 지속성, 주식보상에 따른 희석, 유동부채의 구성입니다.</strong></p>
+</blockquote>
+<h5>1. 분석 범위와 자료의 한계</h5>
+<p>본 보고서는 제공 도구의 기업 종합정보, 분기 재무상태표·손익계산서·현금흐름표 및 내부자 거래 자료를 바탕으로 작성했습니다. 재무제표 도구는 <strong>2026년 11월 11일까지 제출된 미국 증권거래위원회 공시 수치</strong>라고 표시하며, 최신 보고기간은 2026년 9월 30일입니다.</p>
+<p>다만 다음 사항을 구분해야 합니다.</p>
+<ul>
+<li><strong>최근 1주에 새로 발표된 실적이나 공시인지는 확인되지 않습니다.</strong> 자료에 실제 제출일과 원문 링크가 없어, 최신 분기 수치를 이번 주 신규 정보로 단정할 수 없습니다.</li>
+<li>내부자 거래 자료에서 가장 최근 거래는 <strong>11월 3일</strong>로, 이번 주 검토 구간 밖입니다.</li>
+<li>실시간 주가, 실적 예상치, 회사 전망, 예약매출, 이용자 수, 주식보상 비용과 부채 상세내역은 제공되지 않았습니다.</li>
+<li>일부 집계 지표와 재무제표 항목은 서로 직접 대사되지 않습니다. 이러한 항목은 확정적인 가치평가 근거로 사용하지 않았습니다.</li>
+</ul>
+<p>따라서 아래 내용은 <strong>최근 1주 시점에서 확인 가능한 RBLX의 펀더멘털 점검</strong>이며, 이번 주 발생한 사건을 빠짐없이 정리한 뉴스 보고서는 아닙니다.</p>
+<h5>2. RBLX 기업 개요와 사업 구조</h5>
+<p>RBLX는 커뮤니케이션 서비스 업종의 전자게임·멀티미디어 기업입니다. 이용자가 가상 체험을 만들고 이용하며, 개발자·창작자가 콘텐츠를 공급하는 플랫폼 구조를 갖고 있습니다.</p>
+<p>사업을 이해하는 핵심은 다음과 같습니다.</p>
+<ul>
+<li>가상화폐 로벅스와 가상 아이템·체험 관련 소비가 플랫폼 수익화의 중요한 기반입니다.</li>
+<li>이용자 참여 확대는 결제 증가로 이어질 수 있지만, 개발자 보상, 인프라, 인력, 플랫폼 안전 비용도 함께 증가할 수 있습니다.</li>
+<li>가상화폐 판매 시점의 현금 유입과 회계상 매출 인식 시점은 다를 수 있습니다. 따라서 <strong>매출·예약매출·영업현금흐름을 같은 개념으로 해석하면 안 됩니다.</strong></li>
+<li>미성년자 보호, 개인정보 및 콘텐츠 관리 등은 사업 구조상 중요한 위험입니다. 다만 이번 자료에서 새로운 규제 사건이나 관련 비용은 확인되지 않았습니다.</li>
+</ul>
+<h5>3. 최신 실적: 성장 지속, 그러나 속도 둔화</h5>
+<p>이하 재무제표 수치는 별도 표기가 없으면 <strong>백만 달러</strong>입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 3분기</th>
+<th style="text-align:right">2026년 2분기</th>
+<th style="text-align:right">2026년 3분기</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">1,360</td>
+<td style="text-align:right">1,469</td>
+<td style="text-align:right">1,572</td>
+<td>전년 대비 15.6%, 전분기 대비 7.0% 증가</td>
+</tr>
+<tr>
+<td>매출원가</td>
+<td style="text-align:right">296</td>
+<td style="text-align:right">292</td>
+<td style="text-align:right">318</td>
+<td>전년 대비 7.4% 증가</td>
+</tr>
+<tr>
+<td>영업손익</td>
+<td style="text-align:right">-296</td>
+<td style="text-align:right">-229</td>
+<td style="text-align:right">-283</td>
+<td>전년 대비 개선, 전분기 대비 악화</td>
+</tr>
+<tr>
+<td>순손익</td>
+<td style="text-align:right">-256</td>
+<td style="text-align:right">-183</td>
+<td style="text-align:right">-227</td>
+<td>전년 대비 손실 11.3% 감소</td>
+</tr>
+<tr>
+<td>희석 주당순손익</td>
+<td style="text-align:right">-0.37달러</td>
+<td style="text-align:right">-0.26달러</td>
+<td style="text-align:right">-0.32달러</td>
+<td>적자 지속</td>
+</tr>
+<tr>
+<td>영업이익률</td>
+<td style="text-align:right">-21.8%</td>
+<td style="text-align:right">-15.6%</td>
+<td style="text-align:right">-18.0%</td>
+<td>전년 대비 약 3.8%포인트 개선</td>
+</tr>
+</tbody>
+</table></div>
+<h6>성장률은 둔화되고 있습니다</h6>
+<p>RBLX의 분기 매출 증가율은 다음과 같습니다.</p>
+<ul>
+<li>2026년 1분기: 전년 대비 <strong>39.3%</strong></li>
+<li>2026년 2분기: <strong>35.9%</strong></li>
+<li>2026년 3분기: <strong>15.6%</strong></li>
+</ul>
+<p>3분기에도 두 자릿수 성장은 유지했지만, 상반기보다 속도가 크게 낮아졌습니다. 전년도 기저효과, 이용자 증가세, 결제 전환율 등 원인을 분해할 자료는 없습니다.</p>
+<p><strong>거래 시사점:</strong> RBLX에 높은 성장 프리미엄을 적용하려면 다음 실적에서 예약매출·이용자·결제 지표를 통해 성장 지속성을 확인할 필요가 있습니다. 단순히 매출이 늘었다는 사실만으로 성장 둔화 우려가 해소되지는 않습니다.</p>
+<h6>수익성 개선은 아직 일관되지 않습니다</h6>
+<p>3분기 영업손실은 전년보다 줄었지만, 전분기보다 <strong>54백만 달러 확대</strong>됐습니다. 매출 증가가 매 분기 일정한 비율의 이익 개선으로 연결되지는 않는 모습입니다.</p>
+<p>2026년 1~9월 누계는 다음과 같습니다.</p>
+<ul>
+<li>매출: <strong>4,483</strong>, 전년 동기 3,476 대비 <strong>29.0% 증가</strong></li>
+<li>영업손실: <strong>806</strong>, 전년 동기 873 대비 <strong>7.7% 감소</strong></li>
+<li>순손실: <strong>656</strong>, 전년 동기 749 대비 <strong>12.4% 감소</strong></li>
+<li>영업이익률: 약 <strong>-18.0%</strong>, 전년 동기 약 -25.1%에서 개선</li>
+</ul>
+<p>누적 기준의 영업 레버리지 개선은 긍정적입니다. 다만 매출이 29% 증가했는데도 순손실이 656백만 달러 발생했다는 점에서, 손익분기점 도달이 확인됐다고 보기는 어렵습니다.</p>
+<h5>4. 현금흐름: 누적 개선과 최근 분기 약화가 공존</h5>
+<p>현금흐름표의 6개월·9개월 수치는 <strong>누적값</strong>입니다. 아래 분기 수치는 누적값 차감으로 계산했습니다. 잉여현금흐름은 영업현금흐름에서 자본적지출을 차감한 값입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 3분기</th>
+<th style="text-align:right">2026년 1분기</th>
+<th style="text-align:right">2026년 2분기</th>
+<th style="text-align:right">2026년 3분기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">546</td>
+<td style="text-align:right">629</td>
+<td style="text-align:right">318</td>
+<td style="text-align:right">395</td>
+</tr>
+<tr>
+<td>자본적지출</td>
+<td style="text-align:right">103</td>
+<td style="text-align:right">33</td>
+<td style="text-align:right">22</td>
+<td style="text-align:right">28</td>
+</tr>
+<tr>
+<td>계산상 잉여현금흐름</td>
+<td style="text-align:right">443</td>
+<td style="text-align:right">596</td>
+<td style="text-align:right">296</td>
+<td style="text-align:right">367</td>
+</tr>
+</tbody>
+</table></div>
+<h6>누적 현금창출력은 개선됐습니다</h6>
+<p>2026년 1~9월 기준:</p>
+<ul>
+<li>영업현금흐름: <strong>1,342</strong>, 전년 대비 <strong>12.9% 증가</strong></li>
+<li>자본적지출: <strong>83</strong>, 전년 대비 <strong>42.0% 감소</strong></li>
+<li>잉여현금흐름: <strong>1,259</strong>, 전년 대비 <strong>20.4% 증가</strong></li>
+</ul>
+<p>영업에서 현금을 창출하고 있다는 점은 RBLX를 단순한 현금소진형 적자 기업과 구분하는 중요한 요소입니다.</p>
+<h6>다만 3분기 현금흐름은 전년보다 약해졌습니다</h6>
+<ul>
+<li>영업현금흐름: 전년 대비 <strong>27.7% 감소</strong></li>
+<li>잉여현금흐름: <strong>17.2% 감소</strong></li>
+<li>잉여현금흐름률: 약 <strong>23.3%</strong>, 전년 동기 약 32.6%</li>
+</ul>
+<p>누적 잉여현금흐름 개선에는 설비투자 감소도 기여했습니다. 따라서 누적 증가율만 보고 현금창출력 전반이 강화됐다고 단정하면 안 됩니다.</p>
+<p>또한 순손실과 양의 영업현금흐름 사이 차이를 설명할 주식보상, 감가상각, 이연수익 및 운전자본 조정 내역이 없습니다. <strong>양의 잉여현금흐름을 주주에게 귀속되는 경제적 이익과 동일시해서는 안 됩니다.</strong></p>
+<p>2026년 1~9월 투자활동 현금흐름은 <strong>-923</strong>, 재무활동 현금흐름은 <strong>-531</strong>입니다. 특히 재무활동 현금흐름은 전년 동기 +85에서 유출로 전환됐지만, 세부내역이 없어 이를 자사주 매입이나 차입금 상환으로 특정할 수 없습니다.</p>
+<h5>5. 재무상태: 유동성 완충력과 자기자본 약화에 주의</h5>
+<p>2026년 9월 말 RBLX 재무상태는 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">금액</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>총자산</td>
+<td style="text-align:right">10,045</td>
+</tr>
+<tr>
+<td>유동자산</td>
+<td style="text-align:right">4,737</td>
+</tr>
+<tr>
+<td>현금 및 현금성자산</td>
+<td style="text-align:right">1,093</td>
+</tr>
+<tr>
+<td>총부채</td>
+<td style="text-align:right">10,072</td>
+</tr>
+<tr>
+<td>유동부채</td>
+<td style="text-align:right">5,945</td>
+</tr>
+<tr>
+<td>보고된 주주자본</td>
+<td style="text-align:right">-1</td>
+</tr>
+</tbody>
+</table></div>
+<h6>유동비율은 1배 미만입니다</h6>
+<ul>
+<li>유동비율: 약 <strong>0.797배</strong></li>
+<li>순운전자본: <strong>-1,208</strong></li>
+<li>현금 및 현금성자산/유동부채: 약 <strong>18.4%</strong></li>
+</ul>
+<p>2025년 말 유동비율 약 0.956배보다 낮아졌고, 순운전자본 부족액도 228에서 1,208로 확대됐습니다.</p>
+<p>다만 플랫폼 사업에서는 유동부채에 이연수익이 포함될 수 있습니다. 이는 차입금과 경제적 성격이 다르므로, <strong>유동비율 1배 미만을 즉각적인 지급불능으로 해석해서는 안 됩니다.</strong> 반대로 세부내역 없이 위험이 없다고 단정할 수도 없습니다.</p>
+<p>현금 외 유동자산의 구성과 단기투자자산, 실제 차입금 만기구조를 확인해야 정확한 유동성 판단이 가능합니다.</p>
+<h6>자기자본은 사실상 소진됐습니다</h6>
+<p>보고된 주주자본은 2025년 말 <strong>394</strong>에서 2026년 9월 말 <strong>-1</strong>로 하락했습니다. 이는 장부가치 측면에서 손실을 흡수할 완충력이 매우 얇다는 뜻입니다.</p>
+<p>다만 자료에서 총자산에서 총부채를 차감한 금액은 <strong>-27</strong>로, 보고된 주주자본 -1과 일치하지 않습니다. 다른 자본 항목이나 집계 차이가 있을 수 있으나 원문 확인 전에는 대사할 수 없습니다. 따라서 정밀한 자본비율 계산보다 <strong>자기자본이 거의 없다는 방향성</strong>에 초점을 맞추는 것이 타당합니다.</p>
+<h5>6. 가치평가: 매출·현금흐름 기준으로 점검해야 합니다</h5>
+<p>종합정보 도구가 제공한 RBLX 주요 지표는 다음과 같습니다.</p>
+<ul>
+<li>시가총액: 약 <strong>366.4억 달러</strong></li>
+<li>최근 12개월 매출: 약 <strong>59.0억 달러</strong></li>
+<li>최근 12개월 순손실: 약 <strong>9.72억 달러</strong></li>
+<li>최근 12개월 주당순손익: <strong>-1.37달러</strong></li>
+<li>최근 12개월 잉여현금흐름: 약 <strong>17.14억 달러</strong></li>
+<li>배당수익률: <strong>0%</strong></li>
+<li>베타: <strong>1.534</strong></li>
+</ul>
+<p>동일 자료로 단순 계산하면:</p>
+<ul>
+<li>시가총액/매출: 약 <strong>6.21배</strong></li>
+<li>시가총액/잉여현금흐름: 약 <strong>21.4배</strong></li>
+<li>잉여현금흐름 수익률: 약 <strong>4.68%</strong></li>
+</ul>
+<p>이는 이익이 나는 성숙기업의 가치평가라기보다, 향후 성장과 현금창출 지속성에 의존하는 가격 구조입니다.</p>
+<p>주의할 점은 다음과 같습니다.</p>
+<ol>
+<li><strong>적자 상태의 음수 주가수익비율은 저평가 신호가 아닙니다.</strong></li>
+<li>자기자본이 거의 0이거나 음수이므로 주가순자산비율과 자기자본이익률의 해석력은 낮습니다.</li>
+<li>순현금·총차입금 내역이 없어 기업가치 기준 배수를 계산하지 않았습니다.</li>
+<li>종합정보의 매출총이익은 재무제표상 매출에서 표시된 매출원가만 차감한 값과 직접 연결되지 않습니다. 비용 분류 차이를 확인하기 전에는 높은 매출총이익률을 투자 근거로 삼기 어렵습니다.</li>
+<li>최신 주가가 제공되지 않아 구체적인 진입가격이나 목표가격을 제시할 근거는 부족합니다.</li>
+</ol>
+<h5>7. 재무 이력: 규모 확대에도 회계상 흑자는 미확인</h5>
+<p>RBLX의 3분기 매출은 다음과 같이 증가했습니다.</p>
+<ul>
+<li>2020년: <strong>252</strong></li>
+<li>2021년: <strong>509</strong></li>
+<li>2022년: <strong>518</strong></li>
+<li>2023년: <strong>713</strong></li>
+<li>2024년: <strong>919</strong></li>
+<li>2025년: <strong>1,360</strong></li>
+<li>2026년: <strong>1,572</strong></li>
+</ul>
+<p>2020년 3분기 대비 약 <strong>6.2배</strong>로 확대됐습니다. 그러나 제공된 모든 분기의 영업손익과 순손익은 적자입니다.</p>
+<p>1~9월 잉여현금흐름은 2022년 <strong>-19</strong>, 2023년 <strong>60</strong>, 2024년 <strong>522</strong>, 2025년 <strong>1,046</strong>, 2026년 <strong>1,259</strong>로 개선됐습니다.</p>
+<p>장기적으로는 <strong>매출 규모 확대와 현금창출 개선이 진행됐지만, 회계상 수익성과 자본 축적은 뒤처진 상태</strong>로 요약할 수 있습니다.</p>
+<h5>8. 내부자 거래: 최근 1주 신규 거래는 자료상 미확인</h5>
+<p>제공된 RBLX 내부자 거래 목록에서 11월 5~11일 거래는 확인되지 않습니다. 이는 실제 거래가 없었다는 확정적 의미는 아닙니다.</p>
+<p>가장 최근 거래는 다음과 같습니다.</p>
+<ul>
+<li><strong>11월 3일:</strong> 그레고리 바주키 이사, <strong>16,666주 매도</strong></li>
+<li>거래금액: 약 <strong>75.8만 달러</strong></li>
+<li>거래가격 범위: <strong>44.13~45.92달러</strong></li>
+</ul>
+<p>같은 이사는 9월 1일과 8월 4일에도 각각 16,666주를 매도했습니다. 반복적인 수량은 정기 매도 가능성을 시사하지만, 사전계획 여부는 확인되지 않았습니다.</p>
+<p>제공 목록에는 시장에서 현금을 지불한 명확한 내부자 매수가 보이지 않습니다. 주식보상 지급이나 증여는 시장 매수와 구분해야 합니다. 다만 보유주식 대비 처분 비율과 매도 사유가 없으므로, 내부자 매도만으로 부정적인 거래 결론을 내리기는 어렵습니다.</p>
+<h5>9. RBLX 거래 판단에 활용할 조건</h5>
+<h6>긍정적 판단을 강화할 확인사항</h6>
+<ul>
+<li>매출 성장률이 최근 3분기 수준에서 안정되거나 재가속하는지 확인</li>
+<li>영업이익률이 전년 대비 개선을 넘어 전분기 대비로도 개선되는지 확인</li>
+<li>분기 영업현금흐름과 잉여현금흐름의 전년 대비 감소가 반전되는지 확인</li>
+<li>주식보상 및 주식 수 증가를 반영해도 주당 현금창출력이 개선되는지 확인</li>
+<li>이연수익과 차입금 구분을 통해 유동부채 증가가 사업 성장과 연결되는지 확인</li>
+</ul>
+<h6>경계 수준을 높일 조건</h6>
+<ul>
+<li>성장 둔화와 현금흐름 감소가 추가 분기에도 동시에 지속</li>
+<li>자기자본 약화가 이어지고 신규 자금조달이나 희석 부담이 확대</li>
+<li>개발자 보상·안전·인프라 비용 증가로 수익성 개선이 정체</li>
+<li>자본적지출 정상화 이후 잉여현금흐름이 크게 약화</li>
+</ul>
+<p><strong>종합하면 RBLX는 성장성과 현금창출력을 인정하되, 신규 비중 확대에는 추가 검증이 필요한 중립적 연구 판단입니다.</strong> 기존 보유자는 회계상 적자만으로 판단하기보다 현금흐름의 질과 희석을 함께 점검하는 것이 합리적입니다. 실제 거래 방향과 규모는 최신 가격·예상치·위험 한도를 결합해 별도로 결정해야 합니다.</p>
+<h5>RBLX 핵심 요약표</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>점검 항목</th>
+<th>핵심 근거</th>
+<th>해석</th>
+<th>후속 확인·행동</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최근 1주 정보</td>
+<td>신규 공시 제출일 미제공, 기간 내 내부자 거래 미확인</td>
+<td>이번 주 신규 호재·악재 단정 불가</td>
+<td>공시 원문과 제출일 확인</td>
+</tr>
+<tr>
+<td>매출 성장</td>
+<td>3분기 매출 1,572백만 달러, 전년 대비 +15.6%</td>
+<td>성장 지속하나 상반기보다 둔화</td>
+<td>예약매출·이용자·결제 지표 확인</td>
+</tr>
+<tr>
+<td>수익성</td>
+<td>3분기 영업이익률 -18.0%</td>
+<td>전년 대비 개선, 전분기 대비 악화</td>
+<td>분기별 개선의 일관성 점검</td>
+</tr>
+<tr>
+<td>누적 실적</td>
+<td>1~9월 매출 +29.0%, 순손실 656백만 달러</td>
+<td>영업 레버리지 개선에도 적자 지속</td>
+<td>손익분기점 경로 검증</td>
+</tr>
+<tr>
+<td>현금창출</td>
+<td>누적 잉여현금흐름 1,259백만 달러, +20.4%</td>
+<td>긍정적이나 투자 감소도 기여</td>
+<td>주식보상·운전자본 조정 확인</td>
+</tr>
+<tr>
+<td>최근 분기 현금흐름</td>
+<td>3분기 잉여현금흐름 전년 대비 -17.2%</td>
+<td>누적 개선과 상반된 경고 신호</td>
+<td>다음 분기 회복 여부 중점 점검</td>
+</tr>
+<tr>
+<td>유동성</td>
+<td>유동비율 0.797배, 순운전자본 -1,208백만 달러</td>
+<td>유동성 완충력 확인 필요</td>
+<td>이연수익·차입금·투자자산 구분</td>
+</tr>
+<tr>
+<td>자기자본</td>
+<td>보고된 주주자본 -1백만 달러</td>
+<td>장부상 손실 흡수 여력 취약</td>
+<td>원문 대사 및 희석 위험 확인</td>
+</tr>
+<tr>
+<td>가치평가</td>
+<td>시가총액/매출 6.21배, 시가총액/잉여현금흐름 21.4배</td>
+<td>성장·현금흐름 유지가 중요</td>
+<td>최신 가격과 정상화 현금흐름으로 재평가</td>
+</tr>
+<tr>
+<td>내부자 거래</td>
+<td>최근 거래 11월 3일, 약 75.8만 달러 매도</td>
+<td>단독 방향성 신호로는 불충분</td>
+<td>사전 매도계획·보유비중 확인</td>
+</tr>
+<tr>
+<td>연구 결론</td>
+<td>성장·현금창출 강점과 적자·자본 약화 공존</td>
+<td>RBLX 중립</td>
+<td>추가 검증 후 거래 담당자가 최종 결정</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. 투자 검토팀 판단</h2><h3 id="s2-1">상승론 분석가</h3>
+<p>Bull Analyst: <strong>투자 의견</strong>: 매수</p>
+<h4>RBLX 강세 논거: 성장 둔화만큼 현금창출력과 플랫폼의 확장성도 평가해야 한다</h4>
+<p>제 입장은 분명합니다. <strong>RBLX는 단기 급등을 추격할 종목이라기보다, 현금창출력을 갖춘 콘텐츠 플랫폼의 장기 확장에 분할 투자할 후보입니다.</strong> 투자 시계는 2~3년입니다.</p>
+<p>약세 측이 가장 먼저 지적할 부분은 예상할 수 있습니다. “매출 성장률이 낮아졌고, 최근 분기 현금흐름도 줄었으며, 회계상 적자가 계속된다”는 것입니다. 모두 중요한 사실입니다. 그러나 그것만으로 투자 결론을 내리면 <strong>누적 매출과 현금흐름의 성장, 수익성 개선, 플랫폼 구조가 제공하는 확장 기회</strong>를 충분히 평가하지 못합니다.</p>
+<p>이 논거는 제공된 보고서의 2026년 11월 11일 기준 자료에 근거합니다. 가격은 11월 10일 확인 종가이며, 기사와 소셜 게시물의 미검증 주장은 재무제표 기반 수치와 구분합니다.</p>
+<h5>1. “성장이 끝났다”기보다 “확대된 규모에서 성장률이 낮아졌다”가 정확합니다</h5>
+<p>RBLX의 3분기 매출 성장률이 상반기 30%대에서 **15.6%**로 낮아진 것은 명백한 경고입니다. 하지만 사업이 축소되고 있다는 뜻은 아닙니다.</p>
+<ul>
+<li>3분기 매출은 <strong>15억7,200만 달러</strong>로 전년 대비 <strong>15.6%</strong>, 전분기 대비 <strong>7.0%</strong> 증가했습니다.</li>
+<li>1~9월 누적 매출은 <strong>44억8,300만 달러</strong>, 전년 대비 <strong>29.0%</strong> 증가했습니다.</li>
+<li>3분기 매출 규모는 2020년 같은 분기의 약 <strong>6.2배</strong>입니다.</li>
+</ul>
+<p>약세 측에 묻고 싶습니다. <strong>최근 한 분기의 둔화가 장기 성장 경로의 훼손을 입증합니까, 아니면 성장 기대를 재조정해야 한다는 뜻입니까?</strong> 현재 자료로는 후자가 더 타당합니다.</p>
+<p>물론 회계상 매출은 과거 예약매출의 인식 영향을 받으므로, 이것만으로 향후 수요가 탄탄하다고 단정할 수는 없습니다. 다음 공식 예약매출과 결제 지표가 중요합니다. 다만 기사 제목의 <strong>“연말 예약매출 전망 15% 감소”는 비교 기준조차 확인되지 않았습니다.</strong> 이를 확정적인 전년 대비 역성장으로 확대 해석하는 것 역시 근거가 부족합니다.</p>
+<h5>2. RBLX의 경쟁력은 단일 흥행작이 아니라 창작자·이용자 생태계입니다</h5>
+<p>RBLX는 자체 제작 게임 한 편의 성공에만 의존하는 구조가 아닙니다. 창작자가 체험을 만들고 이용자가 소비하는 플랫폼입니다.</p>
+<p>이 구조의 강점은 세 가지입니다.</p>
+<p><strong>첫째, 콘텐츠 공급을 외부 창작자와 함께 확장할 수 있습니다.</strong> 모든 신규 콘텐츠를 내부 개발비로 제작하는 모델과 달리, 창작자 참여를 통해 콘텐츠의 종류와 공급을 늘릴 수 있습니다. 개발자 보상과 안전 관리 비용은 발생하지만, 콘텐츠 생산 능력이 내부 인력 규모에만 묶이지 않습니다.</p>
+<p><strong>둘째, 양면 네트워크 효과의 기반이 있습니다.</strong> 다양한 체험은 이용자를 유인하고, 이용자와 수익화 기회는 창작자 참여를 유인합니다. 제공 자료가 경쟁사의 추격 비용이나 이용자 전환 비용까지 정량적으로 입증하지는 않지만, 이 구조 자체는 단일 게임과 다른 경쟁 기반입니다.</p>
+<p><strong>셋째, 성장 동력이 신규 이용자 증가에만 한정되지 않습니다.</strong> 기존 이용자의 결제 전환, 결제 빈도, 체험의 질 개선도 수익화 경로입니다.</p>
+<p>소셜 게시물에서 주장한 약 1.3%의 결제 이용자 비중은 원자료와 정의가 확인되지 않았으므로 투자 계산에 쓰지 않겠습니다. 다만 낮은 결제 전환율이 확인되더라도, 그것이 반드시 사업 실패만을 의미하지는 않습니다. <strong>개선 가능성이 남아 있다는 뜻도 됩니다.</strong> 강세 논거의 핵심은 그 가능성이 실제 주당 현금흐름으로 연결되는지에 있습니다.</p>
+<h5>3. “적자 기업”과 “현금을 소진하는 기업”은 구분해야 합니다</h5>
+<p>약세 측의 회계상 적자 지적은 맞습니다. 그러나 RBLX를 외부 자금 없이는 운영하기 어려운 기업처럼 취급하는 것은 재무자료와 맞지 않습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2026년 1~9월</th>
+<th style="text-align:right">전년 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">44억8,300만 달러</td>
+<td style="text-align:right">29.0% 증가</td>
+</tr>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">13억4,200만 달러</td>
+<td style="text-align:right">12.9% 증가</td>
+</tr>
+<tr>
+<td>잉여현금흐름</td>
+<td style="text-align:right">12억5,900만 달러</td>
+<td style="text-align:right">20.4% 증가</td>
+</tr>
+<tr>
+<td>영업이익률</td>
+<td style="text-align:right">약 -18.0%</td>
+<td style="text-align:right">약 7.1%포인트 개선</td>
+</tr>
+</tbody>
+</table></div>
+<p>이 수치들은 <strong>규모 확대와 함께 현금창출 및 누적 수익성 개선이 진행되고 있음</strong>을 보여줍니다.</p>
+<p>“잉여현금흐름 증가는 설비투자 감소 덕분 아닌가요?”라는 반론도 나올 것입니다. 일부는 맞습니다. 자본적지출이 42.0% 줄었습니다. 하지만 <strong>영업현금흐름 자체도 12.9% 증가했습니다.</strong> 개선 전체를 투자 축소의 결과로 설명할 수는 없습니다.</p>
+<p>반대로 3분기 잉여현금흐름이 전년 대비 <strong>17.2% 감소</strong>한 사실도 무시하지 않습니다. 강세 관점에서는 이것이 다음 분기의 핵심 검증 항목입니다. 다만 최근 분기 수치는 <strong>3억6,700만 달러의 양수</strong>이며, 전분기 2억9,600만 달러보다는 증가했습니다.</p>
+<p>주식보상과 이연수익 변동의 상세내역이 없으므로 잉여현금흐름을 그대로 주주 이익으로 간주할 수는 없습니다. 그렇더라도 상당한 양의 영업현금흐름은 강세 논거의 실질적인 기반입니다.</p>
+<h5>4. 현재 가치평가에는 성장의 가치도 반영할 여지가 있습니다</h5>
+<p>제공된 집계 자료 기준 RBLX는 다음 수준입니다.</p>
+<ul>
+<li>시가총액/최근 12개월 매출: 약 <strong>6.21배</strong></li>
+<li>시가총액/최근 12개월 잉여현금흐름: 약 <strong>21.4배</strong></li>
+<li>잉여현금흐름 수익률: 약 <strong>4.68%</strong></li>
+</ul>
+<p>이것을 명백한 저평가라고 단정하지는 않겠습니다. 하지만 누적 매출이 29.0% 성장하고 현금흐름이 증가하는 플랫폼에 대해, <strong>현재 배수가 장기 성장 가능성을 전혀 정당화할 수 없을 정도라고 보기도 어렵습니다.</strong></p>
+<p>단순 민감도 예시로, 최근 12개월 잉여현금흐름 <strong>17억1,400만 달러</strong>가 향후 10% 증가하고 시가총액이 그대로라면 해당 배수는 약 <strong>19.4배</strong>로 낮아집니다. 이는 회사 전망이나 목표가가 아니라, 성장에 따른 가치평가 변화의 예시입니다.</p>
+<p>반대로 현금흐름이 감소하거나 주식보상 희석이 크다면 같은 배수도 비쌀 수 있습니다. 따라서 핵심은 <strong>매출 성장률 하나가 아니라 정상화된 주당 현금창출력</strong>입니다.</p>
+<h5>5. 약세 논거는 존중하되, 확인되지 않은 결론까지 받아들일 필요는 없습니다</h5>
+<h6>“유동비율이 낮고 자기자본이 거의 없으니 위험하다”</h6>
+<p>유동비율 <strong>0.797배</strong>, 사실상 소진된 자기자본은 분명한 약점입니다. 다만 플랫폼의 이연수익은 금융 차입금과 성격이 다릅니다. 총부채를 모두 현금 상환이 필요한 차입금처럼 해석해서는 안 됩니다.</p>
+<p>제 결론은 “안전하다”가 아니라 **“부채 구성 확인 없이 유동성 위기로 단정할 수 없다”**입니다. 양의 영업현금흐름은 완충 요인이지만, 단기투자자산과 차입금 만기는 추가 확인해야 합니다.</p>
+<h6>“안전 비용과 대형 경쟁작이 성장성을 훼손한다”</h6>
+<p>안전 비용은 구조적인 부담입니다. 그러나 안전 역량은 부모의 신뢰와 플랫폼의 지속 가능성을 뒷받침할 수도 있습니다. 비용을 성장의 반대편에만 놓을 수는 없습니다.</p>
+<p>경쟁작의 강한 판매도 이용자의 시간과 지출을 위협할 수 있습니다. 하지만 제공 자료에는 <strong>RBLX의 실제 이용시간이나 결제가 경쟁작 때문에 감소했다는 증거가 없습니다.</strong> 하루의 상대 주가 움직임은 사업 잠식의 입증 자료가 아닙니다.</p>
+<h6>“시장 심리가 약세이므로 더 기다려야 한다”</h6>
+<p>심리 점수는 3.9/10이지만 신뢰도가 낮습니다. 방향 태그가 있는 게시물은 7건뿐이고, 약세 태그 4건은 모두 동일 계정에서 나왔습니다. 이를 광범위한 투자자 합의로 보기 어렵습니다.</p>
+<p>그렇다고 약한 심리가 자동으로 매수 신호가 되는 것도 아닙니다. <strong>심리보다 실적과 현금흐름에 더 큰 비중을 두자는 주장입니다.</strong></p>
+<h5>6. 매수 의견과 추격 매수는 다릅니다</h5>
+<p>11월 10일 RBLX 종가 <strong>51.19달러</strong>는 10일선과 50일선을 웃돌고, 200일선 <strong>51.259달러</strong>에는 약 0.13% 못 미칩니다. 평균진폭이 약 <strong>3.20달러</strong>인 상황에서 이 작은 차이를 결정적인 약세 증거로 삼기는 어렵습니다.</p>
+<p>또한 상대강도지수는 <strong>54.75</strong>로 과열되지 않았고, MACD 히스토그램은 여전히 음수지만 개선 중입니다. 기술적 추세 전환이 확정된 것은 아니지만, 강세 관점과 모순되는 상태도 아닙니다.</p>
+<p>따라서 실행은 다음처럼 구분하겠습니다.</p>
+<ul>
+<li><strong>신규 투자:</strong> 200일선 위 안착 또는 눌림목 안정 확인 후 분할 접근.</li>
+<li><strong>추가 매수:</strong> 공식 예약매출 전망과 현금흐름의 질을 확인한 뒤 판단.</li>
+<li><strong>강세 논거 재검토:</strong> 성장 둔화와 전년 대비 현금흐름 감소가 추가 분기에도 지속되거나, 희석을 반영한 주당 현금창출력이 악화될 경우.</li>
+</ul>
+<h5>결론</h5>
+<p>약세 측은 RBLX의 문제를 정확히 지적할 수 있습니다. 그러나 <strong>문제가 있다는 것과 투자 가치가 없다는 것은 다른 주장</strong>입니다.</p>
+<p>RBLX에는 두 자릿수 매출 성장, 증가한 누적 영업현금흐름, 개선된 누적 영업이익률, 창작자 생태계를 통한 확장성이 있습니다. 반면 예약매출 전망의 정확한 의미와 안전 비용의 성장 영향은 아직 충분히 확인되지 않았습니다.</p>
+<p>저는 <strong>최근 분기 둔화를 영구적인 성장 훼손으로 해석하기보다, 현금창출력을 가진 플랫폼을 선별적으로 축적할 기회로 보는 쪽</strong>에 더 무게를 둡니다. 권고는 무조건적인 추격 매수가 아니라, 검증과 위험 관리를 동반한 장기 분할 매수입니다.</p>
+<p>최종 매매 제안: 매수</p>
+<h3 id="s2-2">하락론 분석가</h3>
+<p>Bear Analyst: <strong>투자 의견</strong>: 매도</p>
+<h4>RBLX 약세 논거: 성장 가능성은 남아 있지만, 현재 가격은 그 가능성에 너무 많은 신뢰를 요구합니다</h4>
+<p>강세 측 주장에 동의하는 부분부터 짚겠습니다. RBLX는 현금을 소진하기만 하는 기업이 아닙니다. 창작자 생태계도 실재하며, 매출과 누적 현금흐름도 증가했습니다.</p>
+<p>하지만 <strong>좋은 플랫폼이라는 사실과 지금 매수할 만한 주식이라는 결론은 다릅니다.</strong> 현재 RBLX에서는 성장 둔화, 최근 분기 현금창출력 약화, 불완전한 수익성 개선이 동시에 나타납니다. 그런데 가치평가는 여전히 성장과 현금흐름의 지속성을 상당 부분 전제하고 있습니다.</p>
+<p>제 약세 논거는 사업 붕괴나 지급불능 예측이 아닙니다. <strong>실적 기대가 낮아지는 과정에서 현금흐름 추정치와 적용 배수가 함께 하락할 위험</strong>입니다.</p>
+<p>아래 판단은 제공된 보고서의 2026년 11월 11일 기준 자료에 근거합니다. 가격 기준은 11월 10일 검증 종가 51.19달러이며, 집계 가치평가 수치는 해당 보고서 기준입니다. 기사·소셜의 미검증 주장은 재무제표 기반 수치와 구분합니다.</p>
+<h5>1. “성장이 끝난 것은 아니다”—맞습니다. 하지만 주가 하락에는 성장 종료까지 필요하지 않습니다</h5>
+<p>강세 측은 묻습니다. “한 분기 둔화가 장기 성장 경로의 훼손을 입증합니까?”</p>
+<p>제 답은 이렇습니다. <strong>영구적 훼손을 입증할 필요는 없습니다. 현재 가격을 정당화할 성장 기대가 낮아지는 것만으로도 투자 손실은 발생합니다.</strong></p>
+<p>RBLX의 전년 대비 매출 성장률은 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>분기</th>
+<th style="text-align:right">매출 성장률</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026년 1분기</td>
+<td style="text-align:right">39.3%</td>
+</tr>
+<tr>
+<td>2026년 2분기</td>
+<td style="text-align:right">35.9%</td>
+</tr>
+<tr>
+<td>2026년 3분기</td>
+<td style="text-align:right">15.6%</td>
+</tr>
+</tbody>
+</table></div>
+<p>이것은 단순히 “규모가 커져 성장률이 조금 낮아졌다”는 표현으로 넘기기 어려운 변화입니다. 2분기에서 3분기 사이 성장률이 <strong>20.3%포인트 하락</strong>했습니다.</p>
+<p>누적 매출 성장률 29.0%는 긍정적입니다. 그러나 그 수치에는 이미 지나간 상반기 고성장이 포함됩니다. 앞으로의 가격을 판단하면서 누적 성장률을 중심에 놓으면 최근 둔화를 과소평가할 수 있습니다.</p>
+<p>더구나 RBLX는 현금 수취와 회계상 매출 인식 시점이 다릅니다. 따라서 현재 매출 증가만으로 새로운 수요가 같은 속도로 늘고 있다고 판단하기도 어렵습니다.</p>
+<p>연말 예약매출 전망의 “15% 감소” 보도는 비교 기준이 불분명하므로 확정적인 역성장 근거로 사용하지 않겠습니다. <strong>그 보도를 제외해도, 재무제표상 성장 둔화는 이미 확인됩니다.</strong></p>
+<h5>2. 현금흐름이 양수라는 사실보다, 그 현금흐름에 얼마를 지불하는지가 중요합니다</h5>
+<p>강세 측의 가장 강한 근거는 현금창출력입니다. 저도 이를 부정하지 않습니다. 다만 최신 분기를 보면 방향이 달라집니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align:right">2026년 3분기</th>
+<th style="text-align:right">전년 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">15억7,200만 달러</td>
+<td style="text-align:right">+15.6%</td>
+</tr>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">3억9,500만 달러</td>
+<td style="text-align:right">-27.7%</td>
+</tr>
+<tr>
+<td>잉여현금흐름</td>
+<td style="text-align:right">3억6,700만 달러</td>
+<td style="text-align:right">-17.2%</td>
+</tr>
+<tr>
+<td>잉여현금흐름률</td>
+<td style="text-align:right">약 23.3%</td>
+<td style="text-align:right">약 9.3%포인트 하락</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>매출은 늘었는데 영업현금흐름은 크게 줄었습니다.</strong> 이것이 제 핵심 우려입니다.</p>
+<p>강세 측은 3분기 잉여현금흐름이 전분기보다 증가했다고 강조합니다. 하지만 계절성과 운전자본 변동을 분리할 자료가 없는 상황에서, 전분기 회복만으로 전년 대비 악화를 상쇄했다고 보기는 어렵습니다.</p>
+<p>누적 수치도 조금 더 엄격하게 읽어야 합니다.</p>
+<ul>
+<li>매출 증가율: <strong>29.0%</strong></li>
+<li>영업현금흐름 증가율: <strong>12.9%</strong></li>
+<li>잉여현금흐름 증가율: <strong>20.4%</strong></li>
+</ul>
+<p>누적 영업현금흐름률은 계산상 전년 약 <strong>34.2%에서 29.9%로 하락</strong>했습니다. 잉여현금흐름 증가에는 자본적지출의 42.0% 감소도 기여했습니다.</p>
+<p>즉, 현금흐름 총액은 늘었지만 <strong>매출이 현금으로 전환되는 비율까지 개선된 것은 아닙니다.</strong></p>
+<p>주식보상과 이연수익 변동의 상세내역도 없습니다. 주식보상은 현금 지출이 아니더라도 기존 주주의 지분 가치를 희석할 수 있습니다. 따라서 보고된 잉여현금흐름 전체를 주주에게 귀속되는 경제적 이익으로 간주해 배수를 적용하는 것은 성급합니다.</p>
+<h5>3. 플랫폼의 규모는 커졌지만, 비용 구조가 충분히 가벼워졌다는 증거는 부족합니다</h5>
+<p>“창작자가 콘텐츠를 공급하므로 확장성이 높다”는 설명은 사업 구조로서는 타당합니다. 하지만 투자자는 그 확장성이 실제 손익에 어떻게 나타나는지 확인해야 합니다.</p>
+<p>2026년 3분기 RBLX는:</p>
+<ul>
+<li>매출이 전분기 대비 약 <strong>1억300만 달러 증가</strong>했지만,</li>
+<li>영업손실은 <strong>2억2,900만 달러에서 2억8,300만 달러로 확대</strong>됐고,</li>
+<li>영업이익률은 <strong>-15.6%에서 -18.0%로 악화</strong>됐습니다.</li>
+</ul>
+<p>단일 분기만으로 장기적인 영업 레버리지를 부정할 수는 없습니다. 그러나 <strong>플랫폼 규모 확대가 자동으로 이익 개선으로 연결되지 않는다는 반례</strong>로는 충분합니다.</p>
+<p>창작자가 콘텐츠를 만든다고 해서 개발자 보상, 인프라, 콘텐츠 관리, 이용자 안전 비용이 사라지지는 않습니다. 특히 안전 투자가 부모의 신뢰를 높일 수 있다는 강세 논리는 맞지만, 그 투자가 비용을 웃도는 추가 수익을 창출한다는 증거는 제공되지 않았습니다.</p>
+<p>필수적인 안전 지출과 주주 수익을 높이는 투자는 같은 개념이 아닙니다.</p>
+<h5>4. 네트워크 효과는 경쟁을 없애지 않으며, 수익화 가능성은 아직 실적이 아닙니다</h5>
+<p>강세 측은 낮은 결제 전환율이 확인되더라도 개선 여지가 있다고 말합니다. 가능성은 있습니다. 하지만 반대 해석도 가능합니다.</p>
+<p><strong>결제하지 않는 이용자가 많다는 것은 미개척 기회일 수도 있고, 결제 의향이 낮은 이용자 기반이라는 뜻일 수도 있습니다.</strong></p>
+<p>원자료가 없는 소셜의 결제 비중 수치를 투자 계산에 쓰지는 않겠습니다. 대신 확인해야 할 것은 다음입니다.</p>
+<ul>
+<li>결제 전환율이 실제로 상승하는가?</li>
+<li>수익화를 강화해도 이용자 유지율과 이용시간이 유지되는가?</li>
+<li>창작자 보상과 안전 비용을 차감한 뒤 주당 현금흐름이 증가하는가?</li>
+</ul>
+<p>창작자와 이용자가 많은 플랫폼이라도 외부 게임·영상·소셜 서비스와 이용자의 시간을 놓고 경쟁합니다. 콘텐츠 공급 확대는 선택지를 늘리지만, 개별 콘텐츠의 발견과 품질 관리 부담도 키울 수 있습니다.</p>
+<p>경쟁 신작 때문에 RBLX 이용자가 이탈했다는 증거는 없습니다. 그렇다고 <strong>경쟁 피해가 아직 확인되지 않았다는 사실이 강한 전환 비용이나 가격 결정력을 입증하는 것도 아닙니다.</strong></p>
+<h5>5. 가치평가는 하방 시나리오에도 똑같이 민감합니다</h5>
+<p>제공된 집계 자료에서 RBLX는 다음 수준입니다.</p>
+<ul>
+<li>시가총액/매출: <strong>6.21배</strong></li>
+<li>시가총액/잉여현금흐름: <strong>21.4배</strong></li>
+<li>잉여현금흐름 수익률: <strong>4.68%</strong></li>
+</ul>
+<p>강세 측은 잉여현금흐름이 10% 증가하면 배수가 낮아진다고 설명했습니다. 맞습니다. 다만 반대 방향의 민감도도 봐야 합니다.</p>
+<p><strong>최근 12개월 잉여현금흐름이 20% 감소하고 시장이 18배를 적용한다는 가정</strong>을 놓으면, 산출 시가총액은 현재 집계치 대비 약 <strong>33% 낮아집니다.</strong></p>
+<p>이는 목표가나 회사 전망이 아니라 단순 민감도 분석입니다. 다만 중요한 점을 보여줍니다. 현금흐름이 줄어드는 시기에는 시장이 같은 배수를 유지해 준다는 보장이 없습니다.</p>
+<p>성장 둔화와 현금흐름 감소가 동시에 발생하면:</p>
+<ol>
+<li>평가의 기초가 되는 현금흐름이 줄고,</li>
+<li>성장 신뢰도 약화로 적용 배수도 낮아질 수 있습니다.</li>
+</ol>
+<p>금리 부담이 지속된다면 이 위험은 더 커질 수 있습니다. 다만 제공 자료에서 실제 국채금리 수준은 검증되지 않았으므로, 이는 조건부 위험으로 봅니다.</p>
+<h5>6. 재무구조의 불확실성은 “위기가 아니다”라는 말로 해소되지 않습니다</h5>
+<p>유동비율 0.797배나 사실상 소진된 자기자본만으로 지급불능을 주장하지 않겠습니다. 이연수익은 차입금과 다르고, 양의 영업현금흐름도 완충 역할을 합니다.</p>
+<p>그럼에도 다음 변화는 무시하기 어렵습니다.</p>
+<ul>
+<li>순운전자본: 2025년 말 <strong>-2억2,800만 달러</strong> → 2026년 9월 말 <strong>-12억800만 달러</strong></li>
+<li>보고된 주주자본: <strong>3억9,400만 달러</strong> → 사실상 0</li>
+<li>유동부채 구성과 차입금 만기: 상세 확인 불가</li>
+</ul>
+<p>이연수익은 동일 금액의 현금 상환 의무는 아니지만, 향후 서비스를 제공해야 하는 의무입니다. 무조건적인 여유자금으로 볼 수는 없습니다.</p>
+<p>자사주 매입 보도 역시 순희석과 집행 기간을 확인하기 전에는 강력한 매수 근거가 아닙니다. <strong>현금을 사용해 주식을 줄였다는 사실과 주당 경제적 가치가 증가했다는 결론은 구분해야 합니다.</strong></p>
+<h5>7. 반등은 인정하지만, 지금 매수해야 할 이유까지 확인된 것은 아닙니다</h5>
+<p>RBLX는 11월 2일 42.88달러에서 11월 10일 51.19달러로 약 <strong>19.4% 반등</strong>했습니다.</p>
+<p>200일선보다 약 0.13% 낮다는 사실 자체는 중요하지 않습니다. 강세 측 지적대로 정상적인 변동 범위 안입니다. 제 우려는 <strong>사업 전망의 핵심 불확실성이 해소되지 않은 상태에서 가격이 먼저 크게 회복했다는 점</strong>입니다.</p>
+<ul>
+<li>MACD 히스토그램은 여전히 음수입니다.</li>
+<li>거래량은 지속적인 돌파를 확증하지 못합니다.</li>
+<li>평균진폭 3.20달러는 종가의 약 **6.3%**입니다.</li>
+</ul>
+<p>낮은 신뢰도의 소셜 약세 점수나 단일 계정의 목표가격도 제 매도 논거로 삼지 않겠습니다. 더 중요한 근거는 성장률, 현금흐름, 수익성입니다.</p>
+<h5>결론: 강세 측의 검증 조건은 타당하지만, 검증 전 매수 결론은 앞서 있습니다</h5>
+<p>강세 측은 공식 예약매출, 현금흐름의 질, 희석을 반영한 주당 성과를 확인하자고 말합니다. 동의합니다.</p>
+<p><strong>그런데 그 핵심 항목들이 아직 확인되지 않았다면, 왜 지금부터 매수해야 합니까?</strong></p>
+<p>RBLX의 약세 논거에는 사업 붕괴가 필요하지 않습니다. 매출 성장률이 낮아진 수준에 머물고, 현금흐름 회복이 지연되며, 수익성 개선이 기대보다 느리기만 해도 현재 가치평가는 압박받을 수 있습니다.</p>
+<p>제 판단을 바꾸려면 다음이 필요합니다.</p>
+<ul>
+<li>공식 예약매출과 결제 지표의 안정 또는 재가속</li>
+<li>전년 대비 영업현금흐름 감소의 반전</li>
+<li>주식보상과 순희석을 반영한 주당 현금창출력 개선</li>
+<li>매출 증가와 영업손실 축소가 함께 나타나는 일관된 실적</li>
+</ul>
+<p>그전까지는 <strong>신규 매수를 피하고 기존 비중 축소를 우선하는 편이 합리적</strong>입니다. 이는 높은 변동성을 감수한 공매도 권고와는 구분됩니다. 장기 투자라는 이유만으로 불확실성과 가격 위험이 사라지지는 않습니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s2-3">투자 검토 책임자</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>판단 근거</strong>: RBLX는 약세 측의 논거가 더 설득력 있지만, 전량 처분을 정당화할 정도로 장기 사업가치 훼손이 입증된 것은 아닙니다. 강세 측의 가장 강한 근거는 누적 매출 29.0% 증가, 영업현금흐름 12.9% 증가, 양의 잉여현금흐름과 창작자 생태계입니다. 그러나 최근 분기에는 매출 성장률이 35.9%에서 15.6%로 낮아지고, 영업현금흐름과 잉여현금흐름이 각각 전년 대비 27.7%, 17.2% 감소했습니다. 누적 현금전환율 하락과 자본적지출 감소의 기여까지 고려하면, 성장과 주주 귀속 현금창출력이 함께 개선되고 있다는 강세 논거는 충분히 확인되지 않았습니다. 시가총액/잉여현금흐름 21.4배가 명백한 고평가라고 단정할 수는 없지만, 주식보상·순희석·이연수익 내역이 없는 상태에서는 가격의 안전마진도 확인하기 어렵습니다. 따라서 최신 실적의 둔화와 현금흐름의 질에 더 무게를 두고 비중 축소를 권고합니다. 비교 기준이 불명확한 예약매출 전망 보도, 소수 소셜 게시물, 경쟁작의 직접 피해 추정은 판단에서 제외했습니다. 판단은 제공된 2026년 11월 11일 기준 자료에 한정합니다.</p>
+<p><strong>대응 계획</strong>: RBLX 목표 비중은 표준 배분의 50~75%, 중심값 60%로 설정합니다. 실제 보유량은 알 수 없으므로 트레이더가 목표와의 차이를 계산하며, 이미 목표 이하라면 추가 매도를 강제하지 않습니다. 목표 초과분은 약 절반을 먼저 축소하고 나머지는 반등이나 유동성 양호 구간에서 나누어 집행하되, 현재 시세와 거래비용은 별도 확인합니다. 신규 기본 포지션 구축과 반등 추격 매수는 보류하고 공매도는 권고하지 않습니다. 51.19달러와 평균진폭 3.20달러는 제공 자료의 과거 관측치이므로 현재 주문가격이나 기계적인 손절 기준으로 사용하지 않습니다. 다음 공식 실적에서 예약매출·결제 지표의 안정, 전년 대비 영업현금흐름 감소 반전, 주식보상과 순희석을 반영한 주당 현금창출력 개선, 매출 증가와 영업손실 축소의 동반 여부를 확인합니다. 이 개선이 함께 확인되면 표준 배분 복원을 검토하고, 성장 둔화와 현금흐름 감소가 추가 분기에도 이어지면 표준 배분의 25~50%로 더 축소하는 방안을 검토합니다. 유동부채 구성, 차입금 만기, 현금·단기투자자산 및 이연수익 변동도 추가 확인이 필요합니다.</p>
+</section><section id="s3"><h2>III. 매매 계획</h2><h3 id="s3-1">매매 담당</h3>
+<p><strong>대응</strong>: 매도</p>
+<p><strong>판단 근거</strong>: RBLX는 최근 분기 매출 성장 둔화와 영업현금흐름·잉여현금흐름 감소를 반영해 연구 계획대로 비중 축소가 타당하지만, 사업가치 훼손이 입증되지 않아 전량 매도나 공매도는 권고하지 않습니다. 제공된 과거 종가 51.19달러는 200일선 51.259달러 아래이고 MACD 히스토그램도 음수여서 추격 매수 근거가 부족하며, 평균진폭 3.20039달러에 비해 첫 상단 관찰 구간 52.35~52.55달러까지의 여유도 작습니다. 목표 초과분을 분할 축소하되 과거 시세를 현재 주문가격이나 기계적 손절 기준으로 사용하지 않고, 실제 집행 전 최신 가격과 유동성을 확인해야 합니다.</p>
+<p><strong>진입 가격</strong>: 제시되지 않음</p>
+<p><strong>손절 기준</strong>: 제시되지 않음</p>
+<p><strong>보유 비중 계획</strong>: RBLX 목표 비중은 투자자 본인의 표준 배분 대비 50~75%, 중심값 60%입니다. 현재 비중이 목표를 초과하면 초과분의 약 절반을 먼저 축소하고 나머지는 반등 또는 유동성이 양호한 구간에서 분할 매도합니다. 이미 목표 이하라면 추가 매도를 강제하지 않으며 신규 매수와 공매도는 보류합니다.</p>
+<p>최종 매매 제안: <strong>매도</strong></p>
+</section><section id="s4"><h2>IV. 위험 관리팀 판단</h2><h3 id="s4-1">적극적 위험 분석가</h3>
+<p>적극적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 RBLX의 목표 초과 비중을 분할 매도하자는 결정에 찬성합니다. 공격적인 투자자가 반드시 매수만 해야 하는 것은 아닙니다. 고수익을 추구한다면 성장 둔화가 나타난 자산에 자본을 그대로 묶어두는 기회비용도 공격적으로 관리해야 합니다. 이번 매도의 핵심은 RBLX의 미래를 포기하는 것이 아니라, 반등을 활용해 초과 노출을 줄이면서 플랫폼 성장에 참여할 핵심 보유분과 향후 재진입 여력을 함께 남기는 것입니다.</p>
+<p>아직 보수적·중립적 분석가의 직접 발언은 없으므로, 제공된 보고서의 보유·관망 논리와 전량 매도를 정당화할 수 있는 우려를 상대로 제 입장을 말씀드리겠습니다.</p>
+<p>먼저 중립적인 “추세 확인까지 그대로 보유하자”는 접근은 기다리는 동안 부담하는 자본 비용을 과소평가합니다. RBLX의 매출 성장률은 2026년 1분기 39.3%, 2분기 35.9%에서 3분기 15.6%로 낮아졌습니다. 3분기 영업현금흐름은 전년 대비 27.7%, 잉여현금흐름은 17.2% 감소했습니다. 그런데 제공된 집계 기준 시가총액/매출은 약 6.21배, 시가총액/잉여현금흐름은 약 21.4배입니다. 이것만으로 고평가를 확정할 수는 없지만, 성장과 현금창출의 지속성이 요구되는 가격 구조라는 점은 분명합니다. 사업이 무너졌다는 증거를 기다려야만 초과 비중을 줄일 수 있다는 생각은 지나치게 수동적입니다. 비중 축소에는 사업 붕괴의 입증이 아니라, 현재 노출을 정당화할 기대수익의 재검토가 필요합니다.</p>
+<p>기술적 회복을 근거로 매도를 미루자는 주장에도 반론이 있습니다. 제공된 과거 시세에서 RBLX는 11월 2일 42.88달러에서 11월 10일 51.19달러로 약 19.4% 반등했습니다. 저는 이 회복을 무시하지 않습니다. 오히려 초과 보유분을 공포 속에서 처분하기보다 회복 과정에서 줄일 수 있게 된 기회로 봅니다. 다만 거래량의 상대적 강도가 검증되지 않았으므로, 반등 자체를 충분한 유동성의 증거로 삼지는 않겠습니다.</p>
+<p>동시에 200일선 아래라는 사실을 과장해서도 안 됩니다. 51.19달러와 당시 200일선 51.259달러의 차이는 약 0.13%에 불과합니다. 평균진폭이 약 6.25%인 RBLX에서 이 작은 차이는 강력한 매도 근거가 아닙니다. 더 중요한 것은 첫 상단 관찰 구간인 52.35~52.55달러까지의 상승 폭이 약 2.3~2.7%인 반면, 평균진폭은 3.20039달러였다는 점입니다. 이 관찰 구간이 상승의 한계라는 뜻은 아닙니다. 다만 가까운 가격 구간을 넘을 가능성만으로 초과 비중 전체를 유지하기에는 근거가 빈약하다는 뜻입니다. MACD 히스토그램도 개선 중이지만 아직 음수입니다. 반등은 인정하되, 그 반등에 추가 자본까지 베팅할 단계는 아닙니다.</p>
+<p>반대로 보수적인 관점에서 적자와 취약한 자기자본을 이유로 전량 매도를 주장한다면, 그것 역시 RBLX의 상승 잠재력을 지나치게 할인하는 판단입니다. 제공된 재무자료에서 1~9월 매출은 전년 대비 29.0% 증가했고, 누적 잉여현금흐름은 12억5,900만 달러로 20.4% 늘었습니다. 3분기 잉여현금흐름도 감소했지만 여전히 3억6,700만 달러의 양수입니다. RBLX를 단순한 현금소진형 적자 기업과 동일하게 취급해서는 안 됩니다.</p>
+<p>RBLX의 창작자·이용자 플랫폼은 콘텐츠 공급과 참여 확대가 결제 증가로 연결될 경우 상당한 성장 선택권을 제공합니다. 수익화 개선이 실제로 확인된다면 시장의 평가가 빠르게 달라질 가능성도 있습니다. 물론 현재 자료로 그 전환의 시점이나 규모를 확정할 수는 없습니다. 그렇기 때문에 전량 매도보다 핵심 보유분 유지가 유리합니다. 미래의 모든 개선을 미리 믿고 과대 보유할 필요도 없지만, 개선이 확인되기 전에 상승 참여권을 모두 버릴 이유도 없습니다.</p>
+<p>심리 자료 역시 극단적인 포지션을 지지하지 않습니다. RBLX의 심리 점수는 3.9점으로 완만한 약세지만 신뢰도가 낮고, StockTwits의 약세 태그 4건은 모두 같은 계정에서 나왔습니다. 이를 광범위한 약세 합의나 공매도 근거로 확대하는 것은 무리입니다. 반대로 콜옵션 활동이나 갭 메우기 게시물도 검증된 매수세가 아닙니다. 연말 예약매출 전망의 “15% 감소” 역시 비교 기준이 확인되지 않았습니다. 따라서 저는 이런 주장보다 재무자료에서 확인되는 성장 둔화와 분기 현금흐름 감소에 더 높은 비중을 두겠습니다. 참고로 소셜 게시물의 잉여현금흐름 수치와 재무보고서 수치가 다르므로, 여기서는 재무보고서의 계산값을 사용했습니다.</p>
+<p>거시적 중립론에도 같은 기준을 적용해야 합니다. 금리 부담은 RBLX의 가치평가를 압박할 수 있지만, 실제 금리 수준과 상승 폭이 검증되지 않았습니다. 예측시장의 연간 무인하 확률 98%를 RBLX의 하락 확률처럼 사용할 수는 없습니다. 이런 불확실성은 전량 매도의 근거라기보다, 핵심 노출을 남기면서 초과 자본을 회수할 이유에 가깝습니다. 매도대금이 자동으로 더 높은 수익을 만드는 것은 아니지만, 다음 실적 확인이나 더 유리한 가격에 대응할 선택권을 확보해 줍니다.</p>
+<p>실행은 명확해야 합니다. RBLX 목표 비중은 투자자 본인의 표준 배분 대비 50~75%, 중심값 60%로 두겠습니다. 이는 전체 포트폴리오의 60%를 뜻하지 않습니다. 현재 RBLX 비중이 목표를 넘는 경우에만 초과분의 약 절반을 먼저 줄이고, 나머지는 최신 가격과 유동성을 확인하면서 반등 또는 체결 여건이 좋은 구간에서 분할 매도하는 계획을 지지합니다. 이미 목표 이하라면 추가 매도를 강제하지 않습니다. 제공된 과거 가격은 현재 주문가나 기계적인 손절선으로 사용하지 않으며, 신규 매수와 공매도도 보류합니다.</p>
+<p>제 결론은 “위험하니 도망가자”가 아닙니다. RBLX의 장기 상승 가능성은 남겨두되, 아직 확인되지 않은 성장 재가속에 초과 자본까지 걸지는 말자는 것입니다. 무조건적인 보유보다 자본 활용에 적극적이고, 전량 매도보다 상승 기회를 잘 보존하는 선택입니다. 지금 지지할 전략은 핵심 보유분을 남긴 목표 초과분의 분할 매도입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-2">보수적 위험 분석가</h3>
+<p>보수적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 RBLX의 목표 초과분을 줄이자는 결정에 동의합니다. 다만 공격적 분석가가 제시한 “상승 참여권을 남기고 나머지는 반등 때 매도한다”는 계획에는 보완이 필요합니다. 자산 보호가 목적이라면, 반등을 기다리는 동안 감수할 손실과 매도 완료 조건부터 정해야 합니다. 좋은 가격에 팔 가능성보다 과도한 노출을 실제로 해소하는 것이 우선입니다.</p>
+<p>먼저 공격적 분석가의 “핵심 보유분 유지가 유리하다”는 주장은 조건부로만 받아들이겠습니다. RBLX의 플랫폼 성장 가능성과 양의 현금흐름은 전량 매도를 일률적으로 권하지 않을 근거입니다. 그러나 그것이 모든 투자자에게 일정 규모의 핵심 보유분을 반드시 남겨야 한다는 뜻은 아닙니다. 현재 보유 집중도, 다른 성장주와의 동반 하락 위험, 가까운 시일 내 현금 수요를 모르기 때문입니다. 상승 참여권도 무료가 아닙니다. 보유하는 동안 가격 하락과 가치평가 축소 위험을 계속 부담합니다.</p>
+<p>누적 잉여현금흐름이 20.4% 증가했다는 점도 인정합니다. 하지만 그 수치만으로 RBLX의 방어력이 강화됐다고 보기는 어렵습니다. 제공된 재무보고서에서 3분기 영업현금흐름은 전년 대비 27.7%, 잉여현금흐름은 17.2% 감소했습니다. 누적 잉여현금흐름 증가에는 자본적지출 감소도 기여했습니다. 향후 투자가 늘어나거나 안전·인프라 비용이 증가하면 현금흐름의 여유가 줄어들 수 있습니다. 이는 확정된 악화 전망이 아니라, 현재 보유 규모에 반영해야 할 위험입니다.</p>
+<p>더 중요한 것은 현금흐름의 질입니다. 주식보상, 이연수익, 운전자본 변동의 상세내역이 없어 양의 현금흐름이 주당 경제적 가치 증가로 얼마나 연결되는지 확인되지 않았습니다. 따라서 “현금소진형 기업은 아니다”라는 설명에는 동의하지만, 이를 “현재 핵심 비중은 안전하다”는 결론으로 확대하는 데는 반대합니다. 매출 성장률이 39.3%, 35.9%, 15.6%로 둔화되는 상황에서는 성장의 양뿐 아니라 현금창출의 지속성까지 확인해야 합니다.</p>
+<p>재무상태 역시 가볍게 넘길 수 없습니다. RBLX의 유동비율은 약 0.797배이고 보고된 자기자본은 사실상 소진된 수준입니다. 유동부채에 이연수익이 포함될 수 있으므로 지급불능을 주장하는 것은 부당합니다. 반대로 부채 구성이 확인되지 않았다는 이유로 유동성 위험을 무시하는 것도 부당합니다. 총자산과 총부채의 차이가 보고된 자기자본과 일치하지 않는 자료상 문제까지 있으므로, 정확한 위험 규모는 공시 원문으로 대사해야 합니다. 보수적 대응은 파산을 예측하는 것이 아니라, 이런 확인 공백이 해소되기 전까지 노출을 제한하는 것입니다.</p>
+<p>기술적 판단에서는 공격적 분석가와 일부 의견이 같습니다. 과거 종가 51.19달러가 당시 200일선 51.259달러보다 약 0.13% 낮다는 사실은 강력한 매도 신호가 아닙니다. 그러나 바로 그 이유로 200일선을 조금 회복했다고 매도를 미뤄서도 안 됩니다. 당시 평균진폭 3.20039달러는 종가 대비 약 6.25%였습니다. 이는 예상 하루 손실이나 최대 변동폭이 아니라 변동성 지표이지만, 작은 돌파와 이탈에 큰 의미를 부여하기 어렵다는 점은 분명합니다.</p>
+<p>또한 첫 상단 관찰 구간까지의 거리를 평균진폭과 비교한 것만으로 기대손익비가 계산되는 것은 아닙니다. 해당 구간은 확정 목표가가 아니며, 평균진폭도 손절 폭이 아닙니다. RBLX 비중 축소의 중심 근거는 이런 단기 가격 비교보다 성장 둔화, 분기 현금흐름 약화, 그리고 투자자가 감당할 수 있는 손실 한도여야 합니다.</p>
+<p>중립적 분석가의 직접 발언은 아직 없으므로, 보고서의 보유·관망 논리에 답하겠습니다. RBLX가 단기·중기 이동평균 위에 있고 상대강도지수가 50을 웃돈다는 점은 회복의 근거입니다. 그러나 기술적 보유 유지와 초과 비중의 유지가 같은 결정은 아닙니다. 적정 비중 보유자는 확인을 기다릴 수 있지만, 이미 집중도가 높은 보유자는 기다리는 동안 위험을 계속 부담합니다. 사업가치 훼손이 입증되지 않았다는 사실은 전량 청산을 유보할 이유이지, 초과 노출을 유지할 이유는 아닙니다.</p>
+<p>심리와 거시 자료는 매도 강도를 과장하는 데 사용하지 않겠습니다. 낮은 신뢰도의 심리 점수, 동일 계정의 반복 게시물, 비교 기준이 불명확한 예약매출 전망의 “15% 감소”는 독립적인 확정 악재가 아닙니다. 검증되지 않은 금리 수준이나 예측시장의 연간 무인하 확률도 RBLX의 하락 확률로 해석할 수 없습니다. 다만 악재가 불확실하다는 것이 안전을 뜻하지는 않습니다. 성장 둔화와 할인율 상승이 동시에 발생할 경우를 견딜 수 있도록 보유 규모를 정해야 합니다.</p>
+<p>그래서 저는 기존 계획을 다음과 같이 조정하겠습니다. RBLX의 임시 목표는 투자자 본인의 표준 배분 대비 50~60% 범위를 우선 검토하되, 이를 안전이 검증된 비중으로 간주하지는 않겠습니다. 표준 배분 자체가 크거나 유사 성장주 노출이 높다면 더 낮아야 합니다. 전체 포트폴리오의 50~60%를 뜻하는 것은 아닙니다.</p>
+<p>비중은 손실 예산으로 한 번 더 제한해야 합니다. 예를 들어 RBLX가 30% 하락하는 가상의 스트레스 상황에서 포트폴리오 손실 기여를 0.5% 이내로 제한하려면, 단순 계산상 비중 상한은 약 1.7%입니다. 이는 권장 비중이나 하락 예측이 아니라 산정 방식의 예시이며, 다른 자산의 동반 하락은 별도로 반영해야 합니다. 표준 배분 기준과 손실 예산 기준 중 더 엄격한 한도를 적용하는 편이 보수적입니다.</p>
+<p>현재 비중이 그 목표를 초과하면 초과분의 약 절반을 우선 축소하되, 이미 손실 한도를 크게 넘었다면 절반이라는 비율에 얽매이지 않아야 합니다. 나머지는 반등만 기다리지 말고, 최신 유동성을 고려한 분할 일정과 위험 한도 초과 시의 대응 조건을 정해야 합니다. 지정가 주문은 체결 가격을 통제하는 데 도움이 되지만 미체결 위험이 있으므로, 미체결 시 재평가 절차도 필요합니다.</p>
+<p>이미 조정된 목표와 손실 한도 이내라면 추가 매도를 강제하지 않겠습니다. 신규 매수, 공매도, 레버리지를 이용한 대응도 보류합니다. 제공된 가격과 이동평균은 모두 과거 스냅샷이므로 현재 주문가나 기계적 손절선으로 사용해서는 안 됩니다.</p>
+<p>제 결론은 공격적 분석가보다 매도 방향이 강해서가 아니라, 실행 조건이 더 엄격하다는 데 있습니다. RBLX의 상승 가능성은 인정하되, 그 가능성을 보존하기 위해 감당하기 어려운 손실까지 받아들일 필요는 없습니다. 반등을 활용하되 반등에 의존하지 않는 비중 축소가 자산 보호에 더 적합합니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-3">중립적 위험 분석가</h3>
+<p>중립적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 RBLX의 목표 초과분을 분할 축소하는 결정에 조건부로 동의합니다. 다만 두 분석가가 모두 매도에 도달했다는 사실이 RBLX의 추가 하락 가능성을 더 확실하게 만드는 것은 아닙니다. 같은 성장 둔화와 현금흐름 자료를 바탕으로 한 판단이기 때문입니다. 이번 매도는 방향성 베팅이 아니라 포트폴리오 재조정이어야 합니다. 적정 비중 이내의 보유자라면 보유 유지가 가능하고, 목표를 초과한 보유자에게만 매도을 적용하는 것이 제 입장입니다.</p>
+<p>공격적 분석가에게 먼저 반론하겠습니다. “성장 둔화 자산에 묶인 자본의 기회비용”은 타당한 문제지만, 매도 후 대안의 기대수익과 위험을 비교하지 않고서는 자본 효율이 개선된다고 단정할 수 없습니다. RBLX를 팔아 비슷한 금리 민감도와 성장주 위험을 가진 자산으로 옮기면 종목만 바뀔 뿐입니다. 현금으로 보유하더라도 RBLX의 회복을 놓칠 가능성이 있습니다. 매도는 집중위험을 낮추는 수단이지, 자동으로 수익률을 높이는 수단은 아닙니다.</p>
+<p>또한 공격적 분석가가 말한 “핵심 보유분 유지가 유리하다”는 결론도 모든 투자자에게 적용할 수 없습니다. 플랫폼의 성장 가능성은 보유할 이유가 될 수 있지만, 반드시 보유해야 한다는 근거는 아닙니다. 다만 현재 제공된 자료에서는 일률적 전량 매도를 정당화할 만큼 사업가치 훼손이 확인되지 않았습니다. 이 두 주장은 구분해야 합니다. 핵심 보유분은 상승 참여권이라는 표현보다, 손실 예산 안에서 유지할 수 있는 조건부 노출로 보는 편이 정확합니다.</p>
+<p>반대로 보수적 분석가에게는, 확인되지 않은 위험을 모두 더 낮은 목표 비중으로 연결하는 것은 지나칠 수 있다고 말씀드리겠습니다. RBLX의 유동비율 0.797배와 사실상 소진된 자기자본은 점검할 문제입니다. 그러나 유동부채 중 이연수익과 실제 현금상환 의무의 구성이 확인되지 않았고, 재무자료의 대사 차이도 남아 있습니다. 이런 공백은 검증의 필요성을 높이지, 그 자체로 유동성 위기나 영구적 가치 훼손의 증거가 되지는 않습니다. 보수적 분석가도 이를 인정했지만, 그렇다면 표준 배분 대비 목표 상단을 75%에서 60%로 낮추는 데에도 별도의 근거가 필요합니다.</p>
+<p>실적을 보면 양쪽 모두 강조점을 조정해야 합니다. RBLX의 3분기 매출 성장률이 15.6%로 둔화되고 영업현금흐름이 전년 대비 27.7% 감소했다는 것은 분명한 경고입니다. 그렇지만 1~9월 매출은 29.0%, 영업현금흐름은 12.9% 증가했고, 3분기 잉여현금흐름도 3억6,700만 달러의 양수였습니다. 누적 현금흐름 개선을 설비투자 감소만으로 설명할 수는 없습니다. 동시에 주식보상과 운전자본 내역이 없으므로 이 현금을 그대로 주주가치 증가로 볼 수도 없습니다. 합리적인 결론은 “성장 논리가 끝났다”도, “현금흐름이 있으니 안전하다”도 아니라, 추가 분기에서 지속성을 확인할 때까지 초과 노출을 제한하자는 것입니다.</p>
+<p>기술적 판단에서는 두 분석가 모두 매도 논리를 조금 더 좁혀야 합니다. 제공된 11월 10일 RBLX 종가 51.19달러와 당시 200일선 51.259달러의 차이는 약 0.13%에 불과합니다. 이를 독립적인 매도 신호로 쓰기 어렵습니다. 가격이 10일선과 50일선 위에 있고 RSI가 약 54.75이며 MACD 히스토그램의 음수 폭이 줄었다는 사실도 함께 반영해야 합니다. 또한 52.35~52.55달러까지의 거리와 ATR 3.20039달러를 비교하는 것만으로 보유의 기대손익비가 나쁘다고 판단할 수 없습니다. 그 가격대는 확정 목표가가 아니고 ATR도 예상 손실이 아닙니다. 따라서 기술적 자료는 매도 시점을 보조할 수 있지만, 목표 비중을 결정하는 주된 근거는 아닙니다.</p>
+<p>심리와 거시환경도 같은 원칙으로 보겠습니다. RBLX 심리 점수 3.9점은 신뢰도가 낮고, 약세 태그가 한 계정에 집중돼 있어 매도 규모를 늘릴 근거로는 약합니다. 예약매출 전망의 “15% 감소” 역시 공식 자료로 비교 기준부터 확인해야 합니다. 금리 상승과 소비 둔화가 발생하면 가치평가와 디지털 지출에 부담이 될 수 있지만, 반대로 금리 안정과 결제 전환 개선이 함께 나타나면 회복 여지도 있습니다. 현재 자료로 어느 쪽의 확률을 정밀하게 제시할 수 없으므로, 거시 전망에 크게 베팅하기보다 두 환경을 견딜 비중을 선택해야 합니다.</p>
+<p>실행에서는 기존의 표준 배분 대비 50~75%, 중심값 60%를 잠정적인 검토 범위로 유지하겠습니다. 이는 검증된 최적 비중도, 전체 포트폴리오의 60%도 아닙니다. 먼저 본인의 표준 배분 자체가 적절한지 확인하고, 현금 수요와 다른 성장주·게임주 노출을 반영해야 합니다. 보수적 분석가의 스트레스 손실 계산은 유용하지만, 가정한 하락률과 허용 손실에 따라 결과가 크게 달라집니다. 단일 예시를 보편적인 비중 상한으로 사용하지 말고 여러 하락 시나리오와 동반 하락을 점검하는 보조 수단으로 쓰는 것이 낫습니다.</p>
+<p>현재 RBLX 비중이 그렇게 정한 목표를 초과한다면, 초과분의 약 절반을 먼저 줄이는 기존 계획은 합리적입니다. 나머지는 반등에만 의존하지 말고 최신 유동성에 맞춘 분할 일정과 다음 검토 시점을 정하십시오. 위험 한도를 이미 크게 초과했다면 축소 속도를 높이고, 한도 이내라면 단기 가격 흔들림만으로 매도를 가속할 필요는 없습니다. 거래비용과 해당되는 세금도 함께 고려해야 합니다. 제공된 가격과 이동평균은 모두 과거 스냅샷이므로 현재 주문가나 기계적 손절선으로 사용하지 않겠습니다.</p>
+<p>추가 축소는 공식 자료에서 성장 둔화와 현금흐름 약화가 이어지거나, 희석·유동성 위험이 구체화될 때 검토하겠습니다. 반대로 예약매출 우려가 완화되고 주당 현금창출력과 기술적 추세가 함께 개선된다면 남은 매도 계획도 재평가할 수 있습니다. 단순 반등만으로 매도를 취소하지도, 기존 매도 결정을 지키기 위해 개선된 증거를 무시하지도 않아야 합니다.</p>
+<p>매도대금 역시 자동으로 다른 성장주에 재투입하지 않는 것이 좋습니다. 전체 포트폴리오를 확인한 뒤 유동성 확보나 분산된 자산으로의 배분을 검토해야 실질적인 위험 감소가 가능합니다. 이미 RBLX가 목표와 손실 한도 이내라면 추가 매도를 강제하지 않고, 보유하지 않았다면 이번 매도을 공매도 지시로 해석하지 않습니다.</p>
+<p>결론적으로 저는 공격적 분석가의 상승 가능성 보존과 보수적 분석가의 실행 규율을 모두 받아들이되, 핵심 보유 의무와 일률적인 목표 하향에는 반대합니다. RBLX의 성장 가능성을 남기면서도 그 가능성에 과도한 자본을 걸지 않는 것, 그리고 새로운 증거에 따라 조정할 여지를 유지하는 것이 가장 지속 가능한 중립 전략입니다.</p>
+<p>최종 매매 제안: 매도</p>
+</section><section id="s5"><h2>V. 최종 투자 판단</h2><h3 id="s5-1">투자 총괄</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>핵심 요약</strong>: RBLX는 전량 청산보다 목표 초과분의 분할 축소가 타당하며, 목표는 투자자 본인의 표준 배분 대비 50~75%, 중심값 60%로 설정하되 현금 수요·동반 하락 위험·손실 예산이 요구하는 더 엄격한 한도를 적용합니다. 목표 초과분의 약 절반을 먼저 줄이고 나머지는 최신 가격과 유동성을 확인한 분할 일정으로 집행하되, 위험 한도를 크게 넘었다면 반등을 기다리지 말고 축소 속도를 높입니다. 이미 목표와 위험 한도 이내라면 추가 매도를 강제하지 않으며 신규 매수·공매도는 보류합니다. 다음 공식 실적까지 재평가하며, 현재 시세가 없으므로 과거 가격에 근거한 주문가·손절선이나 목표가는 제시하지 않습니다.</p>
+<p><strong>투자 근거</strong>: RBLX의 비중 축소 논거가 더 강하지만 전량 매도를 뒷받침하지는 않습니다. 분석가들의 매도이라는 명칭보다 실제 제안인 ‘목표 초과분 축소’를 기준으로 비중 축소를 선택합니다. 제공 자료상 분기 매출 성장률은 39.3%, 35.9%, 15.6%로 둔화했고 최근 분기 영업현금흐름과 잉여현금흐름은 각각 전년 대비 27.7%, 17.2% 감소했습니다. 이는 초과 노출을 줄일 직접적인 근거입니다. 반면 1~9월 매출과 영업현금흐름은 각각 29.0%, 12.9% 증가했고 누적 잉여현금흐름은 20.4% 늘어난 12억5,900만 달러, 최근 분기 잉여현금흐름도 3억6,700만 달러의 양수였습니다. 창작자·이용자 생태계의 성장 가능성과 함께 일률적인 전량 청산을 유보할 근거입니다. 누적 잉여현금흐름 증가에는 설비투자 감소도 기여했으며 주식보상·순희석·운전자본·이연수익 세부내역이 없어 주당 경제적 가치 개선은 확인되지 않았습니다. 시가총액/잉여현금흐름 약 21.4배와 시가총액/매출 약 6.21배만으로 고평가를 확정할 수는 없지만 안전마진도 입증되지 않았습니다. 유동비율 약 0.797배와 사실상 소진된 것으로 보고된 자기자본은 공시 확인이 필요한 위험 신호이나, 이연수익을 포함한 유동부채 구성과 재무자료 대사 차이가 미확인이라 유동성 위기로 단정하지 않습니다. 과거 종가 51.19달러와 200일선 51.259달러의 차이는 약 0.13%에 불과하고 단기·중기 추세 회복 신호도 있어 기술적 약세를 독립적인 매도 근거로 삼지 않습니다. 과거 상단 관찰 구간 52.35~52.55달러와 평균진폭 약 3.20달러 역시 목표가나 손절선이 아니며 기대손익비를 확정하지 못합니다. 낮은 신뢰도의 소셜 심리, 비교 기준이 불명확한 예약매출 전망, 검증되지 않은 거시 전망은 판단에서 제외합니다. 다음 공식 실적에서 예약매출·결제 지표 안정, 영업현금흐름 감소 반전, 희석을 반영한 주당 현금창출력 개선, 매출 증가와 영업손실 축소가 함께 확인되면 표준 배분 복원을 검토합니다. 반대로 성장 둔화와 현금흐름 감소가 추가 분기에도 이어지거나 희석·유동성 위험이 구체화되면 표준 배분의 25~50%로 추가 축소를 검토합니다. 판단은 제공된 자료에 한정되며 현재 가격, 투자자의 보유 비중과 현금 수요, 최신 공식 공시는 확인되지 않았습니다.</p>
+<p><strong>목표 가격</strong>: 제시되지 않음</p>
+<p><strong>투자 기간</strong>: 다음 공식 실적 발표까지; 발표 직후 재평가</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">맨 위로</a>
+</body>
+</html>
