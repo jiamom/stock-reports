@@ -1,0 +1,1493 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>IONQ 2026-11-18 비중 축소: 주식 분석 보고서</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">IONQ</span> <span class="rating down">비중 축소</span></h1><p style="font:16px/1.6 system-ui"><strong>항목별 매수 매력도: 31.5~36.5점 / 100점</strong><br>점수는 기존 TradingAgents 보고서에 동일한 8개 항목을 적용한 별도 AI 평가입니다. 1~3년 관점의 매수 매력도를 비교하며, 높을수록 긍정적입니다. 가격 20 · 성장 20 · 수익성 15 · 재무 10 · 주가 흐름 15 · 관심·수급 5 · 향후 재료 5 · 하락 위험 관리 10점. 각 항목을 0~5점으로 평가한 뒤 배점에 맞춰 합산합니다. 자료가 부족하면 가능한 총점 범위로 표시합니다. 프로그램의 최종 매매 의견과 별도이며, 상승 확률·예상 수익률이나 검증된 수익 예측 모형이 아닙니다. 기존의 등급별 고정 점수(비중 축소 25점)는 더 이상 사용하지 않습니다.</p>
+<p class="date">분석 기준일 2026-11-18</p>
+<dl class="run"><div class="detail"><dt>생성 시각</dt><dd>2026-11-18 07:34</dd></div><div class="detail"><dt>심층 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>빠른 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>분석 담당</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">뉴스</span> <span class="field">재무</span></dd></div><div class="detail"><dt>토론 횟수</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>자료 출처</dt><dd><span class="group"><span class="name">시세</span><span class="field">yfinance</span></span> <span class="group"><span class="name">기술지표</span><span class="field">yfinance</span></span> <span class="group"><span class="name">재무</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">뉴스</span><span class="field">yfinance</span></span> <span class="group"><span class="name">거시경제</span><span class="field">fred</span></span> <span class="group"><span class="name">예측시장</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>버전</dt><dd>TradingAgents 0.7.1</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">분석팀 보고서</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">시장 분석가</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">투자심리 분석가</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">뉴스 분석가</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">재무 분석가</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">투자 검토팀 판단</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">상승론 분석가</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">하락론 분석가</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">투자 검토 책임자</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">매매 계획</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">매매 담당</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">위험 관리팀 판단</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">적극적 위험 분석가</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">보수적 위험 분석가</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">중립적 위험 분석가</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">최종 투자 판단</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">투자 총괄</span></a></li></ul></li></ul></nav>
+<main><section><h2>항목별 매수 매력도: 31.5~36.5점 / 100점</h2><p>2026년 11월 18일 기준 1~3년 상대 매수 매력은 빠른 매출 성장보다 높은 가치평가, 대규모 영업적자와 현금 소진 위험에 더 제약받는다고 판단한다. 강점은 확인된 매출 규모 확대와 유동자산 완충력이며, 약점은 성장의 유기성·반복 가능성 미확인과 취약한 현금 창출력이다. 유기적·반복 매출 확대, 절대 영업손실 및 현금 유출 감소, 현금 외 유동자산의 회수 가능성 확인이 평가 개선 조건이다. 반대로 전망 미달, 지속적인 소진 가속, 희석 확대는 평가 악화 조건이다. 원 보고서의 최종 거래 라벨과 별개인 주관적 추가 평가이며 합산 점수나 확률은 산출하지 않았다.</p><p>보고서 기준 시세: 최신 확인 시세: 2026년 11월 17일 종가 24.84달러. 2026년 11월 18일 시세는 제공되지 않았으며 실시간 시세가 아니다.</p><p>자료 한계: 제공된 저장 보고서만 사용했다. 재무정보는 주로 2026년 3분기 말 기준이고 내부자 거래 최신 기록은 9월 10일로 기준일 현재성과 차이가 있다. 뉴스의 매출 1억 7,380만 달러·336% 성장과 재무 보고서의 반올림 수치 1억 7,400만 달러·335% 성장에는 차이가 있다. PER, FCF 기간·산식, 재무상태표 합계에 불일치가 있어 정밀 가치평가를 제한한다. 전망·CFO 일정·DARPA 진전은 보도 기반이며 공식 원문 검증이 없고, CFO 교체 해석도 상충한다. 대표성 있는 심리·수급 자료가 없어 해당 항목은 결측 처리했다. 기술 지표는 단기 스냅샷으로 1~3년 판단의 보조 근거만으로 사용했다.</p><details><summary>8개 항목과 평가 근거 보기</summary><ul><li><strong>가격 매력도: 4 / 20점</strong><p>보고서상 매출배수 약 30.2배는 1~3년 성장·수익성 개선을 크게 선반영한 수준으로 해석한다. 매출 급증은 긍정적이나 본업 적자와 현금 유출 때문에 이익·현금흐름 기반 저평가 근거가 약하다. PER 14.36배는 제시된 시가총액·순이익과 불일치하므로 할인 근거로 사용하지 않았다.</p><blockquote>시가총액을 최근 12개월 매출로 나눈 주가매출비율은 약 **30.2배**입니다.</blockquote></li><li><strong>사업 성장성: 14 / 20점</strong><p>보고된 3분기 매출 증가율 335%와 누적 성장률 약 362.3%는 사업 규모 확대의 강한 증거다. 다만 유기적 성장·인수·일회성 인도 기여가 분리되지 않았고 반복 매출, 수주잔고 및 경쟁력 지표도 부족해 지속성을 할인했다. 뉴스상 연간 전망 상향은 회사 예상이지 실현된 성과가 아니다.</p><blockquote>매출 성장 자체는 강력합니다. 다만 인수 기여분과 계약별 인식 내역이 없어 이 증가율을 기존 사업의 순수 성장률로 해석해서는 안 됩니다.</blockquote></li><li><strong>기업 수익성: 1.5 / 15점</strong><p>3분기 영업이익률 약 -248.9%로 손실률은 개선됐지만 영업손실 4억 3,300만 달러와 분기 단순 FCF -3억 3,100만 달러는 매우 불리하다. 누적 손실·현금 유출도 확대됐다. 순이익 흑자는 영업손익과 괴리가 크고 세부 원인이 미확인되어 지속 가능한 수익성으로 인정하지 않았다.</p><blockquote>그러나 3분기에는 매출 1달러당 약 2.49달러의 영업손실이 발생했습니다.</blockquote></li><li><strong>재무건전성: 4 / 10점</strong><p>유동비율 4.24배와 양의 운전자본은 실제 완충 요인이나, 현금이 전분기 대비 83.1% 감소하고 영업현금 소진이 가속돼 1~3년 자금 여력에는 불확실성이 크다. 현금 외 유동자산의 유동성과 차입 조건·희석 규모가 불명확하다. 현금만을 이용한 1.9개월 민감도를 실제 자금 고갈 시점으로 취급하지 않았다.</p><blockquote>유동자산이 유동부채를 충분히 상회하므로, 현금 감소만으로 즉각적인 지급불능을 주장할 근거는 없습니다.</blockquote></li><li><strong>주가 흐름: 3 / 15점</strong><p>11월 17일 종가는 주요 이동평균을 모두 하회하고 최근 반등 후 6거래일 연속 하락했으며 MACD 히스토그램도 음수다. 볼린저 하단 이탈은 반등 가능성을 동반하지만 바닥 확인 근거는 아니다. 이는 기준일의 불리한 진입 여건을 나타내는 보조 요인이며 1~3년 수익률 예측으로 확대하지 않았다.</p><blockquote>**종가 &lt; 10일 EMA &lt; 50일 SMA &lt; 200일 SMA**</blockquote></li><li><strong>관심·수급의 질: 자료 부족</strong><p>대표성 있는 심리·실제 수급 자료가 부족해 점수를 유보한다. StockTwits는 약 3시간 반 동안 30개 메시지에 불과하고 반복 계정 영향이 크며 Reddit은 수집 실패했다. 거래량은 평균 비교값이 없고 뉴스도 중복 가능성이 있어 상승 태그나 하락 기사만으로 자금 유입·유출의 질을 판단할 수 없다.</p></li><li><strong>향후 재료: 3 / 5점</strong><p>뉴스상 회사의 2026년 매출 전망 상향과 DARPA 관련 기술 검증 진전은 향후 사업 확대를 지지한다. 다만 전망은 실적이 아니며 기술 단계와 매출 연결은 미확인이고 높은 매출배수에 기대가 이미 반영됐을 수 있다. 12월 초 CFO 승계는 불확실성 완화 계기인 동시에 실행 위험이며, 장기 후속 일정은 부족하다.</p><blockquote>**2026년 연간 매출 전망: 5억 500만~5억 1,500만 달러로 상향**</blockquote></li><li><strong>하락 위험 관리: 2 / 10점</strong><p>높은 매출배수, 확대되는 현금 소진, 상업화·인수 성과의 불투명성 및 잠재적 희석이 하방을 키운다. 업종 동반 매도와 높은 베타·ATR도 위험 관리 부담이다. 충분한 유동자산은 완충 요소이나 구성 확인이 필요하며, CFO 교체를 회계 부정의 증거로 해석하지 않았다.</p><blockquote>매출이 증가해도 현금 소진이 계속 가속되거나 자금조달이 필요해진다면 위험 재평가가 필요합니다.</blockquote></li></ul></details></section>
+<section id="s1"><h2>I. 분석팀 보고서</h2><h3 id="s1-1">시장 분석가</h3>
+<h4>IONQ 기술적 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 18일</strong><br />
+<strong>최신 확인 시세: 2026년 11월 17일 종가, 미국 달러 기준</strong></p>
+<h5>1. 핵심 판단</h5>
+<p><strong>IONQ는 단기·중기·장기 추세가 모두 약세 방향으로 정렬되어 있으며, 최근 반등 이후 하락 모멘텀이 다시 강화되는 모습입니다.</strong> 다만 가격이 볼린저 하단을 밑돌고 변동성이 높아, 약세 추세를 확인하는 것과 현 수준에서 하락을 추격하는 것은 구분해야 합니다.</p>
+<ul>
+<li><strong>추세:</strong> 종가가 10일 지수이동평균, 50일·200일 단순이동평균을 모두 하회합니다.</li>
+<li><strong>모멘텀:</strong> RSI는 중립선 아래에 있고, MACD 히스토그램은 다시 음수입니다.</li>
+<li><strong>가격 위치:</strong> 종가가 볼린저 하단 아래에 있어 매도 압력이 강하지만, 기술적 반등 위험도 커졌습니다.</li>
+<li><strong>실행 관점:</strong> 신규 매수는 가격 회복과 모멘텀 개선을 확인하는 접근이 유리하며, 기존 보유자는 반등 기대보다 손실 허용 범위를 먼저 점검할 상황입니다.</li>
+</ul>
+<p>이는 <strong>IONQ의 기술적 상태에 관한 판단</strong>이며, 기업가치·실적·뉴스를 반영한 최종 거래 결정은 아닙니다.</p>
+<h5>2. 데이터 기준과 주의사항</h5>
+<p>검증 스냅샷에서 확인된 최신 IONQ 시세는 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2026년 11월 17일 확인값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시가</td>
+<td style="text-align:right">26.77달러</td>
+</tr>
+<tr>
+<td>고가</td>
+<td style="text-align:right">26.93달러</td>
+</tr>
+<tr>
+<td>저가</td>
+<td style="text-align:right">24.075달러</td>
+</tr>
+<tr>
+<td>종가</td>
+<td style="text-align:right"><strong>24.84달러</strong></td>
+</tr>
+<tr>
+<td>거래량</td>
+<td style="text-align:right"><strong>26,269,122주</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>11월 18일 시세는 제공되지 않았습니다.</strong> 일부 지표 도구는 해당 날짜를 비거래일로 표기했지만, 이 표기만으로 실제 휴장 여부를 확정하지 않습니다. 이 보고서는 최신 검증 행인 <strong>11월 17일</strong>을 기준으로 합니다.</p>
+<p>가격과 주요 지표의 정확한 수치는 검증 스냅샷을 우선했습니다. VWMA는 별도 지표 도구에서 조회되었지만 검증 스냅샷에는 포함되지 않아, 정확한 수치를 거래 기준선으로 제시하지 않고 보조적인 방향성만 반영했습니다.</p>
+<h5>3. 선정한 8개 지표와 역할</h5>
+<p>현재 IONQ에서는 <strong>하락 추세의 지속 여부, 반등의 질, 높은 변동성에 맞춘 위험관리</strong>가 중요합니다. 이에 다음 지표를 선택했습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>선정 지표</th>
+<th>선정 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>close_10_ema</code></td>
+<td>단기 반등이 실제 가격 회복으로 연결되는지 판단</td>
+</tr>
+<tr>
+<td><code>close_50_sma</code></td>
+<td>중기 추세와 반등 시 동적 저항 후보 확인</td>
+</tr>
+<tr>
+<td><code>close_200_sma</code></td>
+<td>장기 추세 필터로 사용</td>
+</tr>
+<tr>
+<td><code>macdh</code></td>
+<td>반등 모멘텀의 소진과 재약화 포착</td>
+</tr>
+<tr>
+<td><code>rsi</code></td>
+<td>약세 강도와 과매도 여부 구분</td>
+</tr>
+<tr>
+<td><code>boll_lb</code></td>
+<td>하방 변동성 확대 및 밴드 재진입 여부 확인</td>
+</tr>
+<tr>
+<td><code>atr</code></td>
+<td>손절 거리와 포지션 크기 조정</td>
+</tr>
+<tr>
+<td><code>vwma</code></td>
+<td>거래량을 반영한 추세의 보조 확인</td>
+</tr>
+</tbody>
+</table></div>
+<p>이동평균 세 개는 서로 다른 투자 기간을 구분하기 위해 사용했습니다. MACD 계열은 중복을 줄이기 위해 히스토그램만 선정했고, 볼린저 밴드 역시 현재 가격과 가장 직접적으로 관련된 하단에 집중했습니다.</p>
+<h5>4. 추세 분석: 단순 조정보다 하락 구조가 우세</h5>
+<h6>단기·중기·장기 약세 정렬</h6>
+<p>최신 검증값은 다음과 같습니다.</p>
+<ul>
+<li><strong>10일 EMA: 29.5616달러</strong></li>
+<li><strong>50일 SMA: 35.7752달러</strong></li>
+<li><strong>200일 SMA: 41.0984달러</strong></li>
+<li><strong>종가: 24.84달러</strong></li>
+</ul>
+<p>가격과 이동평균의 관계는 다음과 같습니다.</p>
+<p><strong>종가 &lt; 10일 EMA &lt; 50일 SMA &lt; 200일 SMA</strong></p>
+<p>이 배열은 단기 가격 약세가 중장기 추세와 같은 방향임을 보여줍니다. 별도 지표 시계열에서도 세 이동평균이 최근 관측 기간 동안 하락하는 모습이 확인됩니다.</p>
+<p>따라서 IONQ가 하루 이틀 반등하더라도 이를 곧바로 상승 추세 전환으로 해석하기는 어렵습니다. 우선 <strong>10일 EMA 회복</strong>, 그다음 <strong>회복 가격대 유지와 더 높은 저점 형성</strong>을 확인할 필요가 있습니다.</p>
+<h6>최근 반등은 지속되지 못함</h6>
+<p>검증된 종가 흐름은 다음과 같습니다.</p>
+<ul>
+<li>11월 5일: <strong>26.43달러</strong></li>
+<li>11월 6일: <strong>32.62달러</strong></li>
+<li>11월 9일: <strong>35.34달러</strong></li>
+<li>11월 12일: <strong>30.86달러</strong></li>
+<li>11월 13일: <strong>28.88달러</strong></li>
+<li>11월 16일: <strong>26.45달러</strong></li>
+<li>11월 17일: <strong>24.84달러</strong></li>
+</ul>
+<p>IONQ는 11월 초 강하게 반등했지만, 이후 상승분을 반납하고 11월 5일 종가 아래로 내려왔습니다. 특히 <strong>11월 9일부터 11월 17일까지 여섯 거래일 연속 종가가 하락</strong>했습니다.</p>
+<p>현재 자료에서는 상승 추세의 재개보다 <strong>하락 추세 중 반등이 실패한 구조</strong>라는 해석이 더 설득력 있습니다. 또한 24.84달러는 검증 스냅샷에 제시된 최근 30개 거래일 중 가장 낮은 종가입니다. 다만 이를 연중 또는 사상 최저가로 확대 해석할 수는 없습니다.</p>
+<h5>5. 모멘텀 분석: 약세지만 바닥 확정 신호는 아님</h5>
+<h6>RSI: 34.7116</h6>
+<p>RSI는 중립 기준인 50 아래이며, 일반적인 과매도 기준인 30보다는 높습니다.</p>
+<p>이 수치는 다음을 의미합니다.</p>
+<ol>
+<li>상승 모멘텀이 우세한 상태는 아닙니다.</li>
+<li>전통적인 과매도 기준에 아직 도달하지 않았으므로, 단지 많이 하락했다는 이유만으로 바닥을 판단하기 어렵습니다.</li>
+<li>향후 RSI가 30 아래로 내려가더라도 강한 하락 추세에서는 약세가 지속될 수 있습니다.</li>
+</ol>
+<p>IONQ의 매수 근거로는 RSI의 낮은 절대값보다 <strong>가격의 저점 안정과 RSI 회복이 함께 나타나는지</strong>가 더 중요합니다. 현재 자료만으로 확정적인 상승 다이버전스를 주장하지는 않습니다.</p>
+<h6>MACD 히스토그램: -0.252334</h6>
+<p>최신 MACD 히스토그램은 음수입니다. 별도 지표 시계열에서는 최근 반등 과정에서 양수였던 값이 축소되다가 11월 17일 음수로 전환된 흐름이 나타납니다.</p>
+<p>이는 <strong>반등 모멘텀이 약해지고 다시 하락 쪽으로 기울었다는 신호</strong>입니다. 다만 히스토그램은 후행적이고 단기 반등에도 민감하므로, 단독 매매 신호로 쓰기보다 가격의 이동평균 회복 여부와 결합하는 편이 적절합니다.</p>
+<h5>6. 변동성과 거래량: 약세 추세 속 반등 위험도 큼</h5>
+<h6>볼린저 하단 이탈</h6>
+<ul>
+<li><strong>볼린저 하단: 25.1257달러</strong></li>
+<li><strong>종가: 24.84달러</strong></li>
+</ul>
+<p>IONQ는 볼린저 하단 아래에서 마감했습니다. 이는 최근 가격 분포에 비해 하방 압력이 강하다는 뜻이지만, <strong>자동적인 저가 매수 신호는 아닙니다.</strong></p>
+<p>가능한 경로는 두 가지입니다.</p>
+<ul>
+<li><strong>하락 지속:</strong> 가격이 하단 아래나 부근에 머물면서 밴드 자체가 더 내려가는 경우</li>
+<li><strong>단기 평균회귀:</strong> 가격이 밴드 안으로 돌아오며 기술적 반등을 시도하는 경우</li>
+</ul>
+<p>따라서 다음 관측에서는 <strong>25.13달러 부근 회복과 종가 유지 여부</strong>를 우선 확인할 수 있습니다. 다만 밴드 값은 매일 변하므로 실제 주문 전에는 갱신해야 합니다.</p>
+<h6>ATR: 2.78298달러</h6>
+<p>IONQ의 ATR은 약 <strong>2.78달러</strong>입니다. 현재 주가 수준에서 이 정도의 변동폭은 위험관리에 중요한 부담입니다.</p>
+<ul>
+<li>작은 손절폭은 통상적인 가격 흔들림에도 체결될 수 있습니다.</li>
+<li>손절폭을 넓히면 같은 위험 예산에서 매수 수량을 줄여야 합니다.</li>
+<li>ATR은 예상 최대 손실이 아니며, 갭 하락 시 실제 손실은 계획을 초과할 수 있습니다.</li>
+</ul>
+<p>포지션 규모는 다음 구조로 관리할 수 있습니다.</p>
+<p><strong>허용 수량 = 거래별 최대 허용 손실액 ÷ 진입가와 손절 기준 사이의 거리</strong></p>
+<p>예를 들어 1.5~2배 ATR을 변동성 점검 범위로 쓰면 약 <strong>4.17~5.57달러</strong>입니다. 이는 기계적으로 적용할 손절 추천이 아니라, 현재 IONQ에서 변동성에 충분한 여유를 주려면 포지션을 작게 해야 할 수 있다는 예시입니다.</p>
+<h6>거래량과 VWMA</h6>
+<p>11월 17일 거래량은 <strong>26,269,122주</strong>입니다. 그러나 검증 스냅샷에는 평균 거래량 비교값이 없어, 이 수치만으로 투매나 기관 매도를 단정하지 않습니다.</p>
+<p>별도 조회된 VWMA는 최근 하락 방향을 보이며 가격 약세와 대체로 일치합니다. 다만 거래량 가중평균도 실제 투자자 전체의 취득 원가나 확정적인 매물대를 뜻하지는 않습니다.</p>
+<h5>7. 주요 관찰 가격대</h5>
+<p>다음은 <strong>확정된 지지·저항이 아니라 향후 반응을 확인할 기준선</strong>입니다.</p>
+<h6>하방 기준: 24.075달러</h6>
+<p>11월 17일 장중 저점입니다. IONQ가 이 가격 아래로 내려간 뒤 회복하지 못하면 추가 약세를 경계할 근거가 됩니다.</p>
+<p>현재 검증 범위에서는 그 아래의 신뢰할 만한 과거 지지대를 제시하기 어렵습니다. 따라서 임의의 하방 목표가를 만들지 않는 편이 타당합니다.</p>
+<h6>초기 회복 기준: 약 25.13달러</h6>
+<p>최신 볼린저 하단입니다. 이 수준 회복은 밴드 내부 복귀라는 초기 안정 신호가 될 수 있지만, 추세 전환을 의미하지는 않습니다.</p>
+<h6>단기 회복 구간: 26.43~26.45달러</h6>
+<p>각각 11월 5일과 11월 16일 종가입니다. 최근 거래된 가격대를 되찾는지 확인할 참고 구간이며, 반복 검증된 저항으로 단정할 수는 없습니다.</p>
+<h6>더 중요한 회복 기준: 약 29.56달러</h6>
+<p>10일 EMA입니다. 이 수준의 회복과 유지가 나타나면 단기 하락 압력 완화를 논의할 근거가 생깁니다. 다만 50일 SMA가 그 위에 있어 중기 추세 개선은 별도로 확인해야 합니다.</p>
+<h5>8. 조건별 대응 시나리오</h5>
+<h6>신규 매수 검토자</h6>
+<p>IONQ에서는 현재 <strong>저가 추정 매수보다 확인 후 진입</strong>이 기술적으로 더 보수적입니다.</p>
+<p>확인 순서는 다음과 같습니다.</p>
+<ol>
+<li>볼린저 하단 재진입</li>
+<li>최근 저점을 지키는지 관찰</li>
+<li>RSI 회복과 MACD 히스토그램 개선 확인</li>
+<li>10일 EMA 회복 후 유지 여부 확인</li>
+</ol>
+<p>초기 안정 신호만으로 진입하면 추세 전환 확인 전 위험을 부담하게 됩니다. 반대로 충분한 확인을 기다리면 매입 가격은 높아질 수 있지만, 하락 추세 속 일시 반등을 추격할 가능성을 줄일 수 있습니다.</p>
+<h6>기존 보유자</h6>
+<p>IONQ의 현재 구조에서는 <strong>매수 단가를 낮추는 것보다 총 위험을 통제하는 일이 우선</strong>입니다.</p>
+<ul>
+<li>최근 저점 이탈 시 대응을 사전에 정합니다.</li>
+<li>반등이 나오더라도 이동평균 아래에서 다시 약해지는지 확인합니다.</li>
+<li>추가 매수 여부는 가격 하락 자체가 아니라 추세 개선 근거와 전체 비중을 기준으로 판단합니다.</li>
+</ul>
+<h6>하락 방향 거래 검토자</h6>
+<p>추세는 약세지만, IONQ는 볼린저 하단 아래이고 변동성이 높습니다. 따라서 <strong>방향 판단이 맞아도 진입 시점이 나쁠 수 있습니다.</strong></p>
+<p>반등 후 회복 실패 또는 저점 이탈 후 재진입 실패를 확인하는 방식이 단순한 하락 추격보다 통제하기 쉬울 수 있습니다. 공매도 가능 여부, 대차 비용, 급반등과 갭 위험은 별도로 확인해야 합니다.</p>
+<h5>결론</h5>
+<p><strong>IONQ의 최신 기술적 증거는 약세 추세 지속에 더 무게를 둡니다.</strong> 가격은 모든 주요 이동평균 아래에 있고, 최근 반등은 지속되지 못했으며, 모멘텀도 다시 약화되었습니다.</p>
+<p>동시에 볼린저 하단 이탈과 높은 ATR은 즉각적인 반등 위험도 경고합니다. 따라서 이 보고서가 뒷받침하는 대응은 <strong>신규 매수의 확인 조건 강화, 기존 보유 위험 점검, 하락 추격 자제</strong>입니다. 최종 거래 여부와 규모는 투자 기간, 보유 비중, 손실 허용 범위 및 추가 기업 정보와 함께 결정해야 합니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>IONQ 확인 내용</th>
+<th>해석</th>
+<th>대응·관찰 기준</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>데이터 기준</td>
+<td>2026년 11월 17일 최신 검증 시세</td>
+<td>11월 18일 가격은 미확인</td>
+<td>주문 전 최신 시세 확인</td>
+</tr>
+<tr>
+<td>종가</td>
+<td>24.84달러</td>
+<td>최근 검증 30거래일 중 최저 종가</td>
+<td>저점 안정 여부 관찰</td>
+</tr>
+<tr>
+<td>추세 배열</td>
+<td>종가 &lt; 10일 EMA &lt; 50일 SMA &lt; 200일 SMA</td>
+<td>단·중·장기 약세 정렬</td>
+<td>단기 반등과 추세 전환 구분</td>
+</tr>
+<tr>
+<td>10일 EMA</td>
+<td>29.5616달러</td>
+<td>첫 주요 추세 회복 기준</td>
+<td>회복 후 유지 여부 확인</td>
+</tr>
+<tr>
+<td>50일·200일 SMA</td>
+<td>35.7752달러·41.0984달러</td>
+<td>중장기 추세 회복은 미확인</td>
+<td>단기 회복만으로 낙관 금지</td>
+</tr>
+<tr>
+<td>RSI</td>
+<td>34.7116</td>
+<td>약세, 전통적 과매도 기준 위</td>
+<td>낮은 값만으로 매수하지 않기</td>
+</tr>
+<tr>
+<td>MACD 히스토그램</td>
+<td>-0.252334</td>
+<td>반등 모멘텀 재약화</td>
+<td>개선과 가격 회복 동반 확인</td>
+</tr>
+<tr>
+<td>볼린저 하단</td>
+<td>25.1257달러</td>
+<td>종가가 하단 이탈</td>
+<td>밴드 내부 재진입 여부 확인</td>
+</tr>
+<tr>
+<td>ATR</td>
+<td>2.78298달러</td>
+<td>높은 변동성 부담</td>
+<td>손절 거리와 수량 함께 조정</td>
+</tr>
+<tr>
+<td>최근 장중 저점</td>
+<td>24.075달러</td>
+<td>단기 하방 관찰 기준</td>
+<td>이탈 후 회복 실패 경계</td>
+</tr>
+<tr>
+<td>거래량·VWMA</td>
+<td>거래량 26,269,122주, VWMA 하락 방향</td>
+<td>약세 보조 근거이나 투매 확정 불가</td>
+<td>평균 거래량·최신 VWMA 추가 확인</td>
+</tr>
+<tr>
+<td>종합 대응</td>
+<td>약세 우세, 반등 위험 병존</td>
+<td>즉시 매수·하락 추격 모두 주의</td>
+<td>확인 중심 접근과 위험관리 우선</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">투자심리 분석가</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mixed</strong> (Score: 4.7/10)
+<strong>Confidence:</strong> Low</p>
+<h4>IONQ 감성 보고서</h4>
+<p>분석 기간: 2026-11-11~2026-11-18. 대상: IONQ, IonQ, Inc., 기술 / 컴퓨터 하드웨어, NYQ. 제공된 자료만 사용했으며 외부 검증은 하지 않았다.</p>
+<p>종합적으로 IONQ는 부정적인 단기 뉴스 흐름과 상승에 기운 소매 투자자 심리가 충돌하는 혼조 상태다. 점수는 4.7/10으로, 혼조 범위 안에서 하방 우려에 조금 더 무게를 두었다. Reddit 수집 실패와 StockTwits의 짧은 관측 구간 때문에 신뢰도는 낮다. 이는 거래 방향이나 목표가격 제안이 아니라 다른 분석과 함께 검토할 심리 신호다.</p>
+<h5>1. 출처별 분석</h5>
+<h6>뉴스: 단기 프레이밍은 부정적이나 IONQ 성장·기술 진전은 긍정적</h6>
+<p>제공된 뉴스는 총 20건이다. 이 중 상당수는 경쟁사 또는 양자컴퓨팅 업종 전반에 관한 기사이므로, 20건 모두를 독립적인 IONQ 기업 사건으로 해석해서는 안 된다. 여러 매체가 동일한 매도 흐름을 반복 보도했을 가능성도 있다.</p>
+<p>부정적 프레이밍의 중심은 실적 발표 뒤 상승분 반납과 업종 동반 하락이다. TIKR와 24/7 Wall St.의 제목들은 IONQ의 약 6~8% 하락을 반복적으로 다루고, Insider Monkey는 목요일 9.4% 하락과 30.86달러 종가를 보도했다. 이 수치는 각 기사에 인용된 관측치로, 일관된 시세 자료로 검증된 것이 아니다. 서로 다른 기사 속 하락률을 합산해 주간 수익률을 계산할 수 없다. Zacks는 손실 확대, 주식 희석, 약화된 기술적 신호를 제시하며 단기 경계심을 강화한다.</p>
+<p>반면 IONQ의 사업 성장에 관한 내용은 뚜렷하게 긍정적이다. TIKR는 3분기 매출 1억 7,380만 달러, 전년 대비 336% 증가, 2026년 매출 전망 5억 500만~5억 1,500만 달러로의 상향을 전했다. Motley Fool의 매수 검토 기사도 상업적으로 유용한 양자컴퓨팅의 도래를 낙관적으로 다룬다. 다만 매출 성장은 수익성이나 적정 가치평가를 자동으로 입증하지 않는다.</p>
+<p>재무 리더십 교체는 같은 사건이 상반되게 해석되는 사례다. TIKR는 CFO Inder Singh의 즉시 사임과 IONQ의 8% 하락을 연결하고, Gary Merrill의 12월 초 취임 예정 사실을 전한다. 반면 Proactive가 인용한 Wedbush는 이를 갑작스러운 이탈이 아닌 질서 있는 승계로 해석한다. 제공 자료만으로 사임 원인이나 회계 문제를 추정할 근거는 없다.</p>
+<p>Simply Wall St.는 IONQ의 DARPA Quantum Benchmarking Initiative Stage C 진전과 'walking cat' 오류내성 설계를 소개한다. 이는 기술 검증과 장기 사업 가능성에 긍정적인 신호지만, 즉각적인 매출 또는 수익성 달성을 의미하지는 않는다. 경쟁사의 기술 진전과 지원금 관련 기사도 업종 관심을 뒷받침하지만, 이를 IONQ에 대한 직접적인 지원이나 수주로 옮겨 해석해서는 안 된다.</p>
+<h6>StockTwits: 상승 태그 우세, 다만 반복 게시와 본문상 불안이 혼재</h6>
+<p>표본은 30개 메시지이며 모두 11월 17일 18:57~22:25 UTC에 집중돼 있다. 따라서 7일 전체의 소매 심리를 대표하기보다 최근 약 3시간 28분의 단면으로 보는 편이 적절하다.</p>
+<p>사용자 태그는 상승 14개, 하락 4개, 무표기 12개다. 전체 표본 기준으로 각각 46.7%, 13.3%, 40.0%이며, 방향을 표시한 18개만 보면 상승 77.8%, 하락 22.2%다. 상승 대 하락 비율은 3.5 대 1로, 소매 심리는 상승 쪽에 기울어 있다. 그러나 이를 전체 메시지의 77.8%가 상승 의견이라고 표현해서는 안 된다.</p>
+<p>상승 논리는 크게 저점 매수와 장기 활용처 기대다. @TrendIsMyFriend는 바닥 도달을 주장했고, @InvestorCastle은 연말 상승장을 기대했다. @Zio_Fauss는 실적과 재무 상태의 차이를 무시한 업종 전체 매도를 비판했다. @Accellerometer는 IONQ 사이버보안 솔루션이 가치평가를 먼저 끌어올릴 수 있는지 질문했고, 다른 게시물들은 양자 네트워킹과 보안 수요를 강조했다. 다만 인프라 의무화나 조직적인 공격이라는 주장은 확인되지 않은 개인 의견이다.</p>
+<p>태그 수치의 강도를 낮추는 요소도 있다. @sck2 한 계정이 상승 태그 14개 중 5개, 즉 35.7%를 작성했고, 일부는 티커 또는 이모지 위주다. 따라서 14개 상승 메시지는 독립적인 투자자 14명의 판단이 아니다. 무표기 메시지에는 '투자자의 돈 낭비'라는 비판, 15달러라는 설명 없는 하방 수준, CFO 이탈에 대한 질문이 포함돼 있어 본문 분위기는 상승 태그 비율보다 덜 낙관적이다. 반대로 무표기 중에도 양자 보안 활용을 옹호하는 내용이 있으므로 무표기 전체를 하락으로 재분류할 수 없다.</p>
+<p>@GTA_Terminal은 IONQ가 11월 17일 7.2% 하락해 25달러가 됐고, 50일선 36달러와 200일선 41달러 아래라고 주장했다. 같은 게시물은 약 5만 계약, 옵션 프리미엄 1,060만 달러, 콜 매수 490만 달러와 풋 매수 570만 달러를 제시했다. 이는 단일 소셜 계정의 미검증 수치다. 해당 게시물 안에서도 옵션 흐름은 중립에 가깝다고 서술돼 있어 확정적 하락 베팅이나 기관 포지셔닝으로 해석하기 어렵다.</p>
+<h6>Reddit: 자료 부재가 아닌 수집 실패</h6>
+<p>r/wallstreetbets, r/stocks, r/investing 모두 수집에 실패했다. 분석 가능한 게시물은 제공되지 않았지만 실제 토론이 없었다는 뜻은 아니다. 커뮤니티 간 입장 차이, 장기 투자자 반응, 논의 확산 여부는 확인할 수 없다. 이 결측이 전체 신뢰도를 낮춘다.</p>
+<h5>2. 출처 간 일치와 괴리</h5>
+<p>가장 큰 괴리는 하락·희석·손실·경영진 교체를 강조하는 뉴스와 저점 매수를 기대하는 StockTwits 상승 태그의 우세다. 이는 소매 투자자의 반등 기대 또는 기존 장기 투자자의 방어적 확신일 수 있으나, 표본만으로 신규 매수 유입이나 실제 수급 전환을 입증하지는 못한다. 또한 뉴스 프레이밍을 기관투자자의 실제 매매와 동일시해서는 안 된다.</p>
+<p>일치점도 명확하다. 뉴스와 소셜 모두 IONQ 개별 실적보다 양자컴퓨팅 업종과 대형 기술주 관련 분위기가 단기 심리에 강하게 작용한다고 본다. 뉴스는 경쟁사 실적 부진과 동반 하락을 다루고, 소셜은 무차별 업종 매도를 비판한다. CFO 교체 역시 뉴스의 상반된 해석과 소셜의 불안이 만나는 지점이다.</p>
+<p>장기 기술 기대는 성장 관련 뉴스와 보안·네트워킹 소셜 논의에서 겹친다. 다만 DARPA 관련 보도, 투자자의 활용처 기대, 확인되지 않은 인프라 의무화 주장은 증거 수준이 서로 다르다.</p>
+<h5>3. 지배적인 서사</h5>
+<ul>
+<li><strong>성장과 주가의 괴리:</strong> IONQ의 매출 급증과 전망 상향에도 매도가 이어졌다는 보도가 핵심이다. 긍정적인 성장 수치만으로 단기 투자심리가 회복되지 않는 모습이다.</li>
+<li><strong>기업 차이보다 업종 위험 회피가 우선:</strong> 경쟁사의 매출·예약 부진과 동반 하락 보도가 IONQ 심리에도 부담을 준다. 다만 경쟁사의 약한 수치를 IONQ 실적으로 오인해서는 안 된다.</li>
+<li><strong>CFO 교체에 대한 신뢰 문제:</strong> 질서 있는 승계라는 해석과 즉시 사임에 대한 불안이 공존한다. 교체 원인에 대한 추측은 사실로 취급할 수 없다.</li>
+<li><strong>장기 상용화 기대와 단기 손실·희석 우려:</strong> 기술 검증과 보안 활용 기대가 낙관론을 지탱하지만, 손실 확대와 자금조달 부담에 대한 뉴스가 이를 상쇄한다.</li>
+</ul>
+<h5>4. 자료에서 드러난 촉매와 위험</h5>
+<p><strong>긍정적 촉매:</strong> IONQ의 상향된 연간 매출 전망 달성 여부와 후속 사업 업데이트, DARPA Stage C 관련 검증 진전, 12월 초 예정된 CFO 승계와 추가 설명이 불확실성을 줄일 수 있다. 다만 제공 자료에는 후속 실적 발표일이나 기술 발표 일정이 없다.</p>
+<p><strong>대형 기술주 연동 변수:</strong> 뉴스는 Nvidia 실적을 앞둔 경계감을, StockTwits는 실적 대기와 '실적 상회' 주장을 동시에 담고 있다. 게시 시점이 섞여 있고 확인 가능한 실적 결과가 없으므로, 11월 18일 현재 이를 아직 남은 행사 또는 이미 확인된 호재로 단정할 수 없다.</p>
+<p><strong>주요 위험:</strong> 손실 확대와 주식 희석, CFO 교체에 대한 불확실성, 업종 전반의 추가 매도, 장기 기술 성과가 실질 수익으로 전환되는 시점의 불확실성이다. 기술적 약세 수치는 소셜 게시물에서 제시됐을 뿐 검증되지 않았다. 상승 태그 우세 역시 반복 계정과 짧은 관측 구간 때문에 지속적인 매수 수요를 의미하지 않는다.</p>
+<h5>5. 핵심 심리 신호 요약</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>신호</th>
+<th>방향</th>
+<th>출처</th>
+<th>근거 및 한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IONQ 성장과 전망 상향</td>
+<td>긍정</td>
+<td>TIKR, Motley Fool</td>
+<td>분기 매출 1억 7,380만 달러, 336% 증가, 연간 전망 5억 500만~5억 1,500만 달러; 수익성 입증과는 별개</td>
+</tr>
+<tr>
+<td>실적 후 상승분 반납과 동반 매도</td>
+<td>부정</td>
+<td>Zacks, TIKR, 24/7 Wall St., Insider Monkey</td>
+<td>반복적인 하락 보도와 손실·희석 우려; 중복 기사 및 관측 시점 차이 유의</td>
+</tr>
+<tr>
+<td>IONQ CFO 교체</td>
+<td>혼조</td>
+<td>TIKR, Proactive/Wedbush, StockTwits</td>
+<td>즉시 사임에 대한 불안과 질서 있는 승계 해석이 대립</td>
+</tr>
+<tr>
+<td>IONQ 기술 검증</td>
+<td>긍정·장기</td>
+<td>Simply Wall St.</td>
+<td>DARPA Stage C 진전 및 walking cat 설계; 즉각적인 매출 효과는 불명</td>
+</tr>
+<tr>
+<td>소매 상승 태그</td>
+<td>긍정</td>
+<td>StockTwits</td>
+<td>상승 14, 하락 4, 무표기 12; 방향 표시 표본의 77.8% 상승</td>
+</tr>
+<tr>
+<td>상승 표본의 독립성·품질</td>
+<td>신뢰도 제약</td>
+<td>StockTwits</td>
+<td>한 계정이 상승 14개 중 5개 작성; 단문·이모지와 다중 티커 게시물 포함</td>
+</tr>
+<tr>
+<td>무표기 본문의 불안</td>
+<td>부정·혼조</td>
+<td>StockTwits</td>
+<td>CFO 우려, 사업 비판, 설명 없는 15달러 언급과 보안 활용 낙관론이 공존</td>
+</tr>
+<tr>
+<td>옵션·이동평균 언급</td>
+<td>중립~부정, 미검증</td>
+<td>StockTwits 단일 계정</td>
+<td>옵션 흐름은 중립에 가깝다는 주장, 주요 이동평균 하회 주장; 독립 확인 없음</td>
+</tr>
+<tr>
+<td>커뮤니티 교차 검증</td>
+<td>확인 불가</td>
+<td>Reddit</td>
+<td>세 서브레딧 수집 실패; 토론 부재로 해석 불가</td>
+</tr>
+</tbody>
+</table></div>
+<p>결론적으로 IONQ의 단기 뉴스 심리는 부정적이지만 소매 표본은 반등 기대를 유지한다. 이 불일치 자체가 핵심 신호이며, 어느 쪽이 옳은지 또는 향후 가격 방향을 현재 자료만으로 결정할 수는 없다.</p>
+<h3 id="s1-3">뉴스 분석가</h3>
+<h4>IONQ 주간 뉴스·거시환경 분석</h4>
+<p><strong>기준일: 2026년 11월 18일 | 분석 기간: 11월 11~18일</strong></p>
+<p><strong>투자 의견</strong>: 보유 유지</p>
+<h5>핵심 결론</h5>
+<p><strong>IONQ는 매출 성장과 기술 검증 진전에도 불구하고, 재무책임자 교체와 양자컴퓨팅 업종 전반의 매도 압력이 단기 주가를 지배하는 구간이다.</strong> 현재 뉴스만으로는 실적 발표 후 하락을 곧바로 저평가 매수 기회로 판단하기 어렵다.</p>
+<p>연구 관점에서는 <strong>신규 추격 매수보다 재무 공시 확인과 주가 안정 여부 관찰이 우선</strong>이다. 특히 매출 성장의 질, 현금 소진, 주식 수 증가를 확인해야 한다. 이 보고서는 다른 의사결정자의 거래 판단을 지원하는 자료이며, 실시간 가격·거래량이나 기업 공시 원문을 직접 확인한 결과는 아니다.</p>
+<h5>1. IONQ 기업 뉴스: 강한 성장과 신뢰도 부담의 충돌</h5>
+<h6>매출과 연간 전망은 긍정적</h6>
+<p>11월 16일 TIKR 보도에 따르면 IONQ는 다음 수치를 발표했다.</p>
+<ul>
+<li><strong>3분기 매출: 1억 7,380만 달러</strong></li>
+<li><strong>전년 동기 대비 성장률: 336%</strong></li>
+<li><strong>2026년 연간 매출 전망: 5억 500만~5억 1,500만 달러로 상향</strong></li>
+</ul>
+<p>이는 IONQ의 상업화 진전에 대한 긍정적 신호다. 그러나 같은 기간 주가 약세 보도가 이어졌다는 점은, 시장이 매출 성장만으로 높은 미래 기대를 유지하지 않고 있음을 시사한다.</p>
+<p><strong>확인해야 할 사항</strong></p>
+<ol>
+<li>매출 증가 중 기존 사업의 유기적 성장과 인수 효과의 비중.</li>
+<li>대형 장비 인도·일회성 계약과 반복 매출의 구성.</li>
+<li>매출채권 회수 및 영업현금흐름과 매출의 괴리.</li>
+<li>손실 확대와 주식 수 증가를 반영한 <strong>주당 기준 성장</strong>.</li>
+</ol>
+<p>제공된 뉴스 요약에는 이 항목들을 검증할 충분한 수치가 없다. 따라서 매출 증가율을 곧바로 수익성 개선으로 해석해서는 안 된다.</p>
+<p>출처: <a href="https://www.tikr.com/blog/ionq-just-guided-to-515-million-in-2026-revenue-take-profits-or-buy-more?ref=yahoofinance&amp;tlnk=yf-261116-4vv8gvhm">TIKR, IONQ 실적 및 전망 보도</a></p>
+<h6>재무책임자 교체: 부정적 가격 반응과 엇갈리는 해석</h6>
+<p>11월 13일 TIKR은 IONQ의 기존 최고재무책임자 Inder Singh이 즉시 물러나고, Gary Merrill이 12월 초 취임할 예정이라고 보도했다. 같은 기사에서는 IONQ가 약 8% 하락했다고 전했다.</p>
+<p>반면 Proactive가 소개한 Wedbush의 평가는 이를 <strong>질서 있는 승계</strong>로 해석했다.</p>
+<p>이 두 해석은 구분해야 한다.</p>
+<ul>
+<li><strong>확인된 뉴스 내용:</strong> 재무 리더십 변경이 보도됐다.</li>
+<li><strong>시장 우려:</strong> 전환기 회계·공시·자금조달 관리에 대한 불확실성이다.</li>
+<li><strong>확인되지 않은 주장:</strong> 이번 교체가 회계 문제나 실적 오류를 의미한다는 증거는 제공되지 않았다.</li>
+</ul>
+<p><strong>실무적 시사점:</strong> IONQ의 공식 인사 발표, 관련 규제 공시, 후임 취임 일정과 재무 전망 유지 여부를 우선 확인해야 한다.</p>
+<p>출처: <a href="https://www.tikr.com/blog/ionq-sinks-8-as-inder-singh-exits-effective-immediately-in-finance-leadership-shake-up?ref=yahoofinance&amp;tlnk=yf-261113-55596v36">TIKR</a>, <a href="https://www.proactiveinvestors.com/companies/news/1101773/ionq-s-finance-reshuffle-seen-as-orderly-succession-by-wedbush-1101773.html">Proactive·Wedbush 해석</a></p>
+<h6>기술 진전은 장기 촉매이지 즉각적인 매출 보장은 아니다</h6>
+<p>Simply Wall St.는 IONQ의 DARPA 양자 벤치마킹 이니셔티브 <strong>Stage C 관련 진전</strong>과 ‘walking cat’ 오류내성 아키텍처를 보도했다.</p>
+<p>이는 기술 검증과 정부 연구 생태계 참여 측면에서 긍정적이다. 다만 기사 제목의 단계 진입 표현과 요약의 검증 진전 표현만으로 정확한 지위나 성과를 단정하기 어렵다. <strong>대규모 계약 수주, 기술 검증 완료, 상업적 우위 확정으로 확대 해석해서는 안 된다.</strong></p>
+<p>출처: <a href="https://finance.yahoo.com/technology/ai/articles/ionq-ionq-reaches-darpa-stage-021910756.html">Simply Wall St., IONQ DARPA 관련 보도</a></p>
+<h5>2. 업종 흐름: IONQ 실적보다 테마 위험이 우세</h5>
+<p>11월 16~17일 기사들은 양자컴퓨팅 기업들의 동반 하락을 전했다. IONQ의 일중 또는 기사 작성 시점 하락 폭은 약 6~8%로 보도됐으며, 경쟁사의 부진한 매출·수주와 손실 확대가 투자심리에 부담을 줬다.</p>
+<p><strong>해석:</strong> IONQ의 개별 실적이 경쟁사보다 강해도, 테마 자금 유출이나 기술주 위험 축소가 진행되면 동반 하락할 수 있다. 경쟁사 실적 부진이 IONQ의 수요 악화를 직접 입증하는 것은 아니다.</p>
+<p>또한 엔비디아 실적을 앞둔 기술주 경계심이 글로벌 뉴스와 업종 기사에 공통적으로 나타났다. 이는 IONQ에 직접적인 실적 연관성보다 <strong>위험선호 변화 경로</strong>로 중요하다.</p>
+<p>일부 기사에는 엔비디아 경영진 변화와 반도체 규제 관련 주장도 등장하지만, 이번 검색에서 독립적인 확인을 하지 못했으므로 핵심 투자 근거에서 제외했다.</p>
+<p><strong>주의:</strong> 여러 기사의 하락률은 작성 시점이 다를 수 있다. 이를 단순 합산해 IONQ의 주간 수익률로 사용해서는 안 된다.</p>
+<h5>3. 거시환경: 금리 부담은 경계하되 실제 지표 확인은 불가</h5>
+<h6>공식 거시자료의 공백</h6>
+<p>미국 10년물 국채금리와 소비자물가 자료를 조회했지만, FRED API 설정 문제로 데이터를 받지 못했다. 따라서 <strong>현재 금리 수준, 최신 물가 상승률, 지난주 금리 변화 방향은 확인되지 않았다.</strong></p>
+<p>일반적인 전달 경로는 다음과 같다.</p>
+<ul>
+<li><strong>금리 상승:</strong> 먼 미래 이익의 현재가치를 낮춰 IONQ 같은 성장 기대 중심 기업에 부담.</li>
+<li><strong>인플레이션 둔화와 금리 하락:</strong> 성장주 가치평가에 우호적일 수 있음.</li>
+<li><strong>경기 둔화:</strong> 자금조달 여건과 고객의 연구·설비 예산에 부담을 줄 수 있음.</li>
+</ul>
+<p>이는 조건부 분석이지, 지난주 실제로 이러한 변화가 발생했다는 진술은 아니다.</p>
+<h6>예측시장: 금리 인하 기대는 낮고, 연내 침체 확률도 낮음</h6>
+<p>조회 시점 Polymarket 결과:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>사건</th>
+<th style="text-align:right">시장 내재 확률</th>
+<th style="text-align:right">최근 1주 변화</th>
+<th style="text-align:right">표시 거래량</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026년 연준 금리 인하가 전혀 없을 가능성</td>
+<td style="text-align:right">98%</td>
+<td style="text-align:right">+0.3%포인트</td>
+<td style="text-align:right">약 970만 달러</td>
+</tr>
+<tr>
+<td>2026년 말까지 미국 경기침체 발생 가능성</td>
+<td style="text-align:right">2%</td>
+<td style="text-align:right">−0.6%포인트</td>
+<td style="text-align:right">약 249만 달러</td>
+</tr>
+</tbody>
+</table></div>
+<p>이 결과는 <strong>금리 인하에 기대는 IONQ 상승 논거가 약함</strong>을 시사한다. 동시에 미국 침체가 임박했다는 강한 신호도 아니다.</p>
+<p>다만 첫 번째 계약은 <strong>2026년 전체 인하 횟수</strong>에 관한 것으로, 다음 회의의 동결 확률과 같지 않다. 두 번째 역시 연말까지 남은 기간이 짧다는 영향을 받는다. 두 수치 모두 계약 정의와 판정 조건에 종속된 시장 가격이며, 공식 경제 전망이나 확정적 사실이 아니다.</p>
+<p>글로벌 뉴스 검색은 게임·개별 종목 기사에 편중돼 있었다. 따라서 이번 결과만으로 세계 경기, 지정학, 원유·환율 환경을 포괄적으로 평가하기에는 한계가 있다.</p>
+<h5>4. IONQ 거래 판단에 활용할 조건</h5>
+<h6>상승 시나리오</h6>
+<ul>
+<li>공식 공시에서 연간 매출 전망이 유지된다.</li>
+<li>재무책임자 승계가 예정대로 진행되고 추가 불확실성이 줄어든다.</li>
+<li>현금흐름·주식 수 자료가 매출 성장의 질을 뒷받침한다.</li>
+<li>양자컴퓨팅 업종이 안정되고 IONQ가 상대적 강세를 보인다.</li>
+</ul>
+<p>이 경우 <strong>확인 후 단계적 진입을 검토할 근거</strong>가 강화된다.</p>
+<h6>하락 시나리오</h6>
+<ul>
+<li>추가 자금조달이나 주식 보상으로 희석 부담이 커진다.</li>
+<li>매출 증가에도 현금 소진 또는 손실이 더 빠르게 확대된다.</li>
+<li>경영진 교체 관련 추가 부정적 공시가 나온다.</li>
+<li>기술주·양자컴퓨팅 업종의 동반 매도가 이어진다.</li>
+</ul>
+<p>이 경우 IONQ의 매출 호조만으로 하방을 방어하기 어렵다. 기존 보유자는 포지션 집중도와 이벤트 위험을 재점검할 필요가 있다.</p>
+<p><strong>현재 확인되지 않은 실시간 가격·거래량을 바탕으로 목표가나 손절가를 제시하지 않는다.</strong> 매매에 활용한다면 실제 시세에서 최근 저점, 거래량, 호가 유동성을 별도로 검증해야 한다.</p>
+<p>최종 매매 제안: 보유 유지</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>확인된 근거</th>
+<th>IONQ에 대한 의미</th>
+<th>후속 확인·대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출 성장</td>
+<td>보도상 3분기 매출 1억 7,380만 달러, 전년 대비 336% 증가</td>
+<td>상업화 진전의 긍정적 신호</td>
+<td>공시 원문에서 유기적 성장·현금 회수 확인</td>
+</tr>
+<tr>
+<td>연간 전망</td>
+<td>보도상 5억 500만~5억 1,500만 달러로 상향</td>
+<td>성장 기대 지지</td>
+<td>전망 유지 여부와 매출 구성 점검</td>
+</tr>
+<tr>
+<td>재무책임자 교체</td>
+<td>즉시 퇴임 및 12월 초 후임 취임 예정 보도</td>
+<td>단기 신뢰·실행 불확실성</td>
+<td>공식 인사·규제 공시 확인</td>
+</tr>
+<tr>
+<td>기술 검증</td>
+<td>DARPA Stage C 관련 진전 보도</td>
+<td>장기 기술 신뢰도 촉매</td>
+<td>정확한 단계와 계약·매출 연결 여부 검증</td>
+</tr>
+<tr>
+<td>업종 동반 하락</td>
+<td>11월 16~17일 반복 보도</td>
+<td>개별 호재보다 테마 매도가 우세할 위험</td>
+<td>IONQ 상대강도·거래량 관찰</td>
+</tr>
+<tr>
+<td>금리 환경</td>
+<td>FRED 자료 조회 실패</td>
+<td>실제 할인율 변화 판단 불가</td>
+<td>국채금리·물가 원자료 별도 확인</td>
+</tr>
+<tr>
+<td>금리 인하 기대</td>
+<td>예측시장 연내 무인하 확률 98%</td>
+<td>금리 인하 중심 상승 논거 제한</td>
+<td>계약 조건과 향후 확률 변화 확인</td>
+</tr>
+<tr>
+<td>미국 침체 위험</td>
+<td>예측시장 연말까지 침체 확률 2%</td>
+<td>임박한 침체의 강한 신호는 아님</td>
+<td>짧은 잔여 기간과 판정 기준 고려</td>
+</tr>
+<tr>
+<td>종합 연구 판단</td>
+<td>성장 호재와 재무·수급 위험 혼재</td>
+<td>IONQ 신규 추격 매수보다 확인 우선</td>
+<td>공시 검증 및 주가 안정 후 재평가</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-4">재무 분석가</h3>
+<h4>IONQ 펀더멘털 분석 보고서</h4>
+<p><strong>분석 기준일:</strong> 2026년 11월 18일<br />
+<strong>최근 1주 검토 구간:</strong> 2026년 11월 12일~11월 18일<br />
+<strong>분석 대상:</strong> IONQ — IonQ, Inc., 뉴욕증권거래소, 기술 / 컴퓨터 하드웨어</p>
+<p><strong>투자 의견</strong>: Neutral</p>
+<h5>1. 핵심 판단</h5>
+<p><strong>IONQ는 매출이 빠르게 증가하고 있지만, 영업손실과 현금 소진도 확대되고 있어 순이익 흑자만으로 사업의 수익성 전환을 판단하기 어렵습니다.</strong> 2026년 3분기 매출은 1억 7,400만 달러로 전년 동기보다 335% 증가했으나, 영업손실은 4억 3,300만 달러에 달했습니다. 같은 분기 순이익 5억 6,400만 달러는 영업실적과 크게 괴리됩니다.</p>
+<p>현재 투자 판단에서 중요한 순서는 다음과 같습니다.</p>
+<ol>
+<li>매출 증가의 유기적 성장·인수 효과·일회성 계약 기여도를 구분할 것.</li>
+<li>순이익보다 영업손실과 영업현금흐름을 우선 확인할 것.</li>
+<li>현금 외 단기투자자산의 실제 유동성과 향후 자금조달 필요성을 점검할 것.</li>
+<li>종합 데이터와 재무제표 사이의 불일치를 해소한 뒤 가치평가를 확정할 것.</li>
+</ol>
+<p><strong>최근 일주일에 새로 발생한 공시나 사업 사건은 제공된 자료만으로 확인할 수 없습니다.</strong> 아래 내용은 기준일까지 조회되는 최신 재무정보에 대한 분석이며, 3분기 실적이 해당 주에 발표되었다는 의미는 아닙니다. 내부자 거래 자료도 최신 거래일이 9월 10일이므로 최근 일주일의 매매 상황을 확정할 수 없습니다.</p>
+<hr />
+<h5>2. 기업 개요와 사업 평가의 관점</h5>
+<p>IONQ는 양자컴퓨팅 기업으로, 일반적으로 이온트랩 기반 양자컴퓨터와 관련 접근·서비스 사업으로 알려져 있습니다. 다만 이번 도구 결과에는 상세 사업 설명, 제품별 매출, 고객별 매출, 수주잔고 및 기술 성능 지표가 포함되지 않았습니다.</p>
+<p>따라서 IONQ의 사업 경쟁력을 평가할 때는 재무 성장과 함께 다음 항목을 추가 확인해야 합니다.</p>
+<ul>
+<li><strong>상업화의 질:</strong> 연구·시험 계약이 반복적인 상용 매출로 전환되고 있는가.</li>
+<li><strong>매출 인식의 지속성:</strong> 대형 시스템 인도나 특정 계약의 인식 시점 때문에 분기 매출이 급증한 것은 아닌가.</li>
+<li><strong>기술 개발과 비용:</strong> 연구개발비 증가가 상업적 성과로 연결되고 있는가.</li>
+<li><strong>사업 확장 방식:</strong> 매출 증가 중 인수한 사업의 기여분과 기존 사업의 성장분은 각각 얼마인가.</li>
+<li><strong>고객·계약 집중도:</strong> 일부 고객이나 공공 계약에 실적이 과도하게 의존하는가.</li>
+</ul>
+<p>이 항목들은 확인이 필요한 평가 요소이며, 이번 자료로 구체적인 성과를 확정할 수는 없습니다.</p>
+<h5>3. 손익 분석: 고성장과 대규모 영업적자의 공존</h5>
+<p>아래 금액은 주당순이익을 제외하고 <strong>백만 달러</strong>입니다. 원자료가 반올림되어 있으므로 계산 비율도 근사치입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 3분기</th>
+<th style="text-align:right">2026년 1분기</th>
+<th style="text-align:right">2026년 2분기</th>
+<th style="text-align:right">2026년 3분기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">40</td>
+<td style="text-align:right">65</td>
+<td style="text-align:right">80</td>
+<td style="text-align:right">174</td>
+</tr>
+<tr>
+<td>영업손익</td>
+<td style="text-align:right">-169</td>
+<td style="text-align:right">-272</td>
+<td style="text-align:right">-337</td>
+<td style="text-align:right">-433</td>
+</tr>
+<tr>
+<td>순손익</td>
+<td style="text-align:right">-1,055</td>
+<td style="text-align:right">805</td>
+<td style="text-align:right">-1,868</td>
+<td style="text-align:right">564</td>
+</tr>
+<tr>
+<td>희석 주당순이익, 달러</td>
+<td style="text-align:right">-3.58</td>
+<td style="text-align:right">2.07</td>
+<td style="text-align:right">-5.08</td>
+<td style="text-align:right">1.35</td>
+</tr>
+</tbody>
+</table></div>
+<h6>매출: 확실한 규모 확대</h6>
+<p>IONQ의 2026년 3분기 매출은 다음과 같이 증가했습니다.</p>
+<ul>
+<li>전년 동기 대비: <strong>335% 증가</strong></li>
+<li>직전 분기 대비: <strong>117.5% 증가</strong></li>
+<li>2026년 1~3분기 누적 매출: <strong>3억 1,900만 달러</strong></li>
+<li>2025년 같은 기간 누적 매출: <strong>6,900만 달러</strong></li>
+<li>누적 매출 증가율: <strong>약 362.3%</strong></li>
+</ul>
+<p>매출 성장 자체는 강력합니다. 다만 인수 기여분과 계약별 인식 내역이 없어 이 증가율을 기존 사업의 순수 성장률로 해석해서는 안 됩니다.</p>
+<h6>영업손실: 비율은 개선됐지만 절대 규모는 악화</h6>
+<p>2026년 3분기 영업손실은 전년 동기보다 약 156.2%, 전분기보다 약 28.5% 증가했습니다.</p>
+<p>영업이익률은 다음과 같습니다.</p>
+<ul>
+<li>2025년 3분기: 약 <strong>-422.5%</strong></li>
+<li>2026년 2분기: 약 <strong>-421.3%</strong></li>
+<li>2026년 3분기: 약 <strong>-248.9%</strong></li>
+</ul>
+<p>매출이 비용보다 빠르게 증가하면서 손실률은 개선됐습니다. 그러나 3분기에는 매출 1달러당 약 2.49달러의 영업손실이 발생했습니다. <strong>손실률 개선과 손익분기점 도달은 구분해야 합니다.</strong></p>
+<p>2026년 1~3분기 누적 영업손실은 <strong>10억 4,200만 달러</strong>로, 전년 동기의 4억 600만 달러보다 약 156.7% 확대됐습니다.</p>
+<h6>순이익: 흑자의 원인을 반드시 분해해야 함</h6>
+<p>2026년 3분기 순이익과 영업손익의 차이는 약 <strong>9억 9,700만 달러</strong>입니다. 1분기에도 영업손실에도 불구하고 큰 순이익이 발생했고, 2분기에는 대규모 순손실로 반전했습니다.</p>
+<p>이는 영업 외 항목과 세금 등의 영향이 매우 크다는 뜻입니다. 다만 제공된 자료에는 상세 주석이 없어, 이를 특정 파생상품·워런트 평가손익이나 다른 항목으로 단정할 수 없습니다.</p>
+<p><strong>실무적 해석:</strong> IONQ의 분기 흑자나 양의 주가수익비율을 본업의 수익성 확보 신호로 사용하기 전에, 비현금성 평가손익과 기타 영업 외 손익을 조정해야 합니다.</p>
+<h5>4. 현금흐름: 가장 우선적으로 감시할 위험</h5>
+<p>현금흐름 원자료의 6개월·9개월 수치는 누적치입니다. 아래 분기 수치는 누적치 차감으로 계산했습니다.</p>
+<p>단위: 백만 달러.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2026년 1분기</th>
+<th style="text-align:right">2026년 2분기 단독</th>
+<th style="text-align:right">2026년 3분기 단독</th>
+<th style="text-align:right">2026년 1~3분기 누적</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">-151</td>
+<td style="text-align:right">-104</td>
+<td style="text-align:right">-315</td>
+<td style="text-align:right">-570</td>
+</tr>
+<tr>
+<td>설비투자</td>
+<td style="text-align:right">8</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">35</td>
+</tr>
+<tr>
+<td>단순 잉여현금흐름</td>
+<td style="text-align:right">-159</td>
+<td style="text-align:right">-115</td>
+<td style="text-align:right">-331</td>
+<td style="text-align:right">-605</td>
+</tr>
+<tr>
+<td>투자현금흐름</td>
+<td style="text-align:right">-392</td>
+<td style="text-align:right">834</td>
+<td style="text-align:right">-719</td>
+<td style="text-align:right">-277</td>
+</tr>
+<tr>
+<td>재무현금흐름</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">28</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>단순 잉여현금흐름은 영업현금흐름에서 설비투자를 차감한 값입니다.</em></p>
+<p>핵심 관찰은 다음과 같습니다.</p>
+<ul>
+<li>2026년 3분기 영업현금 유출은 전분기의 약 <strong>3배</strong>로 확대됐습니다.</li>
+<li>2025년 3분기 단독 영업현금흐름은 약 <strong>-1억 2,300만 달러</strong>로 계산되며, 2026년 3분기 유출액은 이보다 약 156.1% 증가했습니다.</li>
+<li>2026년 누적 영업현금 유출 5억 7,000만 달러는 전년 동기 2억 900만 달러보다 약 <strong>172.7% 증가</strong>했습니다.</li>
+<li>누적 설비투자는 3,500만 달러로, 전체 현금 소진의 주원인은 설비투자보다는 영업활동입니다.</li>
+<li>3분기 투자현금 유출 7억 1,900만 달러는 상당하지만, 세부 내역이 없으므로 인수·투자증권 거래·기타 투자 중 무엇이 주된 원인인지는 확인할 수 없습니다.</li>
+</ul>
+<p>따라서 IONQ의 다음 실적에서 가장 중요한 지표 중 하나는 <strong>매출 증가가 실제 현금 회수로 연결되는지</strong>입니다.</p>
+<h5>5. 재무상태: 높은 유동비율, 그러나 현금 구성은 확인 필요</h5>
+<p>단위: 백만 달러.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 말</th>
+<th style="text-align:right">2026년 2분기 말</th>
+<th style="text-align:right">2026년 3분기 말</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>총자산</td>
+<td style="text-align:right">6,570</td>
+<td style="text-align:right">6,779</td>
+<td style="text-align:right">7,853</td>
+</tr>
+<tr>
+<td>유동자산</td>
+<td style="text-align:right">2,586</td>
+<td style="text-align:right">2,410</td>
+<td style="text-align:right">1,538</td>
+</tr>
+<tr>
+<td>현금 및 현금성자산</td>
+<td style="text-align:right">1,031</td>
+<td style="text-align:right">1,236</td>
+<td style="text-align:right">209</td>
+</tr>
+<tr>
+<td>총부채</td>
+<td style="text-align:right">2,757</td>
+<td style="text-align:right">3,439</td>
+<td style="text-align:right">2,829</td>
+</tr>
+<tr>
+<td>유동부채</td>
+<td style="text-align:right">167</td>
+<td style="text-align:right">226</td>
+<td style="text-align:right">363</td>
+</tr>
+<tr>
+<td>자본</td>
+<td style="text-align:right">3,800</td>
+<td style="text-align:right">3,327</td>
+<td style="text-align:right">4,990</td>
+</tr>
+</tbody>
+</table></div>
+<h6>긍정적 요소</h6>
+<ul>
+<li>3분기 말 유동비율은 약 <strong>4.24배</strong>입니다.</li>
+<li>운전자본은 약 <strong>11억 7,500만 달러</strong>입니다.</li>
+<li>총자산 대비 총부채는 약 **36.0%**입니다.</li>
+</ul>
+<p>유동자산이 유동부채를 충분히 상회하므로, 현금 감소만으로 즉각적인 지급불능을 주장할 근거는 없습니다.</p>
+<h6>주의할 요소</h6>
+<ul>
+<li>현금 및 현금성자산은 전분기보다 약 <strong>83.1% 감소</strong>했습니다.</li>
+<li>유동자산은 전분기보다 약 <strong>36.2% 감소</strong>했습니다.</li>
+<li>유동부채는 전분기보다 약 <strong>60.6% 증가</strong>했습니다.</li>
+<li>현금 및 현금성자산 ÷ 유동부채는 약 <strong>0.58배</strong>입니다.</li>
+</ul>
+<p>현금 2억 900만 달러를 3분기 단순 잉여현금 유출 속도에 대입하면 약 <strong>1.9개월분</strong>입니다. 그러나 이는 현금만을 사용한 민감도 계산이지, 실제 자금 고갈 예상 시점이 아닙니다. 현금 외 유동자산 13억 2,900만 달러에 포함된 단기투자자산·매출채권 등의 구성과 회수 가능성을 먼저 확인해야 합니다.</p>
+<p>또한 총자산의 약 80.4%가 비유동자산입니다. 영업권·무형자산·장기투자 등의 세부 내역이 없어 장부가치의 질과 손상차손 위험을 판단하기 어렵습니다.</p>
+<p><strong>자료상 주의점:</strong> 3분기 말 총부채와 자본의 합계는 총자산보다 3,400만 달러 작습니다. 별도 자본 항목 누락 또는 데이터 매핑 문제 등을 원문 재무제표로 확인해야 합니다.</p>
+<h5>6. 가치평가: 낮아 보이는 이익배수보다 매출배수에 주목</h5>
+<p>종합 조회 결과에서 확인된 IONQ의 주요 수치는 다음과 같습니다.</p>
+<ul>
+<li>시가총액: 약 <strong>114억 9,800만 달러</strong></li>
+<li>최근 12개월 매출: 약 <strong>3억 8,044만 달러</strong></li>
+<li>최근 12개월 순이익: 약 <strong>2억 5,524만 달러</strong></li>
+<li>최근 12개월 상각전영업손익: 약 <strong>-9억 1,455만 달러</strong></li>
+<li>주가수익비율: <strong>14.36배</strong></li>
+<li>예상 주당순이익: <strong>-1.4208달러</strong></li>
+<li>주가순자산비율: <strong>2.04배</strong></li>
+<li>배당수익률: <strong>0%</strong></li>
+<li>베타: <strong>3.409</strong></li>
+</ul>
+<p>시가총액을 최근 12개월 매출로 나눈 주가매출비율은 약 <strong>30.2배</strong>입니다. 이는 현재 매출 규모 대비 높은 수준으로, 향후 높은 성장과 수익성 개선에 대한 기대가 상당 부분 반영된 것으로 해석할 수 있습니다.</p>
+<p>다만 종합 데이터에는 중요한 불일치가 있습니다.</p>
+<ul>
+<li>시가총액 ÷ 제시된 순이익은 약 <strong>45.0배</strong>로, 제공된 주가수익비율 14.36배와 맞지 않습니다.</li>
+<li>종합 데이터의 잉여현금흐름은 약 <strong>-1억 2,070만 달러</strong>인데, 재무제표에서 계산한 2026년 9개월 누적 값은 <strong>-6억 500만 달러</strong>입니다. 기간과 산식이 불명확해 직접 연결할 수 없습니다.</li>
+<li>종합 데이터의 부채/자본 3.07%는 이자부 차입금 기준일 수 있으며, 재무상태표의 총부채/자본 약 56.7%와 같은 개념이 아닙니다.</li>
+<li>종합 매출총이익은 약 9,621만 달러이나, 분기 손익 자료에는 매출원가·매출총이익이 없어 분기별 검증이 불가능합니다.</li>
+</ul>
+<p><strong>따라서 현재 데이터로 목표주가나 정밀한 기업가치 배수를 제시하는 것은 적절하지 않습니다.</strong> 특히 주가수익비율 14.36배만으로 IONQ를 저평가 종목으로 분류해서는 안 됩니다.</p>
+<h5>7. 재무 이력: 소규모 매출에서 급격한 사업 규모 확대로</h5>
+<p>동일한 1~3분기 누적 기간을 비교하면 IONQ의 변화가 분명합니다.</p>
+<p>단위: 백만 달러.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2023년</th>
+<th style="text-align:right">2024년</th>
+<th style="text-align:right">2025년</th>
+<th style="text-align:right">2026년</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>누적 매출</td>
+<td style="text-align:right">16</td>
+<td style="text-align:right">31</td>
+<td style="text-align:right">69</td>
+<td style="text-align:right">319</td>
+</tr>
+<tr>
+<td>누적 영업손익</td>
+<td style="text-align:right">-103</td>
+<td style="text-align:right">-155</td>
+<td style="text-align:right">-406</td>
+<td style="text-align:right">-1,042</td>
+</tr>
+<tr>
+<td>누적 영업현금흐름</td>
+<td style="text-align:right">-52</td>
+<td style="text-align:right">-66</td>
+<td style="text-align:right">-209</td>
+<td style="text-align:right">-570</td>
+</tr>
+</tbody>
+</table></div>
+<p>IONQ는 빠르게 상업적 규모를 확대했지만, 아직 그 성장이 절대적인 손실·현금 유출 감소로 이어지지는 않았습니다.</p>
+<p>재무구조도 크게 변했습니다. 총자산은 2024년 말 5억 800만 달러에서 2026년 3분기 말 78억 5,300만 달러로 증가했습니다. 2025년 1~3분기에는 재무활동으로 13억 7,700만 달러가 유입됐습니다. 다만 제공 자료만으로 자산 증가를 인수, 자본조달, 기타 거래별로 분해할 수는 없습니다.</p>
+<h5>8. 내부자 거래</h5>
+<p>최근 일주일의 신규 내부자 거래는 제공된 데이터에서 확인되지 않습니다. 최신 기록은 다음과 같습니다.</p>
+<ul>
+<li><strong>2026년 9월 10일:</strong> 이사 1명이 2,407주 매도, 총 약 8만 9,564달러.</li>
+<li><strong>2026년 8월 24일:</strong> 이사 2명에게 각각 5,540주 무상 주식보상.</li>
+<li><strong>2026년 6월 18일:</strong> 이사 3명이 합계 9,329주 매도, 총 약 51만 3,216달러.</li>
+<li><strong>2026년 2월 27일:</strong> 이사 1명이 3,000주 매수, 약 11만 5,155달러.</li>
+</ul>
+<p>주식보상은 자발적인 현금 매수와 다르며, 옵션 행사도 별도로 구분해야 합니다. 거래 계획·세금 목적·거래 전후 보유 지분을 알 수 없어 매도만으로 경영진의 부정적 전망을 확정할 수 없습니다. 일부 과거 기록에는 중복 가능성도 있으므로 전체 매도액 단순 합산은 피했습니다.</p>
+<h5>9. 거래 판단에 활용할 조건</h5>
+<h6>신규 진입을 검토한다면</h6>
+<p>IONQ에 대해서는 단순한 순이익 흑자보다 다음 확인 사항을 진입 조건으로 삼는 것이 합리적입니다.</p>
+<ul>
+<li>매출 증가의 유기적 성장 기여분과 반복 가능성이 확인될 것.</li>
+<li>3분기 영업현금 유출 3억 1,500만 달러가 일시적 요인인지 설명될 것.</li>
+<li>현금 외 단기투자자산의 규모·만기·처분 가능성이 확인될 것.</li>
+<li>영업 외 손익을 제거한 실적과 가치평가가 정리될 것.</li>
+</ul>
+<h6>기존 보유자라면</h6>
+<p>IONQ의 다음 실적에서 <strong>매출 성장률, 영업손실률, 현금 소진액을 함께</strong> 비교해야 합니다. 매출이 증가해도 현금 소진이 계속 가속되거나 자금조달이 필요해진다면 위험 재평가가 필요합니다. 반대로 높은 매출을 유지하면서 절대 영업손실과 현금 유출이 줄어들면 투자 논거가 강화됩니다.</p>
+<h6>단기 거래자라면</h6>
+<p>IONQ의 높은 베타는 변동성 위험을 시사하지만, 현재 가격·거래량·실시간 뉴스가 없어 구체적인 진입가나 손절가를 제시할 근거는 부족합니다. 펀더멘털 관점에서는 <strong>성장 기대에 따른 상승 가능성과 현금 소진·희석 우려에 따른 하락 가능성을 동시에 관리해야 하는 종목</strong>입니다.</p>
+<p>최종 거래 판단에 앞서 가장 우선할 작업은 <strong>재무제표 주석과 데이터 불일치 검증</strong>입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>IONQ의 확인된 수치·상태</th>
+<th>해석</th>
+<th>후속 확인·행동</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최근 일주일 정보</td>
+<td>신규 공시·사건 확인 불가</td>
+<td>주간 촉매를 단정할 수 없음</td>
+<td>해당 기간 공식 공시·보도자료 별도 확인</td>
+</tr>
+<tr>
+<td>매출 성장</td>
+<td>2026년 3분기 1억 7,400만 달러, 전년 대비 +335%</td>
+<td>강력한 규모 확대</td>
+<td>유기적 성장·인수·일회성 기여 분리</td>
+</tr>
+<tr>
+<td>영업 수익성</td>
+<td>3분기 영업손실 4억 3,300만 달러</td>
+<td>손실률 개선에도 절대 손실 확대</td>
+<td>다음 분기 절대 손실 감소 여부 확인</td>
+</tr>
+<tr>
+<td>순이익의 질</td>
+<td>3분기 순이익 5억 6,400만 달러</td>
+<td>영업손익과 큰 괴리</td>
+<td>영업 외 손익·비현금 항목 주석 확인</td>
+</tr>
+<tr>
+<td>현금 소진</td>
+<td>3분기 단순 잉여현금흐름 -3억 3,100만 달러</td>
+<td>중요한 위험 요인</td>
+<td>운전자본 변동과 일회성 지급 분해</td>
+</tr>
+<tr>
+<td>현금 보유</td>
+<td>3분기 말 2억 900만 달러</td>
+<td>현금만으로 판단하면 완충력 제한</td>
+<td>단기투자자산과 자금조달 계획 확인</td>
+</tr>
+<tr>
+<td>단기 지급능력</td>
+<td>유동비율 약 4.24배</td>
+<td>유동자산은 유동부채를 충분히 상회</td>
+<td>유동자산의 구성·회수 가능성 검증</td>
+</tr>
+<tr>
+<td>가치평가</td>
+<td>주가매출비율 약 30.2배</td>
+<td>높은 미래 성장 기대 반영</td>
+<td>이익배수보다 성장의 질·현금흐름 중시</td>
+</tr>
+<tr>
+<td>데이터 신뢰성</td>
+<td>이익배수·현금흐름·재무상태표 일부 불일치</td>
+<td>정밀 가치평가 제약</td>
+<td>원문 공시 대조 전 목표주가 확정 유보</td>
+</tr>
+<tr>
+<td>내부자 거래</td>
+<td>최신 제공 거래는 9월 10일</td>
+<td>최근 일주일 신호 판단 불가</td>
+<td>최신 신고와 거래 후 보유량 확인</td>
+</tr>
+<tr>
+<td>종합 관점</td>
+<td>고성장·대규모 적자·현금 소진 병존</td>
+<td>중립적이고 조건부인 평가가 적절</td>
+<td>추가 매수 판단 전 현금흐름과 공시 검증 우선</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. 투자 검토팀 판단</h2><h3 id="s2-1">상승론 분석가</h3>
+<p>Bull Analyst: <strong>투자 의견</strong>: 매수</p>
+<h5>IONQ 강세론: 주가의 하락과 사업의 후퇴를 혼동해서는 안 됩니다</h5>
+<p>약세 분석가가 아직 발언하지 않았으니, 먼저 핵심 쟁점을 제시하겠습니다. <strong>IONQ의 차트는 분명 약합니다. 그러나 제공된 자료에서 사업까지 위축되고 있다는 증거는 찾기 어렵습니다. 오히려 매출 규모 확대와 연간 전망 상향이 확인됩니다.</strong></p>
+<p>제 강세론은 “많이 떨어졌으니 오른다”가 아닙니다. <strong>상업화 속도가 빨라지는 기업을 시장이 업종 위험, 현금 소진, 경영진 교체 우려와 함께 할인하고 있으며, 그 과정에서 장기 성장 기회가 생길 수 있다</strong>는 주장입니다.</p>
+<p>다만 아래 수치는 제공된 보고서를 기준으로 하며, 일부 재무자료의 불일치와 뉴스 원문 미검증이라는 한계가 있습니다. 따라서 제 매수 의견은 단기 반등 확신이 아니라, <strong>공시 검증과 위험 통제를 전제로 하는 장기·분할 매수 관점</strong>입니다.</p>
+<h5>1. 가장 강력한 근거는 기대감이 아니라 매출 규모의 변화입니다</h5>
+<p>IONQ의 성장 수치를 먼저 보겠습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align:right">제공 자료의 수치</th>
+<th>강세 관점의 의미</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026년 3분기 매출</td>
+<td style="text-align:right">약 1억 7,400만 달러</td>
+<td>초기 연구기업 수준을 넘어 상업적 규모 확대</td>
+</tr>
+<tr>
+<td>전년 동기 대비 매출 증가율</td>
+<td style="text-align:right">약 335%</td>
+<td>사업 확장의 속도가 매우 빠름</td>
+</tr>
+<tr>
+<td>전분기 대비 매출 증가율</td>
+<td style="text-align:right">약 117.5%</td>
+<td>최근 분기에도 성장 가속</td>
+</tr>
+<tr>
+<td>2026년 1~3분기 누적 매출</td>
+<td style="text-align:right">3억 1,900만 달러</td>
+<td>전년 같은 기간 대비 약 362% 증가</td>
+</tr>
+<tr>
+<td>보도된 연간 매출 전망</td>
+<td style="text-align:right">5억 500만~5억 1,500만 달러로 상향</td>
+<td>경영진이 추가 매출 확대를 예상한다는 신호</td>
+</tr>
+</tbody>
+</table></div>
+<p>약세 측에서는 “인수 효과나 일회성 시스템 인도가 섞였을 수 있다”고 지적할 것입니다. 맞습니다. <strong>이 증가율 전체를 유기적 성장이라고 주장할 수는 없습니다.</strong> 하지만 구성 확인이 필요하다는 사실과, 이미 발생한 매출 확대를 무의미하게 취급하는 것은 다른 문제입니다.</p>
+<p>반올림된 누적 매출과 보도된 연간 전망을 연결하면, 전망 달성에 필요한 4분기 매출은 약 <strong>1억 8,600만~1억 9,600만 달러</strong>입니다. 이는 3분기보다 약 <strong>7~13% 높은 수준</strong>입니다.</p>
+<p>즉, 연간 전망은 또 한 번의 분기 매출 두 배 증가를 요구하는 구조가 아닙니다. <strong>3분기에 확보한 매출 규모를 유지하고 추가 성장하는 것</strong>이 핵심입니다. 물론 이것이 전망 달성을 보장하지는 않지만, 성장 경로의 현실성을 평가할 중요한 기준입니다.</p>
+<h5>2. “적자가 크다”는 반론은 맞지만, 비용과 매출의 속도 차이도 봐야 합니다</h5>
+<p>IONQ의 3분기 영업손실은 <strong>4억 3,300만 달러</strong>입니다. 이를 가볍게 볼 생각은 없습니다. 순이익 <strong>5억 6,400만 달러</strong>도 본업의 수익성 근거로 사용하지 않겠습니다. 영업손익과의 괴리가 너무 크기 때문입니다.</p>
+<p>그렇지만 분기 변화를 보면 다른 면도 있습니다.</p>
+<ul>
+<li>매출은 전분기 대비 <strong>117.5% 증가</strong>했습니다.</li>
+<li>영업손실은 전분기 대비 <strong>28.5% 증가</strong>했습니다.</li>
+<li>영업이익률은 약 <strong>-421%에서 -249%로 개선</strong>됐습니다.</li>
+</ul>
+<p>제 주장은 수익성 전환이 임박했다는 것이 아닙니다. <strong>최근 분기에는 매출이 손실보다 훨씬 빠르게 증가했다</strong>는 것입니다. 초기 확장 기업에서 관찰해야 할 방향성입니다.</p>
+<p>약세 측이 절대 손실만 강조한다면 저는 이렇게 묻겠습니다.</p>
+<blockquote>
+<p>“매출이 급증하면서 손실률이 개선된 사실도 평가에 반영해야 하지 않습니까?”</p>
+</blockquote>
+<p>다만 한 분기의 변화만으로 지속적인 영업 레버리지를 입증할 수는 없습니다. 다음 단계는 높은 매출을 유지하면서 <strong>절대 영업손실과 현금 유출까지 줄이는 것</strong>입니다.</p>
+<h5>3. 경쟁력은 ‘확정된 독점’이 아니라 기술 차별화와 검증 기회에 있습니다</h5>
+<p>제공된 자료만으로 IONQ의 시장점유율 우위나 경쟁사 대비 성능 우위를 확정할 수는 없습니다. 그렇다고 경쟁력의 기반이 없는 것도 아닙니다.</p>
+<p><strong>첫째, 이온트랩 기반 기술이라는 차별화된 접근이 있습니다.</strong><br />
+이는 양자컴퓨팅 시장에서 다른 구현 방식과 경쟁할 기술적 선택지를 제공합니다. 다만 실제 우위는 오류율, 시스템 확장성, 처리 성능과 고객 활용 결과로 입증해야 합니다.</p>
+<p><strong>둘째, DARPA 양자 벤치마킹 이니셔티브 Stage C 관련 진전 보도는 긍정적인 검증 신호입니다.</strong><br />
+이를 기술 검증 완료나 대규모 정부 수주로 확대 해석해서는 안 됩니다. 그러나 외부 검증 과정의 진전은 기술 실행 위험을 평가할 근거를 늘려줍니다.</p>
+<p><strong>셋째, ‘walking cat’ 오류내성 설계는 장기 상용화의 핵심 문제를 겨냥합니다.</strong><br />
+양자컴퓨팅의 투자 가치는 단순한 장비 개발이 아니라, 유용한 계산을 신뢰성 있게 제공할 수 있는지에 달려 있습니다. 해당 설계의 실제 성과가 검증된다면 기술 차별화가 경제적 가치로 연결될 가능성이 있습니다.</p>
+<p>보안·네트워킹 활용처도 추가 시장 기회입니다. 다만 현재 자료에서는 관련 기대와 소셜 의견의 비중이 크므로, <strong>확정 매출이 아니라 장기 선택권 가치</strong>로 평가하는 것이 타당합니다.</p>
+<h5>4. 가장 무거운 반론인 현금 소진에도, 결론은 구분해야 합니다</h5>
+<p>약세 측의 가장 설득력 있는 지적은 유동성입니다.</p>
+<p>IONQ의 3분기 단순 잉여현금 유출은 <strong>3억 3,100만 달러</strong>, 분기 말 현금은 <strong>2억 900만 달러</strong>입니다. 이 수치만 보면 우려가 큽니다.</p>
+<p>하지만 “현금이 약 두 달치뿐이므로 자금 고갈이 임박했다”는 결론은 불완전합니다.</p>
+<ul>
+<li>유동자산: <strong>15억 3,800만 달러</strong></li>
+<li>유동부채: <strong>3억 6,300만 달러</strong></li>
+<li>유동비율: 약 <strong>4.24배</strong></li>
+<li>운전자본: 약 <strong>11억 7,500만 달러</strong></li>
+</ul>
+<p><strong>현금만으로 전체 유동성을 판단해서는 안 됩니다.</strong> 동시에 현금 외 유동자산을 모두 즉시 사용할 수 있는 자금으로 취급해서도 안 됩니다. 단기투자자산, 매출채권 등의 구성을 확인해야 합니다.</p>
+<p>따라서 정확한 판단은 “즉각적인 지급불능이 입증됐다”가 아니라, <strong>유동자산의 질과 현금 전환 능력을 시급히 검증해야 한다</strong>입니다.</p>
+<p>희석 위험도 마찬가지입니다. 기업 매출 증가만으로 주주가치 증가가 보장되지는 않습니다. 향후에는 매출뿐 아니라 <strong>주당 매출 성장과 현금 소진 대비 사업 성과</strong>가 중요합니다.</p>
+<h5>5. 높은 가치평가와 약한 차트—반박보다 투자 방식을 조정할 문제입니다</h5>
+<p>“IONQ는 비싸다”는 주장에는 일리가 있습니다. 제공된 시가총액과 최근 12개월 매출을 적용하면 매출배수는 약 <strong>30.2배</strong>입니다.</p>
+<p>다만 보도된 연간 매출 전망의 중간값인 <strong>5억 1,000만 달러</strong>를 적용하면 약 <strong>22.5배</strong>입니다. 여전히 높지만, 빠른 성장이 배수를 낮추는 속도도 평가해야 합니다. 이는 서로 다른 기준 시점의 제공 수치를 조합한 참고 계산이지 정밀 가치평가는 아닙니다.</p>
+<p>저는 IONQ를 현재 실적 대비 저렴한 종목이라고 주장하지 않습니다. <strong>높은 가격을 정당화할 만큼 성장할 가능성에 투자하는 종목</strong>이라고 봅니다. 따라서 성장 둔화나 과도한 희석이 나타나면 강세론도 약해집니다.</p>
+<p>차트 역시 부정하지 않겠습니다. 최신 검증 종가 <strong>24.84달러</strong>는 주요 이동평균 아래이며, RSI와 MACD도 약세입니다. 그러나 이는 <strong>진입 시점의 위험</strong>을 보여주는 것이지 장기 사업가치 하락을 독립적으로 증명하지는 않습니다.</p>
+<p>실행에서는 다음을 구분할 필요가 있습니다.</p>
+<ul>
+<li><strong>25.13달러 부근:</strong> 당시 볼린저 하단 재진입 여부</li>
+<li><strong>26.43~26.45달러:</strong> 최근 가격대 회복 여부</li>
+<li><strong>29.56달러 부근:</strong> 당시 10일 EMA 회복·유지 여부</li>
+</ul>
+<p>모두 고정 목표가가 아닌 관찰 기준이며, 주문 전 갱신해야 합니다. ATR이 주가의 약 **11.2%**인 만큼, 작은 비중과 단계적 진입이 중요합니다.</p>
+<h5>결론: IONQ는 위험이 사라진 뒤가 아니라, 성장의 지속성을 검증하며 접근할 종목입니다</h5>
+<p>약세 논리는 <strong>현재의 손실, 현금 소진, 차트 약세</strong>를 정확히 짚습니다. 하지만 그것만으로 투자 판단이 끝나지는 않습니다. 강세 논리는 다음 사실에 기반합니다.</p>
+<ol>
+<li><strong>매출이 실제로 빠르게 확대되고 있습니다.</strong></li>
+<li><strong>연간 전망이 상향됐다는 보도가 있습니다.</strong></li>
+<li><strong>최근 분기에는 매출이 영업손실보다 빠르게 증가했습니다.</strong></li>
+<li><strong>기술 검증 진전이 장기 상용화 가능성을 뒷받침합니다.</strong></li>
+<li><strong>업종 동반 매도가 IONQ 자체의 수요 악화를 의미하지는 않습니다.</strong></li>
+</ol>
+<p>제 판단은 <strong>고위험을 감수할 수 있는 장기 투자자의 제한적·분할 매수</strong>입니다. 유동자산 구성, 매출의 반복성, 희석 수준을 공시에서 확인하고 가격 안정에 따라 비중을 확대하는 접근을 지지합니다.</p>
+<p>반대로 매출 전망 하향, 유동자산의 낮은 현금화 가능성, 지속적인 현금 소진 가속이 확인되면 강세론을 재평가해야 합니다. <strong>IONQ를 사야 할 이유는 하락 그 자체가 아니라, 그 하락 속에서도 확인되는 사업 규모 확대입니다.</strong></p>
+<p>최종 매매 제안: 매수</p>
+<h3 id="s2-2">하락론 분석가</h3>
+<p>Bear Analyst: <strong>투자 의견</strong>: 매도</p>
+<h5>IONQ 약세론: 사업이 성장한다는 사실만으로, 지금 주식을 사야 하는 것은 아닙니다</h5>
+<p>강세 분석가의 출발점에는 동의합니다. <strong>주가 하락과 사업의 후퇴는 같은 일이 아닙니다.</strong> 하지만 그 반대도 성립합니다. <strong>매출 성장과 주주가치 증가는 같은 일이 아닙니다.</strong></p>
+<p>IONQ에 대한 제 약세론은 “양자컴퓨팅은 실패한다”가 아닙니다. <strong>성장의 반복성, 현금 전환 능력, 경쟁우위가 충분히 확인되지 않은 기업에 이미 높은 매출배수가 적용되고 있으며, 그 사이 손실과 현금 유출이 확대되고 있다</strong>는 것입니다.</p>
+<p>아래 판단은 제공된 2026년 11월 18일 기준 보고서에 근거합니다. 최신 확인 가격은 11월 17일 종가이며, 재무자료의 불일치와 뉴스 원문 미검증이라는 한계를 반영했습니다.</p>
+<h5>1. “매출이 335% 성장했다”—맞습니다. 그러나 무엇을 얼마나 비싸게 사고 있습니까?</h5>
+<p>강세 측은 IONQ의 3분기 매출 약 <strong>1억 7,400만 달러</strong>, 연간 전망 <strong>5억 500만~5억 1,500만 달러</strong>를 강조했습니다. 분명 긍정적입니다.</p>
+<p>하지만 투자 판단에는 두 번째 질문이 필요합니다.</p>
+<blockquote>
+<p>“그 성장을 확보하기 위해 현재 주주가 지불하는 가격과 부담하는 비용은 얼마입니까?”</p>
+</blockquote>
+<p>제공된 시가총액 약 <strong>114억 9,800만 달러</strong>를 적용하면:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>평가 기준</th>
+<th style="text-align:right">매출배수</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최근 12개월 매출 약 3억 8,044만 달러</td>
+<td style="text-align:right">약 30.2배</td>
+</tr>
+<tr>
+<td>연간 전망 중간값 5억 1,000만 달러</td>
+<td style="text-align:right">약 22.5배</td>
+</tr>
+</tbody>
+</table></div>
+<p>강세 측은 성장하면 배수가 낮아진다고 말합니다. 그러나 <strong>전망을 달성해도 22.5배라는 점이 문제</strong>입니다. 실적 달성 자체가 저평가를 만들어주지는 않습니다.</p>
+<p>단순 민감도 계산으로, 연간 매출이 5억 1,000만 달러에 도달하더라도 시장이 적용하는 주가매출비율이 15배라면 시가총액은 약 <strong>76억 5,000만 달러</strong>로, 제시된 시가총액보다 약 <strong>33% 낮습니다</strong>. 10배라면 약 <strong>56% 낮습니다</strong>.</p>
+<p>이는 적정 배수를 확정하거나 목표주가를 제시하는 계산이 아닙니다. <strong>매출 전망을 달성하면서도 가치평가 정상화만으로 상당한 하락이 가능하다</strong>는 설명입니다. 시점과 주식 수 변화 역시 별도로 확인해야 합니다.</p>
+<p>그리고 인수 기여도, 반복 매출 비중, 고객 집중도조차 확인되지 않은 상태라면, 높은 배수를 정당화할 증거는 아직 부족합니다.</p>
+<h5>2. “손실률 개선을 인정해야 하지 않습니까?”—인정합니다. 하지만 현금흐름은 반대 방향입니다</h5>
+<p>강세 분석가의 질문에 직접 답하겠습니다.</p>
+<p><strong>영업손실률이 약 -421%에서 -249%로 개선된 것은 긍정적입니다.</strong> 그러나 이를 지속 가능한 영업 레버리지의 초기 증거로 받아들이려면 현금흐름도 함께 봐야 합니다.</p>
+<p>단위는 백만 달러입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2026년 2분기</th>
+<th style="text-align:right">2026년 3분기</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">80</td>
+<td style="text-align:right">174</td>
+</tr>
+<tr>
+<td>영업손실</td>
+<td style="text-align:right">337</td>
+<td style="text-align:right">433</td>
+</tr>
+<tr>
+<td>영업현금 유출</td>
+<td style="text-align:right">104</td>
+<td style="text-align:right">315</td>
+</tr>
+<tr>
+<td>단순 잉여현금 유출</td>
+<td style="text-align:right">115</td>
+<td style="text-align:right">331</td>
+</tr>
+</tbody>
+</table></div>
+<p>매출이 9,400만 달러 증가하는 동안:</p>
+<ul>
+<li>영업손실은 <strong>9,600만 달러 증가</strong>했습니다.</li>
+<li>영업현금 유출은 <strong>2억 1,100만 달러 증가</strong>했습니다.</li>
+<li>3분기 영업현금 유출은 분기 매출의 약 **181%**였습니다.</li>
+</ul>
+<p>운전자본이나 일회성 지급이 영향을 줬을 가능성은 있습니다. 그렇기 때문에 원인을 확인해야 합니다. <strong>그 설명이 없는 상태에서 손실률 개선은 투자 근거로 채택하고 현금흐름 악화는 일시적일 수 있다고 넘기는 것은 비대칭적인 해석</strong>입니다.</p>
+<p>누적으로도 문제는 남습니다. 1~3분기 매출은 <strong>3억 1,900만 달러</strong>인데, 영업손실은 <strong>10억 4,200만 달러</strong>, 단순 잉여현금 유출은 <strong>6억 500만 달러</strong>입니다.</p>
+<p>IONQ는 사업 규모를 키우고 있습니다. 그러나 아직 <strong>성장할수록 외부 자본에 대한 의존이 줄어드는 사업</strong>이라는 증거는 없습니다.</p>
+<h5>3. 유동비율 4.24배는 파산론을 반박하지만, 매수론을 입증하지는 않습니다</h5>
+<p>강세 측의 유동성 지적은 정확합니다. 현금 <strong>2억 900만 달러</strong>만 보고 자금 고갈이 임박했다고 단정해서는 안 됩니다. 유동자산 <strong>15억 3,800만 달러</strong>와 유동비율 <strong>4.24배</strong>를 무시할 수 없습니다.</p>
+<p><strong>저 역시 즉각적인 지급불능을 주장하지 않습니다.</strong></p>
+<p>다만 주식 투자자의 질문은 “당장 파산하는가?”보다 넓습니다.</p>
+<blockquote>
+<p>“사업이 자립할 때까지 얼마나 많은 자산을 소모하고, 기존 주주의 몫이 얼마나 줄어들 수 있는가?”</p>
+</blockquote>
+<p>제공된 자료에서 확인되는 변화는 다음과 같습니다.</p>
+<ul>
+<li>현금 및 현금성자산: 전분기 대비 약 <strong>83.1% 감소</strong></li>
+<li>유동자산: 약 <strong>36.2% 감소</strong></li>
+<li>유동부채: 약 <strong>60.6% 증가</strong></li>
+<li>3분기 단순 잉여현금 유출: <strong>3억 3,100만 달러</strong></li>
+</ul>
+<p>현금 감소 전체를 영업손실로 설명할 수는 없습니다. 투자증권 거래나 다른 투자활동의 내역이 필요합니다. 그렇더라도 <strong>유동성 완충자산이 있다는 사실과 그 완충자산을 빠르게 소모해도 괜찮다는 주장은 다릅니다.</strong></p>
+<p>추가 자금조달이나 주식보상이 확대되면 기업 전체의 매출은 성장해도 주당 가치는 기대에 못 미칠 수 있습니다. 향후 희석 규모가 확인되지 않았다는 것은 위험이 없다는 뜻이 아니라, <strong>아직 가격에 반영할 위험의 크기를 계산하기 어렵다는 뜻</strong>입니다.</p>
+<h5>4. 기술 차별화는 인정하지만, 경쟁우위에 지불하는 가격은 검증이 필요합니다</h5>
+<p>강세 측은 이온트랩 기술, DARPA Stage C 관련 진전, ‘walking cat’ 설계를 장기 선택권 가치로 평가했습니다.</p>
+<p>가능성은 있습니다. 그러나 <strong>다른 기술을 사용한다는 사실은 경쟁사를 경제적으로 이긴다는 뜻이 아닙니다.</strong></p>
+<p>제공된 자료에는 다음 핵심 근거가 없습니다.</p>
+<ul>
+<li>경쟁 방식 대비 성능·확장성·비용 우위</li>
+<li>고객의 실제 활용 성과와 재구매율</li>
+<li>반복 매출과 계약 갱신의 안정성</li>
+<li>기술 진전이 매출총이익과 현금흐름에 연결되는 경로</li>
+</ul>
+<p>따라서 IONQ가 경쟁에서 뒤처졌다고 단정할 수는 없지만, <strong>현재의 높은 배수를 방어할 경쟁우위도 입증되지 않았습니다.</strong></p>
+<p>DARPA 관련 진전 역시 기술 검증 완료나 대규모 수주와 같지 않습니다. 보안·네트워킹의 잠재시장도 확정된 수익원이 아닙니다.</p>
+<p>강세 측이 말하는 “장기 선택권”에는 유지 비용이 있습니다. <strong>그 가능성이 현실화될 때까지 발생하는 연구개발비, 운영비, 잠재적 희석을 기존 주주가 부담합니다.</strong></p>
+<h5>5. 약한 차트는 사업 실패의 증거가 아니라, 지금 서두를 이유가 부족하다는 증거입니다</h5>
+<p>강세 측은 차트 약세를 진입 방식으로 관리할 문제라고 했습니다. 그러나 분할 매수는 진입가격을 분산할 뿐, <strong>높은 가치평가와 지속적인 현금 소진을 해결하지 못합니다.</strong></p>
+<p>최신 확인 종가 <strong>24.84달러</strong>는:</p>
+<ul>
+<li>10일 지수이동평균 <strong>29.56달러</strong></li>
+<li>50일 단순이동평균 <strong>35.78달러</strong></li>
+<li>200일 단순이동평균 <strong>41.10달러</strong></li>
+</ul>
+<p>모두를 하회합니다. 11월 9일 종가 <strong>35.34달러</strong>에서 약 <strong>29.7% 하락</strong>했고, 최근 반등도 유지되지 못했습니다. RSI는 약 <strong>34.7</strong>, MACD 히스토그램은 음수입니다.</p>
+<p>이것이 기업가치 하락을 독립적으로 입증하지는 않습니다. 다만 <strong>성장 호재가 이미 알려진 상황에서도 가격 안정이 확인되지 않았다는 사실</strong>은 매수를 서두르지 않을 이유가 됩니다.</p>
+<p>소매 낙관론도 강한 반증이 아닙니다. StockTwits의 상승 태그 14개 중 5개는 한 계정이 작성했고, 전체 표본은 약 3시간 반에 집중돼 있습니다. 이를 폭넓은 매수 수요나 바닥 확인으로 해석하기 어렵습니다.</p>
+<p>다만 볼린저 하단 이탈과 주가 대비 약 <strong>11.2%의 ATR</strong>은 급반등 위험도 보여줍니다. <strong>매수 반대와 즉시 공매도는 별개입니다.</strong></p>
+<h5>6. 강세론의 핵심 확인 조건들이 아직 충족되지 않았습니다</h5>
+<p>강세 분석가는 공시 검증과 위험 통제를 전제로 매수를 권했습니다. 저는 그 순서에 반대합니다.</p>
+<p><strong>매출의 반복성, 유동자산의 질, 현금 소진의 원인, 주당 성장률은 매수 후 점검할 부수 항목이 아니라 높은 가격을 지불하기 전에 확인할 핵심 조건입니다.</strong></p>
+<p>CFO 교체가 회계 문제라는 증거는 없습니다. 그러나 재무자료 불일치와 현금흐름 설명이 중요한 시점의 재무책임자 전환은 불확실성을 추가합니다. 금리 하락이나 업종 반등 역시 현재 확인된 구제책으로 삼을 수 없습니다.</p>
+<p>제 약세 의견이 약해지려면 다음이 필요합니다.</p>
+<ol>
+<li>인수 효과를 분리한 유기적·반복 매출 성장 확인</li>
+<li>높은 매출을 유지하면서 절대 영업손실과 현금 유출 감소</li>
+<li>유동자산 구성과 자금조달 계획의 명확한 공개</li>
+<li>희석을 반영한 주당 사업가치 개선</li>
+<li>상업적 경쟁우위의 검증 또는 더 보수적인 가치평가</li>
+</ol>
+<h5>결론: IONQ의 성장 가능성보다, 그 가능성에 지불하는 가격이 문제입니다</h5>
+<p><strong>좋은 기술이 좋은 사업으로 이어질 수는 있지만, 좋은 사업도 지나치게 높은 가격에 사면 나쁜 투자가 될 수 있습니다.</strong></p>
+<p>IONQ는 매출 성장이라는 긍정적 사실과 함께, 더 큰 절대 손실, 가속된 현금 유출, 검증되지 않은 성장의 질, 높은 매출배수를 동시에 갖고 있습니다. 강세론은 이 문제들이 향후 개선될 가능성에 투자합니다. 제 판단은 <strong>현재 가격에서는 그 개선을 너무 많이 선반영하고 있다</strong>는 것입니다.</p>
+<p>따라서 신규 투자자는 매수를 보류하고, 기존 보유자는 반등 기대보다 비중 축소와 총위험 점검을 우선하는 편이 낫습니다. 정밀한 목표주가를 제시할 만큼 자료가 일관되지는 않지만, <strong>그 불확실성은 매수의 근거가 아니라 더 큰 안전마진을 요구할 이유</strong>입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s2-3">투자 검토 책임자</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>판단 근거</strong>: IONQ는 매출 급증과 연간 전망 상향 보도, 영업손실률 개선이라는 강세 근거가 있습니다. 다만 제공된 수치상 매출이 전분기 대비 9,400만 달러 늘 때 절대 영업손실은 9,600만 달러 증가했고, 단순 잉여현금 유출은 1억 1,500만 달러에서 3억 3,100만 달러로 확대됐습니다. 연간 매출 전망 중간값 기준 약 22.5배의 시가총액/매출 배수는 성장의 반복성, 유기적 성장, 희석 부담이 확인되지 않은 상태에서 높은 기대를 요구합니다. 따라서 현 단계에서는 약세 측의 가격·현금흐름 논리가 더 설득력 있습니다. 그러나 유동자산 구성이 확인되지 않아 지급불능을 단정할 수 없고, 빠른 매출 성장과 기술적 선택권도 있어 전량 처분보다 비중 축소가 적절합니다. 판단은 제공된 보고서에만 근거하며, 재무자료 불일치, 뉴스 원문 미검증, 가격·시가총액 기준 시점 차이로 확신은 제한됩니다. 제시된 2026년 11월 17일 가격을 현재 주문 가격으로 간주하지 않습니다.</p>
+<p><strong>대응 계획</strong>: IONQ 목표 비중을 표준 배정의 50%로 제한합니다. 실제 보유량은 트레이더와 포트폴리오 매니저가 확인하여 초과분을 2~3회 지정가 주문으로 축소하고, 이미 목표 이하이거나 미보유라면 목표를 채우기 위한 신규 매수는 하지 않습니다. 제시된 주가 대비 ATR 약 11.2%를 고려하여 시장가 일괄 매도와 신규 공매도는 피하고, 반등을 반드시 기다리지는 않습니다. 주문 전 실행 시스템에서 현재 호가·유동성을 확인하며, 과거 가격 24.84달러와 이동평균을 현재 유효한 주문 기준으로 사용하지 않습니다. 다음 공시에서 인수 효과를 제외한 반복 매출, 유동자산 중 사용 가능한 현금·단기투자자산, 현금유출 원인, 자금조달 및 희석을 확인합니다. 매출 수준 유지와 절대 영업손실·현금 유출 감소가 함께 확인되고 가치평가가 이를 뒷받침하면 표준 배정의 75%, 이후 100%로 단계적 복원을 재검토합니다. 전망 하향이나 현금 유출 가속 및 가용 유동성 악화가 확인되면 표준 배정의 25% 이하 또는 청산을 재검토합니다. 현재 자료로는 신뢰할 목표주가나 고정 손절가를 산출하지 않습니다.</p>
+</section><section id="s3"><h2>III. 매매 계획</h2><h3 id="s3-1">매매 담당</h3>
+<p><strong>대응</strong>: 매도</p>
+<p><strong>판단 근거</strong>: IONQ는 매출 성장에도 절대 영업손실과 현금 유출이 확대되어 연구 계획의 비중 축소 방향이 타당하며, 종가 24.84달러가 주요 이동평균 아래이고 MACD 히스토그램도 음수여서 기술적 구조 역시 이를 뒷받침합니다. 다만 볼린저 하단 이탈과 ATR 2.78298달러는 급반등 및 체결 위험을 시사하므로 전량 시장가 매도나 신규 공매도보다 초과 보유분의 분할 축소를 권고합니다. 2026년 11월 17일 이후 시세와 실제 보유 비중이 제공되지 않았으므로 과거 가격을 현재 주문가로 쓰거나 고정 손절가를 설정하지 않습니다.</p>
+<p><strong>진입 가격</strong>: 제시되지 않음</p>
+<p><strong>손절 기준</strong>: 제시되지 않음</p>
+<p><strong>보유 비중 계획</strong>: IONQ 목표 비중은 표준 배정의 50%로 제한합니다. 실제 보유 비중이 이를 초과하면 초과분만 현재 호가와 유동성 확인 후 2~3회 지정가 주문으로 축소하고, 목표 이하이거나 미보유이면 신규 매수 및 신규 공매도를 하지 않습니다.</p>
+<p>최종 매매 제안: <strong>매도</strong></p>
+</section><section id="s4"><h2>IV. 위험 관리팀 판단</h2><h3 id="s4-1">적극적 위험 분석가</h3>
+<p>적극적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 IONQ의 초과 보유분을 분할 매도한다는 결정을 지지합니다. 공격적 투자는 무조건 위험자산을 더 사는 것이 아닙니다. 높은 보상을 받을 근거가 약해진 노출은 줄이고, 다음 기회에 투입할 자본과 선택권을 확보하는 것도 공격적인 전략입니다. 이번 판단의 핵심은 IONQ의 성장 가능성을 포기하는 것이 아니라, 장기 기술 잠재력과 지금 과도하게 보유할 이유를 구분하는 데 있습니다.</p>
+<p>보수적·중립적 분석가는 아직 발언하지 않았으므로, 그들이 하지 않은 주장을 반박하지는 않겠습니다. 대신 제공된 보고서의 보유 유지·Neutral 판단과, 전량 청산으로 기울 수 있는 보수적 해석이 놓치는 부분을 짚겠습니다.</p>
+<p>먼저 “성장과 위험이 혼재하므로 IONQ를 그대로 보유하자”는 중립적 결론은 초과 보유자에게 충분한 대응이 아닙니다. IONQ의 3분기 매출은 약 1억 7,400만 달러로 전년 대비 335% 증가했습니다. 하지만 영업손실은 4억 3,300만 달러, 분기 영업현금 유출은 3억 1,500만 달러입니다. 매출이 커지는 것과 주주에게 돌아갈 경제적 가치가 커지는 것은 다릅니다. 유기적 성장, 반복 매출, 현금 회수에 대한 검증이 부족한 상태에서 초과 비중까지 유지하는 것은 중립이 아니라 성장 기대에 대한 적극적인 베팅입니다. 저는 그 베팅의 일부를 회수하는 편이 낫다고 봅니다.</p>
+<p>기술적 증거도 단순 관망보다 비중 조정을 지지합니다. 제공된 11월 17일 스냅샷에서 IONQ 종가 24.84달러는 10일 EMA 29.56달러, 50일 SMA 35.78달러, 200일 SMA 41.10달러 아래입니다. 11월 9일 종가 35.34달러에서 약 29.7% 하락했고, MACD 히스토그램도 음수로 전환됐습니다. 이 지표들은 서로 연관돼 있으므로 독립적인 확률 증거처럼 합산할 수는 없습니다. 그래도 가격 구조와 모멘텀이 같은 약세 방향을 가리킨다는 점은 분명합니다. “정보를 더 확인하자”는 말이 초과 위험을 그대로 유지할 이유가 되지는 않습니다.</p>
+<p>반대로 보수적 관점이 IONQ의 손실 확대를 근거로 전량 청산을 주장한다면, 저는 그 결론에도 반대합니다. IONQ는 매출 성장뿐 아니라 영업손실률이 전년 동기 약 -422.5%에서 -248.9%로 개선됐습니다. 뉴스상 연간 매출 전망 상향과 DARPA Stage C 관련 진전도 장기 상승 가능성을 남깁니다. 이것들이 수익성이나 기술적 우위를 확정하지는 않지만, 미래 가치가 없다는 주장 역시 뒷받침하지 않습니다. 표준 배정의 절반 수준까지 노출을 제한하는 방식은 성장 시나리오에 참여할 여지를 남기면서 과도한 집중을 해소합니다. 다만 이 50%는 자료로 산출된 최적 비중이 아니라, 이번 거래안의 위험관리 기준입니다.</p>
+<p>“볼린저 하단을 이탈했으니 반등을 기다려야 한다”는 주장도 방향과 실행을 혼동합니다. IONQ의 ATR 2.78298달러는 당시 종가의 약 11.2%입니다. 급반등 가능성은 분명하지만, 그것이 초과 보유를 무기한 정당화하지는 않습니다. 오히려 전량 시장가 매도 대신 2~3회 지정가 주문으로 나눠 줄여야 할 이유입니다. 반등이 나오면 더 유리하게 축소할 기회가 될 수 있지만, 반등이 반드시 온다는 전제도 세워서는 안 됩니다. 지정가 주문 역시 미체결될 수 있으므로 최신 호가와 유동성에 맞춰 재검토해야 합니다.</p>
+<p>IONQ의 소매 투자자 낙관론은 매도 결정을 뒤집기보다 신규 공매도를 피할 근거에 가깝습니다. StockTwits에서는 방향을 표시한 메시지의 77.8%가 상승 태그였지만, 전체 표본은 30개뿐이고 한 계정이 상승 메시지 14개 중 5개를 작성했습니다. 종합 감성도 4.7/10, 신뢰도 낮음입니다. 이를 지속적인 매수세의 증거로 보기는 어렵습니다. 다만 작은 호재에도 반등 기대가 빠르게 되살아날 가능성은 경계해야 합니다. 따라서 기존 초과 노출 축소와 신규 하락 베팅은 전혀 다른 거래입니다. 저는 전자를 지지하고 후자는 지지하지 않습니다.</p>
+<p>재무 위험도 과장할 필요는 없습니다. IONQ의 현금 2억 900만 달러만 보고 자금 고갈이 임박했다고 단정하면 유동비율 4.24배와 현금 외 유동자산을 무시하게 됩니다. CFO 교체를 회계 문제로 연결할 증거도 없습니다. 그러나 이런 극단적 악재를 가정하지 않아도 매도 논거는 성립합니다. 절대 영업손실과 현금 유출 확대, 약한 가격 구조만으로도 초과 보유분을 줄일 이유는 충분합니다.</p>
+<p>실행은 명확합니다. IONQ의 실제 보유 비중이 표준 배정의 50%를 넘는 경우에만 초과분을 현재 호가와 유동성을 확인한 뒤 2~3회로 나눠 지정가 매도합니다. 이미 목표 이하이거나 미보유라면 이번 제안에 따른 신규 매수나 신규 공매도는 하지 않습니다. 제공된 시세는 2026년 11월 17일 기준이므로 24.84달러나 당시 이동평균을 현재 주문가·고정 손절가로 사용하지 않습니다.</p>
+<p>IONQ에서 높은 보상을 추구하는 가장 설득력 있는 길은 지금 무조건 버티거나 하락을 추격하는 것이 아닙니다. 초과 노출을 줄여 재투입 여력을 확보하고, 제한된 성장 노출은 유지하는 것입니다. 매출 성장이 현금흐름 개선으로 연결되고 가격 회복이 확인될 때 다시 위험을 확대할 선택권을 남긴다는 점에서, 이번 분할 매도가 단순 보유 유지보다 더 능동적인 전략입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-2">보수적 위험 분석가</h3>
+<p>보수적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>IONQ의 초과 보유분을 분할 매도한다는 방향에는 동의합니다. 다만 공격적 분석가가 제시한 “표준 배정의 절반을 남겨 성장 가능성에 참여한다”는 결론은 자산 보호 관점에서 한 단계 더 검증해야 합니다. 표준 배정의 50%라는 숫자는 위험이 충분히 낮아졌다는 증거가 아닙니다. 저는 이를 유지해야 할 목표가 아니라, 실제 손실 허용 범위에 따라 더 낮출 수 있는 잠정 상한으로 보겠습니다.</p>
+<p>공격적 분석가님, 전량 청산이 반드시 필요하지 않다는 점에는 동의합니다. 그러나 “미래 가치가 없다는 증거가 없다”는 것과 “현재 비중을 유지할 근거가 충분하다”는 것은 다릅니다. 보수적인 운용에서는 남겨 두는 IONQ 포지션 역시 자본 배정의 타당성을 입증해야 합니다. 장기 기술 잠재력은 남아 있지만, 그것만으로 현재의 현금 소진과 높은 가격 변동성을 상쇄할 수는 없습니다.</p>
+<p>특히 영업손실률 개선을 잔여 보유의 근거로 삼는 데에는 주의가 필요합니다. IONQ의 영업손실률이 전년 동기 약 -422.5%에서 -248.9%로 개선된 것은 긍정적입니다. 하지만 3분기 영업손실은 4억 3,300만 달러이고, 영업현금 유출은 3억 1,500만 달러입니다. 매출 대비 손실 비율이 낮아져도 사업을 유지하고 확대하는 데 필요한 절대 자금이 늘어난다면, 주주의 자금조달·희석 위험이 함께 줄었다고 볼 수 없습니다. 지속 가능한 성장의 확인 기준은 매출 증가율뿐 아니라 절대 손실과 현금 소진의 안정화여야 합니다.</p>
+<p>연간 매출 전망 상향과 DARPA 관련 진전도 같은 맥락입니다. IONQ의 성장 가능성을 인정할 이유는 되지만, 반복 매출이나 현금 회수, 상업적 우위를 확정하는 자료는 아닙니다. 제공된 자료로는 유기적 성장과 인수 기여도조차 충분히 구분되지 않습니다. 따라서 “성장 시나리오에 참여할 여지를 남기자”는 선택은 가능하더라도, 그 참여 규모는 기대수익보다 감당 가능한 손실을 먼저 기준으로 정해야 합니다.</p>
+<p>재무 위험을 과장하지 말자는 지적에는 동의합니다. IONQ의 유동비율은 약 4.24배이므로, 현금 2억 900만 달러만으로 자금 고갈이 임박했다고 주장해서는 안 됩니다. 그렇다고 높은 유동비율이 주가의 하방을 보호해 주는 것도 아닙니다. 현금 외 유동자산의 구성과 처분 가능성, 매출채권 회수, 향후 지급 의무를 확인해야 합니다. 지급능력을 유지하는 기업이라도 불리한 조건으로 자금을 조달하거나 성장 기대가 낮아지면 주주는 상당한 손실을 볼 수 있습니다.</p>
+<p>IONQ의 가치평가도 잔여 포지션을 자동으로 정당화하지 않습니다. 제공된 종합 수치에서 주가매출비율은 약 30.2배지만, 이익배수와 현금흐름 등에 데이터 불일치가 있습니다. 이 수치를 정밀한 현재 가치평가로 사용할 수는 없습니다. 다만 주가가 많이 하락했다는 사실만으로 저평가가 확인된 것은 아니라는 점은 분명합니다. CFO 교체 역시 회계 문제의 증거로 해석할 수는 없지만, 공식 공시와 승계 진행 상황을 확인하기 전 불확실성이 해소됐다고 볼 수도 없습니다.</p>
+<p>중립적 분석가는 아직 발언하지 않았으므로 특정 주장을 대신 만들어 반박하지는 않겠습니다. 다만 제공된 보고서의 보유 유지·Neutral 판단을 “현재 보유량 그대로 유지”로 적용하는 데에는 반대합니다. 기업에 대한 중립적 평가는 포트폴리오 위험에 대한 중립적 판단이 아닙니다. IONQ가 이미 집중 보유되어 있거나 다른 양자컴퓨팅·고변동성 기술주와 위험이 겹친다면, 추가 정보를 기다리는 동안에도 손실 노출은 계속됩니다. 정보 확인과 초과 비중 축소는 동시에 진행할 수 있습니다.</p>
+<p>실행에서는 공격적 분석가의 2~3회 지정가 매도에도 보완이 필요합니다. 분할 지정가는 체결 가격을 통제하는 데 도움이 되지만, 위험 축소를 보장하지는 않습니다. 시장에서 멀리 떨어진 매도 지정가를 걸고 반등만 기다리면 주문은 남아 있어도 IONQ 노출은 그대로입니다. 반대로 오래된 시세에 맞춰 주문을 내는 것도 부적절합니다. 최신 호가와 호가 깊이, 스프레드를 확인하고, 미체결 시 언제 주문을 재검토할지까지 정해야 합니다. 긴급한 위험 한도 초과라면 더 좋은 가격을 기다리는 것보다 노출 축소의 우선순위가 높습니다.</p>
+<p>제공된 11월 17일 기준 IONQ의 ATR은 종가의 약 11.2%입니다. 이는 큰 일상적 변동을 시사하지만 최대 손실 한도는 아닙니다. 볼린저 하단 이탈 역시 반등 가능성과 추가 하락 가능성을 함께 열어 둡니다. 따라서 신규 공매도를 피해야 한다는 판단에는 동의하지만, 급반등 가능성이 기존 보유 위험을 낮춰 주는 것은 아닙니다. 신뢰도가 낮은 소셜 낙관론이나 실제 금리 자료가 확인되지 않은 거시 전망도 잔여 보유의 안전판으로 삼지 않겠습니다.</p>
+<p>제가 권고하는 조정은 다음과 같습니다. IONQ의 허용 비중은 표준 배정의 50%와 포트폴리오 손실 예산으로 계산한 상한 중 더 낮은 값으로 정하십시오. 스트레스 상황에서 가정한 IONQ 하락률에 보유 비중을 곱하면 포트폴리오 손실 기여도를 대략 점검할 수 있습니다. 다만 이는 시나리오 계산일 뿐이며, 다른 보유자산의 동반 하락과 갭 위험도 별도로 반영해야 합니다. 표준 배정이나 손실 예산이 정의되어 있지 않다면 먼저 이를 정해야 합니다.</p>
+<p>실제 IONQ 비중이 이 상한을 넘으면 초과분을 최신 유동성에 맞춰 분할 축소하겠습니다. 이미 그 이하라면 자동으로 추가 매도하지 않되, 목표보다 적다는 이유로 채워 넣지도 않겠습니다. 미보유라면 신규 매수와 신규 공매도를 하지 않습니다. 매도 대금도 곧바로 다른 고변동성 테마에 재투입하기보다는 전체 유동성과 분산 상태부터 점검하는 편이 이번 위험 축소의 목적에 부합합니다.</p>
+<p>결론적으로 IONQ의 분할 매도는 지지하지만, “절반은 남긴다”보다 “감당 가능한 위험만 남긴다”가 우선입니다. 매출 성장의 질, 현금 소진 안정화, 유동자산 구성과 최신 가격 구조가 확인되기 전에는 잔여 비중을 확대하지 않겠습니다. 제공된 과거 가격을 현재 주문가나 고정 손절가로 사용하지 않는다는 원칙도 유지합니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-3">중립적 위험 분석가</h3>
+<p>중립적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 IONQ의 매도를 지지하되, 이를 “하락 전망에 대한 베팅”이 아니라 “허용 범위를 넘는 보유 위험의 조정”으로 한정하겠습니다. 공격적 분석가는 자본 회수의 이점을, 보수적 분석가는 손실 예산의 중요성을 잘 짚었습니다. 다만 두 분 모두 같은 매도 결론에 도달했다고 해서 매도 규모와 속도까지 자동으로 정당화되는 것은 아닙니다. 현재 보유 비중과 투자 기간을 모르는 만큼, 초과 보유자는 축소하고 이미 적정 규모인 보유자는 유지하는 조건부 대응이 더 타당합니다.</p>
+<p>공격적 분석가님, “단순 보유 유지보다 분할 매도가 능동적”이라는 말씀에는 조건이 필요합니다. IONQ가 과도하게 편입되어 있다면 맞지만, 이미 작은 비중으로 관리되고 있다면 거래하지 않는 것이 오히려 합리적인 위험관리일 수 있습니다. 능동성 자체가 투자 성과의 근거는 아닙니다. 매도에는 거래비용과 계좌별 세금 영향, 반등 참여 기회의 감소가 따르므로, 매도 여부는 행동의 적극성보다 줄일 위험의 크기로 판단해야 합니다.</p>
+<p>또한 IONQ의 절대 영업손실 확대만 강조하면 사업 규모 확대 과정에서 나타난 상대적 개선을 과소평가할 수 있습니다. 제공된 재무자료에서 3분기 매출은 전년 대비 약 335% 늘어난 반면 영업손실 증가율은 약 156%였고, 영업손실률은 약 -422.5%에서 -248.9%로 개선됐습니다. 이것이 수익성 확보를 뜻하지는 않지만, 비용이 매출보다 빠르게 악화되는 상황과는 구별해야 합니다. 반대로 분기 영업현금 유출 3억 1,500만 달러와 단순 잉여현금 유출 3억 3,100만 달러는 분명한 경고입니다. 균형 잡힌 결론은 “성장 논거가 소멸했다”가 아니라 “성장에 배정할 위험 예산을 낮춰야 한다”입니다.</p>
+<p>기술적 약세에 대한 공격적 분석가의 판단에는 동의합니다. IONQ의 제공된 11월 17일 종가 24.84달러는 주요 이동평균 아래이고 MACD 히스토그램도 음수입니다. 그러나 이 정보는 약세 추세를 보여줄 뿐, 앞으로의 하락 폭이나 현시점 매도의 기대수익을 계산해 주지는 않습니다. 볼린저 하단 이탈 역시 반등을 보장하지 않지만, 당시 ATR이 종가의 약 11.2%였다는 점은 매도 시점에 따른 결과 차이가 클 수 있음을 보여줍니다. 따라서 추세 판단을 곧바로 빠른 매도의 근거로 확대해서는 안 됩니다.</p>
+<p>보수적 분석가님, 표준 배정의 50%를 의무 보유량이 아니라 잠정 상한으로 보자는 제안은 적절합니다. 다만 손실 예산으로 계산한 상한 역시 객관적인 정답은 아닙니다. 가정한 스트레스 하락률을 크게 잡을수록 허용 비중은 작아지고, 최근 변동성 상승 때마다 이를 다시 계산하면 하락 후 매도를 반복할 수 있습니다. IONQ의 상한은 일관된 스트레스 시나리오와 전체 포트폴리오의 동반 하락 가능성으로 정하고, 하루의 가격 변화만으로 기계적으로 낮추지 않는 편이 낫습니다.</p>
+<p>또한 IONQ의 절대 손실과 현금 유출이 모두 감소할 때까지 기다리는 것은 비중 확대의 강한 확인 조건으로는 유용하지만, 소규모 기존 보유를 인정하는 필수 조건으로 삼으면 지나치게 엄격할 수 있습니다. 시장은 실제 손익 개선보다 먼저 반복 매출 증가나 현금 회수 개선을 반영할 수 있기 때문입니다. 제한된 기존 노출을 유지하는 데 필요한 증거와 신규 자금을 추가하는 데 필요한 증거를 구분해야 합니다. 물론 유동성 악화나 불리한 자금조달이 공식적으로 확인된다면 잔여 보유의 타당성도 다시 판단해야 합니다.</p>
+<p>두 분이 공통으로 경계한 재무자료의 한계는 특히 중요합니다. IONQ의 현금 2억 900만 달러만으로 자금 고갈을 단정할 수 없고, 유동비율 4.24배만으로 안전하다고 할 수도 없습니다. 현금 외 유동자산의 구성과 처분 가능성, 현금 유출의 일회성 여부를 확인해야 합니다. 이익배수와 현금흐름 자료에도 불일치가 있으므로, 제공된 주가매출비율 약 30.2배는 높은 기대가 반영됐다는 참고 자료이지 현재 적정가치를 확정하는 근거가 아닙니다. CFO 교체도 공식 설명을 확인할 사안이지 회계 문제를 추정할 근거는 아닙니다.</p>
+<p>거시환경은 매도 강도를 높이는 확정적 근거로 쓰지 않겠습니다. 제공된 보고서에서는 실제 국채금리와 물가 자료를 확인하지 못했습니다. 예측시장의 연내 무인하 확률 98%도 다음 회의의 정책이나 IONQ의 할인율을 직접 보여주지 않습니다. 금리 상승과 기술주 위험 회피는 IONQ에 부담이고, 금리 하락과 업종 안정은 우호적일 수 있다는 조건부 해석이 적절합니다. 특히 금리가 내려가더라도 경기 둔화로 고객 연구 예산이 줄어든다면 효과가 상쇄될 수 있습니다.</p>
+<p>감성 자료도 방향 결정의 중심에 두지 않겠습니다. IONQ의 종합 감성은 4.7/10이고 신뢰도가 낮습니다. StockTwits 상승 태그 우세는 짧은 관측 구간과 반복 계정의 영향을 받았으며, Reddit 수집 실패는 투자자 관심 부재를 뜻하지 않습니다. 이 자료는 매수세나 급반등을 입증하기보다 단기 심리가 불안정하다는 보조 신호입니다.</p>
+<p>그래서 거래안은 다음처럼 조정하겠습니다. IONQ의 표준 배정이 이미 정의되어 있다면 그 50%를 잠정 상한으로 사용하되, 전체 손실 예산과 다른 고변동성 기술주 노출을 함께 점검합니다. 표준 배정 자체가 없다면 “절반 매도”부터 실행하지 말고 먼저 포트폴리오 대비 허용 비중을 정해야 합니다. 표준 배정의 절반과 현재 보유량의 절반은 전혀 다른 의미입니다.</p>
+<p>실제 IONQ 비중이 상한을 넘는 경우에만 초과분을 2~3회로 나눠 축소합니다. 첫 주문은 현재 호가와 유동성을 확인한 뒤 실행하고, 나머지는 당일 체결 상황과 가격 움직임을 보며 조정하는 방식이 적절합니다. 반등만 기다리는 먼 지정가는 피하고, 미체결 주문은 적어도 해당 거래일 종료 전 재검토하십시오. 손실 한도를 크게 넘은 상황이라면 가격 개선보다 위험 축소를 우선하되, 분할 자체를 지키려고 노출을 오래 방치하지 않아야 합니다.</p>
+<p>이미 IONQ가 허용 상한 이하라면 이번 판단만으로 추가 매도하지 않겠습니다. 상한보다 적다는 이유로 채워 넣지도 않으며, 미보유라면 신규 매수와 신규 공매도를 하지 않습니다. 매도 대금은 다른 양자컴퓨팅 종목으로 곧바로 옮기기보다, 필요한 유동성과 기존 기술주 집중도를 먼저 점검한 뒤 현금성 자산이나 더 넓게 분산된 자산에 배분할 수 있습니다. 종목만 바꾸고 같은 테마 위험을 유지하면 축소의 효과가 제한됩니다.</p>
+<p>IONQ의 재평가는 가격과 사업을 함께 보겠습니다. 갱신된 지표에서 볼린저 밴드 재진입, 저점 안정, 단기 이동평균 회복이 나타나고, 공식 자료에서 매출의 반복성과 현금 회수가 개선된다면 추가 축소를 중단할 근거가 강화됩니다. 반대로 현금 소진 가속이나 불리한 희석이 확인되면 허용 비중 자체를 낮출 수 있습니다. 제공된 2026년 11월 17일 가격과 지표는 현재 주문가나 고정 손절가로 사용하지 않겠습니다.</p>
+<p>결론적으로 IONQ에서는 공격적 분석가의 “성장 참여를 남긴다”와 보수적 분석가의 “감당 가능한 위험만 남긴다”를 함께 적용해야 합니다. 다만 성장 참여를 위해 반드시 절반을 보유할 필요도, 불확실성 때문에 적정 규모의 보유까지 자동 청산할 필요도 없습니다. 초과분만 줄이고, 남은 비중은 일관된 위험 예산과 새로운 증거로 관리하는 조건부 매도이 가장 균형 잡힌 선택입니다.</p>
+<p>최종 매매 제안: 매도</p>
+</section><section id="s5"><h2>V. 최종 투자 판단</h2><h3 id="s5-1">투자 총괄</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>핵심 요약</strong>: IONQ는 전량 청산보다 초과 비중 축소가 타당합니다. 허용 비중은 사전에 정의한 표준 배정의 50%와 일관된 스트레스 시나리오에 따른 포트폴리오 손실 예산상 상한 중 낮은 값으로 정하고, 이를 넘는 보유분만 최신 호가·유동성을 확인해 2~3회 지정가 주문으로 줄이십시오. 이미 상한 이하이거나 미보유라면 신규 매수·신규 공매도는 하지 않으며, 미체결 주문은 해당 거래일 종료 전 재검토하고 중대한 위험 한도 초과 시 가격 개선보다 노출 축소를 우선합니다. 다음 공식 실적·유동성 공시까지 재평가하되, 현재 가격과 보유 내역이 없으므로 고정 손절가나 목표주가는 제시하지 않습니다.</p>
+<p><strong>투자 근거</strong>: IONQ에 대한 약세 논거는 성장 부재가 아니라 성장에 비해 큰 절대 손실과 현금 소진입니다. 제공된 3분기 매출은 약 1억 7,400만 달러로 전년 대비 335% 증가했지만 영업손실은 4억 3,300만 달러, 영업현금 유출은 3억 1,500만 달러였습니다. 연구 계획에 따르면 전분기 대비 매출이 9,400만 달러 늘 때 영업손실은 9,600만 달러 증가했고, 단순 잉여현금 유출은 1억 1,500만 달러에서 3억 3,100만 달러로 확대됐습니다. 유기적 성장·반복 매출·현금 회수가 검증되지 않은 상태에서는 추가 위험 배정보다 노출 축소가 우세합니다.</p>
+<p>반대 근거도 유효합니다. IONQ의 영업손실률은 전년 동기 약 -422.5%에서 -248.9%로 개선됐고, 연간 매출 전망 상향 및 DARPA Stage C 관련 진전 보도는 성장 선택권을 남깁니다. 따라서 분석가들이 사용한 매도라는 명칭보다는 초과 보유분만 줄이고 제한된 기존 노출을 허용한다는 실제 권고를 따르는 비중 축소가 적절합니다. 표준 배정의 50%는 최적 비중이나 의무 보유량이 아니라 잠정 상한이며, 표준 배정이 없다면 먼저 포트폴리오 대비 위험 한도를 정해야 합니다.</p>
+<p>IONQ의 제공된 2026년 11월 17일 스냅샷에서 종가 24.84달러는 주요 이동평균 아래였고 MACD 히스토그램도 음수였습니다. 이는 당시 약세 구조를 뒷받침하지만 현재 추세를 입증하지는 않습니다. 당시 ATR 약 11.2%와 볼린저 하단 이탈은 체결 및 반등 위험을 시사하므로 전량 시장가 매도나 신규 공매도보다 분할 축소가 적합합니다. 상관된 기술 지표를 독립적 증거로 중복 계산하지 않으며, 과거 가격은 현재 주문가·손절가로 사용하지 않습니다.</p>
+<p>IONQ의 가치평가는 연구 계획의 연간 전망 중간값 기준 시가총액/매출 약 22.5배와 다른 보고서의 주가매출비율 약 30.2배가 제시됐으나 기준 시점·분모와 자료 불일치 때문에 정밀한 현재 배수로 확정할 수 없습니다. 현금 2억 900만 달러만으로 지급불능을 단정할 수도, 유동비율 4.24배만으로 안전을 확신할 수도 없습니다. 사용 가능한 현금·단기투자자산, 유출의 일회성 여부, 자금조달·희석 조건을 공식 공시로 확인해야 하며, CFO 교체를 회계 문제의 증거로 해석하지 않습니다.</p>
+<p>IONQ의 반복·유기적 매출과 현금 회수가 개선되고, 매출 수준 유지와 절대 영업손실·현금 유출 감소 및 이를 뒷받침하는 가치평가가 확인되면 표준 배정의 75%, 이후 100%로 단계적 복원을 검토할 수 있습니다. 반대로 전망 하향, 현금 소진 가속, 가용 유동성 악화 또는 불리한 희석이 확인되면 상한을 표준 배정의 25% 이하로 낮추거나 청산을 재검토합니다. 최신 시세·실제 보유량·전체 포트폴리오와 검증된 원문 자료가 없어 확신과 가격 목표 산정에는 한계가 있습니다.</p>
+<p><strong>목표 가격</strong>: 제시되지 않음</p>
+<p><strong>투자 기간</strong>: 다음 공식 실적·유동성 공시까지, 중대한 신규 공시 발생 시 즉시 재평가</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">맨 위로</a>
+</body>
+</html>
