@@ -1,0 +1,1489 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>MSFT 2026-11-20 비중 축소: 주식 분석 보고서</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">MSFT</span> <span class="rating down">비중 축소</span></h1><p style="font:16px/1.6 system-ui"><strong>항목별 매수 매력도: 52.5~62.5점 / 100점</strong><br>점수는 기존 TradingAgents 보고서에 동일한 8개 항목을 적용한 별도 AI 평가입니다. 1~3년 관점의 매수 매력도를 비교하며, 높을수록 긍정적입니다. 가격 20 · 성장 20 · 수익성 15 · 재무 10 · 주가 흐름 15 · 관심·수급 5 · 향후 재료 5 · 하락 위험 관리 10점. 각 항목을 0~5점으로 평가한 뒤 배점에 맞춰 합산합니다. 자료가 부족하면 가능한 총점 범위로 표시합니다. 프로그램의 최종 매매 의견과 별도이며, 상승 확률·예상 수익률이나 검증된 수익 예측 모형이 아닙니다. 기존의 등급별 고정 점수(비중 축소 25점)는 더 이상 사용하지 않습니다.</p>
+<p class="date">분석 기준일 2026-11-20</p>
+<dl class="run"><div class="detail"><dt>생성 시각</dt><dd>2026-11-20 07:12</dd></div><div class="detail"><dt>심층 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>빠른 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>분석 담당</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">뉴스</span> <span class="field">재무</span></dd></div><div class="detail"><dt>토론 횟수</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>자료 출처</dt><dd><span class="group"><span class="name">시세</span><span class="field">yfinance</span></span> <span class="group"><span class="name">기술지표</span><span class="field">yfinance</span></span> <span class="group"><span class="name">재무</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">뉴스</span><span class="field">yfinance</span></span> <span class="group"><span class="name">거시경제</span><span class="field">fred</span></span> <span class="group"><span class="name">예측시장</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>버전</dt><dd>TradingAgents 0.7.1</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">분석팀 보고서</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">시장 분석가</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">투자심리 분석가</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">뉴스 분석가</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">재무 분석가</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">투자 검토팀 판단</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">상승론 분석가</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">하락론 분석가</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">투자 검토 책임자</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">매매 계획</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">매매 담당</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">위험 관리팀 판단</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">적극적 위험 분석가</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">보수적 위험 분석가</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">중립적 위험 분석가</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">최종 투자 판단</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">투자 총괄</span></a></li></ul></li></ul></nav>
+<main><section><h2>항목별 매수 매력도: 52.5~62.5점 / 100점</h2><p>2026년 11월 20일 기준 1~3년 상대 매수 매력은 견조한 실현 성장과 높은 본업 이익률이 지지하지만, 현금흐름 대비 높은 가격과 급증한 설비투자가 제약한다. 자본 기반과 반복 매출은 강점이나 유동성 완충력은 축소됐고 단·중기 가격 흐름도 약하다. 높은 10%대 매출 성장과 영업이익률 유지에 더해 투자 증가율 둔화·FCF 증가 전환이 확인되면 평가를 높일 수 있다. 반대로 성장 둔화, 총이익률 압박의 영업이익률 전이, 예상 이익 하향과 추가 현금 감소는 평가를 낮출 조건이다. 관심·수급과 향후 촉매는 충분한 대표성·검증 근거가 없어 점수화하지 않았다. 보고서의 최종 등급과 독립적인 주관적 평가이며 합산 점수나 확률은 산출하지 않았다.</p><p>보고서 기준 시세: 최신 검증 종가 498.30달러 — 2026년 11월 19일. 2026년 11월 20일 가격은 제공되지 않았으며 실시간 시세가 아니다.</p><p>자료 한계: 제공 보고서만 사용했고 외부 검증은 하지 않았다. 최신 재무자료는 2026년 9월 30일 종료 분기이며 기준일 최근 일주일의 신규 공시를 날짜별로 확인할 수 없다. 기업정보 FCF 2.994십억 달러와 재무제표 재구성 FCF 59.957십억 달러는 불일치하여 후자를 우선했으며, 이 산식은 금융리스·인수·기타 투자약정을 모두 반영하지 않는다. 예상 EPS의 산정 기간과 근거, 사업부 성장·순차입금 세부자료가 없다. 뉴스는 제목·요약 기반이고 증권사 견해와 소셜 주장은 회사 공식 전망이나 실현 실적과 구분했다. 소셜 표본은 짧은 시간대에 편중되고 Reddit 자료·대표적 자금 흐름·현재 금리는 없으며, 보고서 간 뉴스 반복을 독립적 확인으로 간주하지 않았다.</p><details><summary>8개 항목과 평가 근거 보기</summary><ul><li><strong>가격 매력도: 8 / 20점</strong><p>후행 PER 26.01배와 예상 PER 20.59배는 성장 대비 일부 지지 요인이지만, 재구성 FCF 배수 61.7배·수익률 1.62%와 매출 배수 10.7배는 현금 기준 부담이다. 1~3년 매력은 투자 회수와 예상 EPS 실현에 의존하며 예상치의 기간·근거도 불명확하다. 최근 하락 자체를 저평가로 보지 않았다.</p><blockquote>이익 기준으로는 성장성을 고려할 여지가 있지만, 현금흐름 기준으로는 높은 평가를 받고 있습니다.</blockquote></li><li><strong>사업 성장성: 16 / 20점</strong><p>보고된 최신 분기 매출 18.8%·영업이익 21.0% 증가와 연간 매출 17.8% 증가는 실현된 성장 근거다. 반복 매출·전환비용·교차판매 기반은 1~3년 성장 지속에 유리하다는 분석이다. 다만 인수 효과와 유기적 성장의 구분, Azure·AI별 기여는 확인되지 않으며 EPS 32.3% 증가 전부를 본업 성장으로 인정하지 않았다.</p><blockquote>최신 분기 매출은 18.8%, 영업이익은 21.0% 증가했고 자기자본도 확대됐습니다.</blockquote></li><li><strong>기업 수익성: 10.5 / 15점</strong><p>최신 분기 영업이익률 49.76%와 영업비용 통제, 증가한 영업현금흐름은 높은 본업 수익성을 뒷받침한다. 그러나 총이익률 하락과 설비투자 급증으로 분기 FCF가 27.4% 감소해 지속 가능한 현금 수익성은 이익률보다 약하다. 세금·영업외손익이 미확인인 순이익 증가나 투자 평가이익은 반복 수익성 근거에서 제외했다.</p><blockquote>이는 **매출원가 부담에도 영업비용 통제로 영업이익률을 개선했다**는 의미입니다.</blockquote></li><li><strong>재무건전성: 7 / 10점</strong><p>자기자본 470.509십억 달러와 총부채/총자산 39.6%로의 하락, 강한 영업현금 창출은 재무 완충력을 지지한다. 반면 유동비율 1.225배, 현금 전년 대비 29.7% 감소와 순운전자본 축소는 투자 부담을 보여준다. 단기금융상품·차입금 세부 내역 부족으로 순차입금과 전체 유동성을 확정할 수 없어 매우 높은 점수는 유보했다.</p><blockquote>유동비율은 약 **1.40배에서 1.225배**로 하락했습니다. 순운전자본도 **54.070십억 달러에서 34.169십억 달러**로 감소했습니다.</blockquote></li><li><strong>주가 흐름: 6 / 15점</strong><p>11월 19일 종가는 10일·50일 평균 아래이며 RSI 39.2118과 MACD 히스토그램 -4.1927도 약세를 확인한다. 다만 가격과 50일 평균이 200일 평균 위여서 장기 구조는 유지된다. 1~3년 평가의 보조 요인으로 반영했으며 하루 저가를 검증된 지지로 보거나 하락을 매수 신호로 해석하지 않았다. 11월 20일 가격은 없다.</p><blockquote>최신 종가 | 498.30달러 | 단·중기 평균선 아래</blockquote></li><li><strong>관심·수급의 질: 자료 부족</strong><p>대표성 있는 관심·수급 자료가 부족하다. StockTwits 30건은 약 106분에 편중되고 태그와 본문이 불일치하며 Reddit은 수집 실패했다. 단일 일자 거래량과 미검증 옵션·매수 주장으로 기관 수급이나 지속적 관심의 질을 추론할 수 없어 중립 점수 대신 평가를 유보한다.</p></li><li><strong>향후 재료: 자료 부족</strong><p>Ignite 이후 증권사 호평과 게임 출시 보도는 이미 발생한 소재이며 미래 실적 기여는 미확인이다. Azure·Copilot 수익화와 투자 회수는 관찰 조건이지 검증된 향후 촉매나 회사 가이던스가 아니다. 다음 실적 일정·공식 전망 변경·가격 반영 정도의 근거가 부족해 1~3년 촉매 점수를 부여하지 않았다.</p></li><li><strong>하락 위험 관리: 5 / 10점</strong><p>반복 구독·다각화·고객 전환비용과 높은 영업현금 창출은 하방 완충 요인이다. 반면 높은 현금흐름 배수, 투자 회수 지연, 현금 완충력 축소와 AI 경쟁이 1~3년 하방 위험을 높인다. 서비스 장애 영향은 미확인이고 ATR 15.9173달러는 단기 변동성 경고다. 방어력과 실질 위험이 함께 확인되어 균형으로 평가하며 금리·규제 위험은 자료 부족으로 정량화하지 않았다.</p><blockquote>주요 하방 위험은 AI 투자 회수 지연, AI 경쟁자의 기업 고객·사용자 점유율 잠식, 투자 평가손익과 반복 영업이익 사이의 괴리, 서비스 장애 관련 평판 악화다.</blockquote></li></ul></details></section>
+<section id="s1"><h2>I. 분석팀 보고서</h2><h3 id="s1-1">시장 분석가</h3>
+<h4>MSFT 기술적 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 20일</strong><br />
+<strong>실제 가격·지표 기준: 2026년 11월 19일 최신 확인 자료</strong><br />
+<strong>대상: MSFT — 마이크로소프트, 기술 / 소프트웨어 인프라, NMS</strong></p>
+<h5>1. 핵심 판단</h5>
+<p><strong>MSFT는 장기 상승 구조가 유지되는 가운데 단기·중기 가격 흐름이 약화된 상태입니다. 현재 자료는 저가 매수를 서두르기보다 하락세의 진정과 추세 회복을 확인하는 접근을 뒷받침합니다.</strong></p>
+<p>최신 검증 종가 <strong>498.30달러</strong>는 10일 지수이동평균 <strong>516.305달러</strong>, 50일 단순이동평균 <strong>520.059달러</strong>보다 낮습니다. 반면 200일 단순이동평균 <strong>442.303달러</strong>보다는 높습니다.</p>
+<p>따라서 두 가지 해석을 구분해야 합니다.</p>
+<ul>
+<li><strong>단기 관점:</strong> 가격이 주요 단·중기 평균선 아래에 있고 모멘텀도 약해, 반등이 나오더라도 추세 전환보다 기술적 회복일 가능성을 먼저 점검해야 합니다.</li>
+<li><strong>장기 관점:</strong> 가격과 50일 평균선이 모두 200일 평균선 위에 있어 장기 하락 추세가 확정되었다고 보기는 어렵습니다. 다만 장기 구조가 양호하다는 사실 자체가 당장의 매수 시점을 보장하지는 않습니다.</li>
+</ul>
+<p>이 보고서는 기술적 조건과 대응 기준을 제시하며, 최종 매매 결정은 다른 분석 자료와 함께 판단해야 합니다.</p>
+<h5>2. 데이터 확인과 해석상의 제한</h5>
+<p>최신 검증 자료는 다음과 같습니다.</p>
+<ul>
+<li>시가: <strong>519.50달러</strong></li>
+<li>고가: <strong>526.49달러</strong></li>
+<li>저가: <strong>498.16달러</strong></li>
+<li>종가: <strong>498.30달러</strong></li>
+<li>거래량: <strong>28,435,392주</strong></li>
+</ul>
+<p><strong>11월 20일 자료는 제공되지 않았으므로 이 보고서를 당일 실시간 분석으로 해석해서는 안 됩니다.</strong> 개별 지표 도구는 해당 날짜를 “비거래일”이라고 표시했지만, 이 출력만으로 실제 휴장 여부를 확정할 수는 없습니다. 확인 가능한 사실은 최신 검증 행이 11월 19일이라는 점입니다.</p>
+<p>가격과 공통 기술지표의 최신 값은 검증 스냅샷과 개별 조회 결과가 반올림 범위에서 일치합니다. 거래량가중이동평균은 개별 조회에만 포함되어 있어 정확한 수치를 매매 기준으로 사용하지 않았습니다.</p>
+<h5>3. 선정 지표와 선정 이유</h5>
+<p>현재 MSFT의 핵심 과제는 <strong>장기 상승 구조 속 조정인지, 더 깊은 추세 악화의 시작인지 구분하는 것</strong>입니다. 이에 다음 7개 지표를 선정했습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>선정 지표</th>
+<th>분석 목적</th>
+<th>현재 상황에서의 역할</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>close_10_ema</code></td>
+<td>단기 방향과 회복 시점</td>
+<td>반등이 단기 추세 회복으로 이어지는지 확인</td>
+</tr>
+<tr>
+<td><code>close_50_sma</code></td>
+<td>중기 추세</td>
+<td>가격의 중기 추세 이탈과 재진입 여부 판단</td>
+</tr>
+<tr>
+<td><code>close_200_sma</code></td>
+<td>장기 구조</td>
+<td>단기 약세와 장기 추세 훼손을 구분</td>
+</tr>
+<tr>
+<td><code>macdh</code></td>
+<td>모멘텀 변화</td>
+<td>하락 압력의 확대·축소 확인</td>
+</tr>
+<tr>
+<td><code>rsi</code></td>
+<td>상승·하락 힘의 균형</td>
+<td>약세 정도와 과매도 여부 구분</td>
+</tr>
+<tr>
+<td><code>atr</code></td>
+<td>변동성과 위험 관리</td>
+<td>손절 거리와 포지션 규모 조절</td>
+</tr>
+<tr>
+<td><code>vwma</code></td>
+<td>거래량을 반영한 추세</td>
+<td>단순 가격 회복에 거래량 측면의 확인 추가</td>
+</tr>
+</tbody>
+</table></div>
+<p>이동평균 세 개는 서로 다른 시간축을 담당합니다. MACD 관련 지표는 중복을 줄이기 위해 히스토그램만 선정했습니다. 볼린저밴드는 이번 핵심 선정에서 제외했으며, 변동성 관리는 ATR에 집중했습니다.</p>
+<h5>4. 추세: 장기 구조보다 단기 가격이 먼저 약해졌다</h5>
+<h6>단기 추세는 하방 우위</h6>
+<p>MSFT의 종가는 <strong>10일 EMA 516.305달러</strong> 아래입니다. 또한 10일 EMA 자체가 <strong>50일 SMA 520.059달러</strong>보다 낮습니다.</p>
+<p>이 배열은 단기 가격 흐름이 중기 평균보다 약해졌음을 보여줍니다. 따라서 가격이 조금 반등하는 것과 단기 추세가 복구되는 것은 구분해야 합니다.</p>
+<p>최근 검증 종가도 이러한 약화를 보여줍니다.</p>
+<ul>
+<li>11월 9일: <strong>545.18달러</strong></li>
+<li>11월 13일: <strong>523.88달러</strong></li>
+<li>11월 17일: <strong>506.24달러</strong></li>
+<li>11월 18일: <strong>508.29달러</strong></li>
+<li>11월 19일: <strong>498.30달러</strong></li>
+</ul>
+<p>11월 18일에는 전일 대비 종가가 높아졌지만, 다음 날 다시 낮아졌습니다. <strong>일회성 반등이 지속적인 회복으로 연결되었다는 근거는 아직 없습니다.</strong></p>
+<h6>중기 평균선 회복이 중요한 이유</h6>
+<p><strong>516.31~520.06달러</strong>는 최신 10일 EMA와 50일 SMA가 위치한 구간입니다. 이는 과거 여러 차례 검증된 고정 저항대라는 뜻이 아니라, <strong>향후 반등의 질을 평가할 동적 기준 구간</strong>입니다.</p>
+<ul>
+<li>이 구간 아래에서 반등이 멈추면 단기 약세 구조가 유지될 가능성을 경계해야 합니다.</li>
+<li>종가가 구간 위로 올라온 뒤 후속 거래에서도 유지된다면 중기 회복의 근거가 강화됩니다.</li>
+<li>이동평균은 매일 변하므로 실제 주문 시에는 최신 값을 다시 확인해야 합니다.</li>
+</ul>
+<h6>장기 구조는 아직 별도로 평가해야 한다</h6>
+<p>200일 SMA는 <strong>442.303달러</strong>입니다. 최신 가격은 그 위에 있고, 50일 SMA 역시 200일 SMA보다 높습니다.</p>
+<p>다만 <strong>442.30달러를 반드시 반등할 지지선으로 취급해서는 안 됩니다.</strong> 현재 가격과 거리가 있는 장기 추세 기준일 뿐이며, 도구 결과는 그 수준에서의 반복적인 지지 확인을 제시하지 않았습니다.</p>
+<h5>5. 모멘텀: 약세지만 과매도 매수 신호는 아니다</h5>
+<h6>MACD 히스토그램: 하락 압력이 우세</h6>
+<p>최신 MACD 히스토그램은 <strong>-4.1927</strong>입니다.</p>
+<p>음수라는 것은 MACD선이 신호선 아래에 있다는 의미입니다. 개별 지표 시계열에서도 최근 음의 히스토그램이 확대되는 흐름이 나타나, 가격 하락과 모멘텀 약화가 같은 방향을 가리킵니다.</p>
+<p>중요한 것은 단순히 음수라는 사실보다 앞으로의 변화입니다.</p>
+<ul>
+<li>음수 폭이 계속 커지면 하락 압력이 유지되는 것으로 해석할 수 있습니다.</li>
+<li>음수 폭이 줄어들면 하락 속도 둔화의 초기 단서가 됩니다.</li>
+<li>다만 음수 축소만으로 상승 추세 전환을 확정할 수는 없습니다. 가격의 평균선 회복이 함께 필요합니다.</li>
+</ul>
+<h6>RSI: 매도 우위, 그러나 전형적인 과매도는 아님</h6>
+<p>최신 RSI는 <strong>39.2118</strong>입니다.</p>
+<p>이는 중립 기준인 50 아래이므로 상승보다 하락 모멘텀이 우세한 상태입니다. 그러나 일반적인 과매도 기준인 30 아래는 아닙니다.</p>
+<p><strong>“최근 많이 내렸으니 곧 반등한다”는 판단을 RSI가 뒷받침하지는 않습니다.</strong> 약세 추세에서는 RSI가 낮은 수준에 머무는 동안 가격이 추가 하락할 수도 있습니다.</p>
+<p>또한 현재 자료만으로 강세 다이버전스가 확정되었다고 주장할 근거는 부족합니다. 이후 가격이 저점을 재시험할 때 RSI와 히스토그램이 함께 개선되는지 확인하는 편이 타당합니다.</p>
+<h5>6. 가격 움직임과 변동성: 좁은 손절에 불리한 환경</h5>
+<p>11월 19일 MSFT는 <strong>519.50달러</strong>에 출발해 <strong>526.49달러</strong>까지 상승했지만, <strong>498.30달러</strong>에 마감했습니다. 종가는 당일 저가 <strong>498.16달러</strong>에 매우 가까웠습니다.</p>
+<p>이 움직임은 당일 상승 시도가 종가까지 유지되지 못했음을 보여줍니다. 다만 일봉 자료만으로 장중 매도 주체나 구체적인 하락 원인을 추정할 수는 없습니다.</p>
+<p>최신 ATR은 <strong>15.9173달러</strong>입니다. 이는 단기 위험 관리에서 상당한 가격 흔들림을 고려해야 한다는 뜻입니다.</p>
+<ul>
+<li>몇 달러 수준의 좁은 손절은 정상적인 변동에도 실행될 수 있습니다.</li>
+<li>반대로 손절 폭만 넓히면 계좌 손실 위험이 커집니다.</li>
+<li>따라서 손절 거리가 늘어나면 보유 수량을 줄이는 방식이 필요합니다.</li>
+</ul>
+<p>기본적인 수량 산정 방식은 다음과 같습니다.</p>
+<p><strong>거래 수량 = 거래당 허용 손실액 ÷ 주당 손절 거리</strong></p>
+<p>주당 손절 거리는 진입 근거가 무효화되는 가격과 ATR을 함께 고려해 정해야 합니다. ATR 배수만으로 기계적으로 정하는 것은 충분하지 않으며, 급격한 가격 공백이나 슬리피지로 실제 손실이 계획보다 커질 수 있습니다.</p>
+<h5>7. 조건별 대응 기준</h5>
+<h6>신규 매수를 검토하는 경우</h6>
+<p>현 단계에서는 <strong>가격 회복 확인을 우선하는 접근</strong>이 자료와 더 잘 부합합니다.</p>
+<p>확인할 조건은 다음과 같습니다.</p>
+<ol>
+<li>종가가 최신 10일 EMA 부근을 회복하는가.</li>
+<li>이어서 50일 SMA 부근까지 회복하고 유지하는가.</li>
+<li>MACD 히스토그램의 음수 폭이 축소되는가.</li>
+<li>RSI가 50 방향으로 개선되는가.</li>
+<li>거래량가중 추세도 가격 회복을 확인하는가.</li>
+</ol>
+<p>모든 조건이 동시에 충족될 필요는 없지만, 가격과 모멘텀이 함께 개선될수록 단순 반등과 추세 회복을 구분하기 쉬워집니다. 확인을 기다리면 진입 가격이 높아질 수 있으나, 하락 중 조기 진입의 위험은 줄일 수 있습니다.</p>
+<h6>기존 보유자의 경우</h6>
+<p>보유 기간에 따라 판단을 분리해야 합니다.</p>
+<ul>
+<li><strong>단기 거래 목적:</strong> 가격이 단·중기 평균선 아래에 있고 모멘텀이 약하므로, 기존 진입 논리가 여전히 유효한지 재검토할 필요가 있습니다.</li>
+<li><strong>장기 보유 목적:</strong> 200일 SMA 위라는 점은 장기 구조 평가에 의미가 있지만, 그것만으로 단기 손실 확대를 무시해서는 안 됩니다.</li>
+<li><strong>공통 사항:</strong> 반등 시 위험 노출을 조절할지, 어느 조건에서 보유 논리가 무효화되는지 사전에 정해야 합니다.</li>
+</ul>
+<h6>추가 하락을 경계하는 경우</h6>
+<p>최신 저가 <strong>498.16달러</strong>는 가장 가까운 관찰 기준입니다. 다만 하루 저가이므로 강한 지지대로 확정할 수는 없습니다.</p>
+<p>이 수준을 하회한 뒤 종가 회복에 실패하고 모멘텀까지 악화된다면 추가 약세 위험이 커질 수 있습니다. 반대로 일시적인 하회 후 빠르게 회복한다면 실패한 하방 이탈 가능성을 살펴볼 수 있습니다.</p>
+<p>현재 가격은 이미 하락한 위치이므로, <strong>약세라는 이유만으로 신규 매도를 추격하는 것도 별도의 반등 위험을 수반합니다.</strong> 최종 매매 방향보다 진입 조건과 손실 제한을 먼저 정하는 것이 중요합니다.</p>
+<h5>종합 결론</h5>
+<p>MSFT의 최신 자료는 <strong>장기 상승 구조 속 단기·중기 약세</strong>를 가리킵니다. 가격의 평균선 이탈, 음의 MACD 히스토그램, 50 아래 RSI가 서로 같은 방향의 증거를 제공합니다.</p>
+<p>현재 가장 중요한 판단 기준은 <strong>하락한 가격 자체가 아니라 회복의 지속성</strong>입니다. 평균선 재돌파와 모멘텀 개선이 확인되기 전까지는 저가 매수의 확신을 높이기 어렵습니다. 최종 거래 여부는 최신 가격 갱신, 투자 기간, 계좌 위험 한도 및 다른 분석 결과를 결합해 결정해야 합니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>MSFT 확인 자료</th>
+<th>해석</th>
+<th>실행 시 점검 사항</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>자료 기준</td>
+<td>2026년 11월 19일 최신 검증 행</td>
+<td>11월 20일 실시간 자료 아님</td>
+<td>주문 전 최신 가격·지표 갱신</td>
+</tr>
+<tr>
+<td>최신 종가</td>
+<td>498.30달러</td>
+<td>단·중기 평균선 아래</td>
+<td>가격만 보고 저가 매수 판단 금지</td>
+</tr>
+<tr>
+<td>단기 추세</td>
+<td>10일 EMA 516.305달러</td>
+<td>단기 회복 미확인</td>
+<td>종가 회복과 유지 여부 확인</td>
+</tr>
+<tr>
+<td>중기 추세</td>
+<td>50일 SMA 520.059달러</td>
+<td>가격의 중기 추세 이탈</td>
+<td>평균선 재진입 후 지속성 확인</td>
+</tr>
+<tr>
+<td>장기 구조</td>
+<td>200일 SMA 442.303달러</td>
+<td>장기 구조는 아직 유지</td>
+<td>확정 지지선으로 간주하지 않기</td>
+</tr>
+<tr>
+<td>하락 모멘텀</td>
+<td>MACD 히스토그램 -4.1927</td>
+<td>매도 모멘텀 우위</td>
+<td>음수 폭 축소와 가격 회복 동반 확인</td>
+</tr>
+<tr>
+<td>상대 강도</td>
+<td>RSI 39.2118</td>
+<td>약세, 전형적 과매도 아님</td>
+<td>50 방향 회복 여부 관찰</td>
+</tr>
+<tr>
+<td>변동성</td>
+<td>ATR 15.9173달러</td>
+<td>좁은 손절에 불리</td>
+<td>손절 거리와 수량을 함께 조절</td>
+</tr>
+<tr>
+<td>가까운 하방 기준</td>
+<td>11월 19일 저가 498.16달러</td>
+<td>관찰 기준이지 검증된 지지대는 아님</td>
+<td>하회 후 종가 회복 여부 확인</td>
+</tr>
+<tr>
+<td>거래량 확인</td>
+<td>VWMA 개별 조회만 제공</td>
+<td>보조 확인에 한정</td>
+<td>정확한 수치는 추가 검증 후 사용</td>
+</tr>
+<tr>
+<td>최종 판단 범위</td>
+<td>기술적 조건 분석</td>
+<td>최종 거래 지시는 유보</td>
+<td>다른 분석·위험 한도와 종합 판단</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">투자심리 분석가</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Mixed</strong> (Score: 4.8/10)
+<strong>Confidence:</strong> Low</p>
+<h4>MSFT 심리 보고서</h4>
+<p>분석 기간: 2026-11-13~2026-11-20. 기준일: 2026-11-20. 대상: MSFT, Microsoft Corporation, 기술 / 소프트웨어 인프라, NMS.</p>
+<p>종합 판단: 혼재된 심리이며 부정적 우려가 소폭 우세하다. MSFT의 AI 지출 대응력과 Azure 사업 확장에 대한 기대가 있으나, 경쟁 심화·투자 회수·회계 투명성 우려와 매도 경험담이 이를 상쇄한다. 제공된 자료만 사용했으며, Reddit 수집 실패와 단기 소셜 표본 편중으로 신뢰도는 낮다.</p>
+<h5>1. 출처별 분석</h5>
+<h6>뉴스: 사업 방어력에 대한 긍정 평가와 AI 구조적 위험이 공존</h6>
+<p>제공된 뉴스는 20건이다. 다만 MSFT를 직접 다루지 않는 타사 기사와 유사한 주제의 중복 보도가 포함되어 있어, 20건을 독립적인 MSFT 심리 관측치로 볼 수 없다. 제목·제공 요약을 넘어선 기사 본문 내용은 확인할 수 없다.</p>
+<p>가장 명확한 긍정 신호는 Proactive가 전한 Jefferies의 Ignite 이후 평가다. 경영진·고객과의 면담 후 MSFT가 AI 투자 둔화를 견디고 시장점유율을 확대하기에 유리하다는 견해를 제시했다. 이는 소셜의 단순 반등 기대와 달리 사업 방어력에 초점을 맞춘 분석가 의견이다. 그러나 실제 점유율 확대나 투자수익 실현을 입증하는 실적 수치는 제공되지 않았다.</p>
+<p>경쟁 측면에서는 Bloomberg의 Ann Berry 발언이 부정적이다. Claude가 MSFT 등 기존 기술 기업의 점유율을 가져갈 수 있다는 관점이다. 이는 경쟁 위협에 대한 의견이지, 이번 기간에 확인된 MSFT 점유율 하락 수치는 아니다. Anthropic의 성장 과제 및 AI 보안 위험 기사도 AI 업종 기대에 부담을 줄 수 있지만, MSFT에 미치는 영향을 정량화할 근거는 없다.</p>
+<p>Barron's의 Anthropic 투자 관련 기사 두 건은 대형 기술기업의 투자와 회계상 이익 사이의 관계를 문제 삼는다. 이 가운데 한 요약은 MSFT를 명시한다. 회계 이익과 영업 성과를 구분해야 한다는 경계 신호지만, 같은 주제의 보도를 별개의 위험 사건 두 건으로 중복 계산하지 않는다. 자료는 회계 부정이 확인됐다고 말하지 않는다.</p>
+<p>Yahoo Finance의 기술 서비스 장애 기사는 MSFT를 영향받은 기업 중 하나로 언급한다. 서비스 신뢰성과 평판에 부정적인 소재지만, 장애 원인·지속시간·MSFT의 책임 범위·재무 영향은 제공되지 않았다. GTA VI 관련 영상은 11월 19일 출시와 플랫폼 사업자의 수혜 가능성을 제시한다. MSFT의 게임 생태계에는 보조적 긍정 소재이나, 제시된 80억 달러 이상 예약매출 기대는 게임 제작사 관련 수치이며 MSFT 매출 전망이 아니다.</p>
+<p>그 밖의 타사 실적·구조조정·투자 기사들은 MSFT 직접 신호로 낮게 가중했다. 뉴스 전체를 일률적으로 강세 또는 약세로 분류하기보다는, 방어력 기대와 경쟁·회계·운영 위험이 공존하는 것으로 해석한다.</p>
+<h6>StockTwits: 태그는 강세 편중이지만 본문은 훨씬 신중</h6>
+<p>총 30개 메시지 중 강세 7개, 약세 0개, 무표시 23개다. 전체 표본 기준 강세는 23.3%, 무표시는 76.7%다. 태그가 있는 7개만 보면 강세 비율은 100%지만, 7:0이라는 작은 표본이며 유한한 강세/약세 배수로 표현할 수 없다. 이를 전체 참여자의 만장일치 강세로 해석해서는 안 된다.</p>
+<p>특히 태그와 본문 간 불일치가 크다. 강세로 표시된 @George_V2는 MSFT의 Anthropic 투자와 경쟁 관계를 들어 경영진을 비판한다. 강세 표시가 붙은 @openclassaction2도 대형 클라우드 기업들의 자본지출 확대와 수익 실현의 시차를 문제 삼는다. @GridironGainz의 강세 메시지 두 개는 여러 종목 태그만 있어 MSFT 투자 논거가 사실상 없다. 따라서 태그 7개 전부를 독립적이고 실질적인 매수 확신으로 볼 수 없다.</p>
+<p>구체적인 긍정 본문으로는 @SmartTrade99의 MSFT 매수 언급, @ElmagoMagico의 행사가 500·12월 18일 만기 콜옵션 매수 주장, @Moonship의 Anthropic 관련 혼란 이후 반등 기대가 있다. 이는 저가 매수 또는 반등 베팅의 존재를 보여주지만, 포지션 규모나 실제 체결은 검증되지 않았다. @Ro_Patel과 @NicholasABrown은 Azure 및 Windows PC로 확장되는 가속 컴퓨팅 협력을 언급해 사업 측면의 긍정 소재를 제공한다. 두 게시물은 유사한 Ignite 발표를 다루므로 완전히 독립적인 촉매로 세지 않는다.</p>
+<p>반면 @SunAndStorm은 MSFT 잔여 보유분 매도와 상승 추세 복귀 시 재매수 의사를 밝혔다. 이는 회사의 자금 여력은 인정하면서도 현재 가격 흐름에는 방어적으로 대응하는 태도다. @SwingPlayers는 AI 경쟁자가 MSFT의 기존 사업을 위협한다고 주장했고, @techvested는 AI 자본지출 거품을 비판했다. @EngelsInAmerica의 순환금융·회계 비유와 @openclassaction2의 신용부도스와프 스프레드 관련 주장도 위험 회피 심리를 보여준다. 다만 이 소셜 주장들은 독립적으로 확인된 금융·회계 사실이 아니다.</p>
+<p>@openclassaction2가 제시한 잉여현금흐름 186억 달러와 수주잔고 6,770억 달러는 MSFT의 방어력을 뒷받침하려는 주장과 수주잔고 실현 여부에 대한 의심을 동시에 담는다. 제공된 자료에 이를 검증할 공시가 없어 확정 재무 수치로 사용하지 않는다. @GTA_Terminal은 장기 콜 거래 한 건을 강조하면서 전체 옵션 거래는 거의 균형이라고 적었다. 해당 글만으로 기관의 순매수나 전체 옵션시장 강세를 추론할 수 없다.</p>
+<p>시간적 한계도 크다. 30개 모두 11월 19일 19:58~21:44 UTC의 약 106분에 집중되어 있어 일주일 전체의 심리 변화나 11월 20일 현재 심리를 대표하지 못한다. 동일 사용자의 반복 게시, 다중 종목 태그, 타 종목 홍보도 포함된다. 게시물 사이의 MSFT 하락폭·가격 언급은 서로 일치하지 않아 실제 주간 수익률이나 종가로 채택하지 않았다.</p>
+<h6>Reddit: 관측 불가</h6>
+<p>r/wallstreetbets, r/stocks, r/investing 모두 수집 실패다. 이는 토론 부재나 중립 심리를 뜻하지 않는다. 커뮤니티별 논조, 장기 투자자의 반응, 게시물 참여도를 판단할 수 없다. 따라서 Reddit을 중립 점수로 합산하지 않았으며 종합 신뢰도를 낮췄다.</p>
+<h5>2. 출처 간 일치와 괴리</h5>
+<p>뉴스와 StockTwits 본문은 MSFT의 AI 투자 회수 및 경쟁 구도에 대한 논쟁에서 일치한다. 뉴스의 Anthropic 투자 회계 문제와 소셜의 순환금융 우려는 이익의 질에 대한 불안을 공유하지만, 소셜의 강한 비유가 뉴스에서 확인된 사실이라는 뜻은 아니다.</p>
+<p>긍정 측면에서는 Jefferies의 MSFT 방어력 평가가 소셜의 현금 창출력·Azure 확장 논의와 맞물린다. MSFT를 단순한 AI 과열 종목이 아니라 자체 사업 기반을 가진 플랫폼으로 보는 시각이 남아 있다.</p>
+<p>가장 큰 괴리는 StockTwits의 강세 태그 7 대 약세 태그 0이라는 외형과 실제 본문의 회의적 내용이다. 뉴스와 소셜 본문 모두 경계 요인이 상당하므로, 태그만으로 강한 낙관이나 과열을 판정하는 것은 부적절하다. Reddit의 확인 신호도 없어 이 괴리가 시장 전반의 투자자 집단 간 차이라고 일반화할 수 없다.</p>
+<h5>3. 지배적 서사</h5>
+<ol>
+<li>AI 지출 규모보다 수익 전환의 증명이 중요해졌다는 시각: 자본지출, 현금흐름, 수주잔고의 매출 전환 여부가 반복된다.</li>
+<li>Anthropic은 경쟁 압력인 동시에 사업 관계의 일부라는 양면성: 뉴스는 점유율 잠식을 우려하고 일부 소셜은 MSFT의 투자·클라우드 관계를 방어 논리로 제시한다. 구체적인 계약 조건은 확인되지 않았다.</li>
+<li>운영 기반이 있는 MSFT의 상대적 방어력: Jefferies 평가와 가속 컴퓨팅 확장 게시물이 이를 뒷받침한다. 다만 사업 내구성이 단기 주가 반등을 보장하지는 않는다.</li>
+<li>실적의 질과 서비스 신뢰성에 대한 경계: 투자 관련 회계 효과와 기술 장애가 투자자의 점검 항목으로 부각된다.</li>
+<li>저가 매수와 추세 확인 대기가 공존: 매수·콜옵션 진입 주장과 전량 매도·재진입 대기가 동시에 나타난다.</li>
+</ol>
+<h5>4. 자료에서 드러난 촉매와 위험</h5>
+<p>긍정 촉매는 Ignite 이후 MSFT 고객 수요에 대한 우호적 평가의 지속 여부, Azure·PC 가속 컴퓨팅 확장의 실제 이용 및 매출 전환, GTA VI 출시 이후 게임 플랫폼 수혜의 확인이다. 출시일과 행사 관련 내용은 이미 해당 기간에 제시된 소재이며, 향후 실적 효과가 확정된 것은 아니다.</p>
+<p>주요 하방 위험은 AI 투자 회수 지연, AI 경쟁자의 기업 고객·사용자 점유율 잠식, 투자 평가손익과 반복 영업이익 사이의 괴리, 서비스 장애 관련 평판 악화다. 소셜에서 제기된 신용위험 및 시장 급락 주장은 추가 검증이 필요하다.</p>
+<p>제공 자료에는 다음 MSFT 실적 발표일, 공식 가이던스 변경, 확인된 주간 가격·거래량·자금 흐름이 없다. 따라서 특정 날짜의 매매 촉매나 방향성 가격 목표를 제시할 근거가 없다.</p>
+<h5>5. 핵심 심리 신호 요약</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 신호</th>
+<th>방향</th>
+<th>출처</th>
+<th>근거 및 해석상 한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AI 투자 둔화에 대한 MSFT 방어력</td>
+<td>긍정</td>
+<td>Proactive / Jefferies</td>
+<td>Ignite 경영진·고객 면담 후 우호적 평가. 실현된 점유율 증가를 입증하는 자료는 아님</td>
+</tr>
+<tr>
+<td>AI 경쟁자의 점유율 잠식 가능성</td>
+<td>부정</td>
+<td>Bloomberg, StockTwits</td>
+<td>Ann Berry 발언과 기존 사업 위협 주장. MSFT 점유율 하락 수치는 없음</td>
+</tr>
+<tr>
+<td>투자 회계와 이익의 질</td>
+<td>경계</td>
+<td>Barron's, StockTwits</td>
+<td>유사 뉴스 두 건과 순환금융 우려. 중복 주제이며 회계 부정 확인은 아님</td>
+</tr>
+<tr>
+<td>MSFT 서비스 장애 언급</td>
+<td>부정</td>
+<td>Yahoo Finance</td>
+<td>장애 관련 기사에 포함. 원인·지속시간·재무 영향 미제공</td>
+</tr>
+<tr>
+<td>게임 플랫폼 수혜</td>
+<td>제한적 긍정</td>
+<td>Yahoo Finance Video</td>
+<td>GTA VI 11월 19일 출시 및 플랫폼 수혜 가능성. MSFT 기여액 미제공</td>
+</tr>
+<tr>
+<td>강세 태그 편중</td>
+<td>표면상 긍정</td>
+<td>StockTwits</td>
+<td>30개 중 강세 7·약세 0·무표시 23. 태그 표본이 작고 일부 본문은 부정적</td>
+</tr>
+<tr>
+<td>매수 및 콜옵션 진입</td>
+<td>긍정</td>
+<td>StockTwits</td>
+<td>매수 주장과 500 행사가 콜옵션 언급. 체결·규모 검증 불가</td>
+</tr>
+<tr>
+<td>매도 및 추세 확인 대기</td>
+<td>부정·신중</td>
+<td>StockTwits</td>
+<td>동일 사용자의 잔여 보유분 매도와 상승 추세 복귀 시 재매수 발언</td>
+</tr>
+<tr>
+<td>Azure·PC 가속 컴퓨팅 확장</td>
+<td>긍정</td>
+<td>StockTwits</td>
+<td>Ignite 관련 게시물 두 개. 동일 발표의 반복 가능성, 매출 효과 미확인</td>
+</tr>
+<tr>
+<td>커뮤니티 확인 신호 부족</td>
+<td>판단 제약</td>
+<td>Reddit</td>
+<td>세 커뮤니티 모두 수집 실패. 중립 또는 무관심으로 해석 불가</td>
+</tr>
+</tbody>
+</table></div>
+<p>결론적으로 MSFT의 사업 방어력 기대와 AI 투자·경쟁 위험이 충돌한다. 종합 점수 4.8/10은 강한 약세 확신이 아니라 혼재 속 소폭의 경계를 나타낸다. 이 평가는 과거 자료에 나타난 심리 신호이며 가격 예측이나 매매 제안이 아니다. 다른 판단 주체가 MSFT의 검증된 펀더멘털·가격·거래량과 함께 활용해야 한다.</p>
+<h3 id="s1-3">뉴스 분석가</h3>
+<h4>MSFT 주간 뉴스·거시경제 보고서</h4>
+<p><strong>기준일: 2026년 11월 20일 | 분석 기간: 11월 13~20일</strong></p>
+<p><strong>투자 의견</strong>: Neutral</p>
+<h5>핵심 판단</h5>
+<p><strong>MSFT는 기업용 소프트웨어·클라우드의 방어력과 인공지능 투자 수익성에 대한 우려가 교차하는 구간이다.</strong> 이번 주 수집된 뉴스에서는 Ignite 행사 이후의 긍정적인 고객·경영진 평가가 확인됐지만, 인공지능 경쟁 심화와 서비스 장애 관련 보도도 나타났다.</p>
+<p>다만 <strong>현재 주가·거래량·밸류에이션 및 공식 실적 자료가 제공되지 않았으므로, 뉴스만으로 MSFT의 매수 가격이나 목표주가를 정하기는 어렵다.</strong> 뉴스 연구 관점에서는 신규 추격매수보다 사업 지표와 서비스 정상화 여부를 확인하는 접근이 합리적이다. 최종 거래 판단은 가격·포트폴리오 정보를 함께 검토하는 담당자의 판단이 필요하다.</p>
+<h6>자료의 범위와 한계</h6>
+<ul>
+<li>기업·글로벌 뉴스 도구에서 제공한 제목과 요약을 분석했다. 기사 전문이나 기업 공시를 별도로 검증한 결과는 아니다.</li>
+<li>글로벌 뉴스 결과가 인공지능·게임 등 기술주에 편중돼 있어, 세계 경제 전반을 대표하는 자료로 보기는 어렵다.</li>
+<li>FRED 도구는 인증키 부재로 정책금리와 미국 10년물 국채금리를 반환하지 못했다. 따라서 현재 금리·물가·성장률의 수준이나 방향을 임의로 제시하지 않는다.</li>
+</ul>
+<h5>1. MSFT 주요 뉴스와 투자 시사점</h5>
+<h6>① Ignite 이후 긍정적 평가: 고객 기반의 방어력에 주목</h6>
+<p>Proactive가 전한 Jefferies 평가에 따르면, Ignite 행사에서 경영진과 고객을 만난 이후 MSFT의 인공지능 지출 둔화 대응력과 시장점유율 확대 가능성을 더 긍정적으로 봤다.</p>
+<p><strong>해석:</strong> 기업용 소프트웨어와 클라우드를 함께 공급하는 MSFT의 기존 고객 관계는 인공지능 도입 수요를 확보하는 데 도움이 될 수 있다. 다만 이는 증권사 평가이며, 실제 매출 증가나 투자 회수 개선을 입증하는 수치는 아니다.</p>
+<p><strong>확인할 지표</strong></p>
+<ul>
+<li>Azure 성장률과 다음 분기 가이던스</li>
+<li>Microsoft 365 Copilot의 유료 도입·사용 확대</li>
+<li>설비투자 증가율 대비 영업현금흐름과 잉여현금흐름</li>
+<li>클라우드 수익성과 감가상각 부담</li>
+</ul>
+<p><strong>거래 시사점:</strong> 긍정적 행사 평가가 실적 추정치 상향으로 이어지는지 확인해야 한다. 평가만 개선되고 현금흐름 전망이 정체된다면 주가 상승의 지속력은 제한될 수 있다.</p>
+<p>출처: <a href="https://www.proactiveinvestors.com/companies/news/1102143/microsoft-well-positioned-to-weather-ai-slowdown-says-jefferies-after-ignite-meetings-1102143.html">Proactive — Ignite 이후 Jefferies 평가</a></p>
+<h6>② 인공지능 경쟁·회계 이슈: 영업성과와 평가이익을 구분</h6>
+<p>수집된 Bloomberg·Barron’s·Yahoo Finance 자료는 Anthropic의 상장, 이용자 확보, 대형 기술기업의 관련 투자 회계 문제를 다뤘다. <strong>상장 조건과 MSFT의 투자 노출 규모는 이번 도구 결과만으로 독립 확인하지 못했다.</strong></p>
+<p>MSFT에는 두 가지 상반된 경로가 존재한다.</p>
+<ul>
+<li><strong>긍정적 경로:</strong> 인공지능 이용 확대가 클라우드·컴퓨팅 수요를 늘릴 가능성</li>
+<li><strong>부정적 경로:</strong> 경쟁 모델과 서비스가 기업 고객의 예산을 분산시켜 Copilot 등의 가격 결정력을 약화할 가능성</li>
+</ul>
+<p>또한 투자자산 평가이익이 발생하더라도 이를 반복 가능한 영업이익이나 현금 창출력과 동일하게 봐서는 안 된다.</p>
+<p><strong>거래 시사점:</strong> MSFT의 실적을 평가할 때 주당순이익만 보지 말고, 영업이익·영업현금흐름·설비투자 차감 후 현금흐름을 함께 확인해야 한다. 관련 투자 평가손익의 규모와 회계 처리는 공식 공시 확인이 우선이다.</p>
+<p>출처: <a href="https://www.barrons.com/articles/anthropic-stock-warping-big-tech-books-17525995?siteid=yhoof2&amp;yptr=yahoo">Barron’s — 인공지능 투자와 회계 영향</a></p>
+<h6>③ 서비스 장애 보도: 단기적으로 우선 확인할 위험</h6>
+<p>Yahoo Finance는 MSFT를 포함한 여러 기업의 기술 서비스 장애를 보도했다. 제공된 요약만으로는 <strong>MSFT 관련 장애의 원인·기간·영향 서비스·보상 비용을 확인할 수 없다.</strong> 다른 기업의 보안 사고가 MSFT와 같은 원인이라고 추정해서도 안 된다.</p>
+<p><strong>거래 시사점</strong></p>
+<ul>
+<li>공식 서비스 상태 공지에서 영향 범위와 복구 여부를 확인한다.</li>
+<li>일회성 장애인지 반복적인 신뢰성 문제인지 구분한다.</li>
+<li>기업 고객 이탈, 서비스 크레딧 또는 추가 보안 비용으로 연결되는지 관찰한다.</li>
+</ul>
+<p>장애가 신속히 해소되고 고객 영향이 작다면 일시적인 뉴스일 수 있다. 반대로 반복된다면 기업 고객 기반의 안정성에 대한 재평가 요인이 된다.</p>
+<p>출처: <a href="https://finance.yahoo.com/markets/article/walmart-costco-see-some-panic-buying-after-tech-outages-191922568.html">Yahoo Finance — 기술 서비스 장애 관련 보도</a></p>
+<h6>④ 게임 출시 뉴스: 보조적 촉매로 취급</h6>
+<p>뉴스 도구는 11월 19일 GTA VI 출시와 플랫폼 사업자의 수혜 가능성을 제시했다. Reuters 기사 목록도 관련 출시 뉴스를 포함했으나, MSFT의 구체적인 매출 효과는 제공되지 않았다.</p>
+<p><strong>해석:</strong> Xbox 관련 콘텐츠 거래와 이용자 활동에 긍정적일 가능성은 있지만, 이를 MSFT 전체 실적의 핵심 동력으로 확대 해석해서는 안 된다. 해당 게임을 MSFT가 제작했거나 구독 서비스에 포함됐다고 가정할 근거도 없다.</p>
+<h5>2. 거시경제와 시장 심리</h5>
+<h6>금리: 실제 수익률 확인이 선행돼야 한다</h6>
+<p>현재 정책금리와 국채금리를 확보하지 못했으므로, 이번 주 금리 움직임이 MSFT 주가에 우호적이었는지는 판단을 유보한다.</p>
+<p>일반적으로 장기금리 상승은 미래 현금흐름의 할인율을 높여 MSFT 같은 성장주의 평가가치에 부담을 줄 수 있다. 반대로 금리 하락도 경기 악화에 따른 기업 정보기술 지출 축소를 동반한다면 일방적인 호재가 아니다. <strong>금리 방향과 기업 수요를 함께 봐야 한다.</strong></p>
+<h6>예측시장: 연간 금리 인하 부재에 높은 확률</h6>
+<p>조회한 Polymarket 시장에서 <strong>“2026년에 연준 금리 인하가 없을 것인가”의 ‘예’ 가격은 98%</strong>, 표시 거래량은 약 <strong>974만 달러</strong>, 최근 1주 변화는 <strong>-0.1%포인트</strong>였다.</p>
+<p>주의할 점은 다음과 같다.</p>
+<ul>
+<li>이는 참여자들이 거래하는 시장 가격이지, 연준의 공식 전망이 아니다.</li>
+<li>연간 사건으로, 다음 회의의 금리 동결 확률과 동일하지 않다.</li>
+<li>누적 거래량만으로 현재 호가의 깊이나 신뢰성을 확정할 수 없다.</li>
+<li>계약 판정 조건과 실제 금리 이력을 별도로 대조하지 못했다.</li>
+</ul>
+<p><strong>MSFT에 대한 시사점:</strong> 적어도 해당 시장에서는 연내 금리 인하를 강하게 기대하지 않는 가격이 관측됐다. 따라서 금리 인하만을 전제로 한 MSFT 매수 논리는 신중할 필요가 있다.</p>
+<h6>세계 경제: 확인되지 않은 영역을 구분</h6>
+<p>이번 글로벌 뉴스 결과로는 주요국 물가·고용·성장, 지정학, 원유·환율 흐름을 충분히 확인할 수 없었다. 이들 위험이 없다는 뜻은 아니다. MSFT의 다음 평가에서는 미국 장기금리, 달러, 기업 정보기술 예산, 데이터센터 전력·공급 제약을 추가 점검해야 한다.</p>
+<h5>3. 조건별 대응 체크리스트</h5>
+<ul>
+<li><strong>긍정적 전환 조건:</strong> Azure·Copilot 전망 개선, 현금흐름 대비 투자 부담 안정, 서비스 장애 해소가 함께 확인되는 경우</li>
+<li><strong>중립 유지 조건:</strong> 인공지능 수요 관련 호평은 이어지지만 실제 수익화와 현금흐름 개선 근거가 부족한 경우</li>
+<li><strong>위험 재평가 조건:</strong> 반복적 장애, 클라우드 성장 둔화, 수익성 악화 또는 장기금리 상승이 확인되는 경우</li>
+</ul>
+<p><strong>현재 연구 결론은 ‘호재는 있으나 검증이 더 필요하다’이다.</strong> 가격 정보가 없는 상태에서 구체적인 진입가·손절가·포지션 규모를 제시하지 않는다.</p>
+<p>최종 매매 제안: WAIT</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>확인된 근거</th>
+<th>MSFT에 대한 의미</th>
+<th>다음 확인·대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>기업용 인공지능 수요</td>
+<td>Ignite 이후 Jefferies의 긍정적 평가</td>
+<td>기존 고객 기반의 방어력 가능성</td>
+<td>Azure·Copilot 실적과 추정치 상향 확인</td>
+</tr>
+<tr>
+<td>인공지능 경쟁</td>
+<td>Anthropic 성장·상장 관련 보도</td>
+<td>클라우드 수요 확대와 경쟁 심화가 공존</td>
+<td>MSFT의 실제 계약·투자 노출을 공시로 검증</td>
+</tr>
+<tr>
+<td>이익의 질</td>
+<td>인공지능 투자 회계 관련 보도</td>
+<td>평가이익과 영업성과를 구분할 필요</td>
+<td>영업현금흐름·설비투자·잉여현금흐름 비교</td>
+</tr>
+<tr>
+<td>서비스 안정성</td>
+<td>MSFT 포함 기술 장애 보도</td>
+<td>신뢰성·보상 비용 위험</td>
+<td>공식 상태 공지와 고객 영향 확인</td>
+</tr>
+<tr>
+<td>게임 사업</td>
+<td>GTA VI 출시 관련 보도</td>
+<td>플랫폼 거래 활성화 가능성</td>
+<td>전체 실적 기여를 과대평가하지 않기</td>
+</tr>
+<tr>
+<td>금리 환경</td>
+<td>FRED 자료 조회 불가</td>
+<td>현재 할인율 부담 판단 제한</td>
+<td>실제 정책금리·10년물 금리 추가 확보</td>
+</tr>
+<tr>
+<td>예측시장</td>
+<td>연간 금리 인하 부재 ‘예’ 98%</td>
+<td>금리 인하 기대만으로 매수하기 어려움</td>
+<td>계약 조건·금리 이력과 교차 검증</td>
+</tr>
+<tr>
+<td>종합</td>
+<td>호재와 실행 위험이 혼재</td>
+<td>뉴스만으로 방향성 확신 부족</td>
+<td>MSFT 가격·실적·공시 확인 후 거래 판단</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-4">재무 분석가</h3>
+<h4>MSFT 펀더멘털 분석 보고서</h4>
+<p><strong>분석 기준일:</strong> 2026년 11월 20일<br />
+<strong>최근 1주 검토 구간:</strong> 2026년 11월 14일~20일<br />
+<strong>분석 대상:</strong> MSFT — 마이크로소프트, 나스닥 시장(NMS), 기술 / 소프트웨어 인프라</p>
+<p><strong>투자 의견</strong>: 보유 유지</p>
+<blockquote>
+<p><strong>핵심 판단:</strong> MSFT는 매출 성장과 영업이익률 개선이 이어지고 있지만, 설비투자가 영업현금흐름보다 빠르게 증가하면서 잉여현금흐름이 감소하고 있습니다. 이익 성장만으로 저평가를 판단하기보다는, 투자 확대가 현금수익으로 전환되는지 확인해야 합니다. 위 등급은 펀더멘털 연구 의견이며, 최종 매매 결정은 별도 판단이 필요합니다.</p>
+</blockquote>
+<h5>1. 검토 범위와 자료의 한계</h5>
+<p>이번 보고서는 제공 도구의 기업정보, 분기·연간 재무제표, 내부자 거래 자료를 사용했습니다. 재무제표 도구는 <strong>2026년 11월 20일까지 공시된 SEC 자료</strong>를 기준으로 한다고 명시하고 있습니다.</p>
+<p>다만 최근 1주 동안의 신규 공시나 경영진 발표를 날짜별로 확인할 수 있는 자료는 제공되지 않았습니다. 따라서 아래 내용은 <strong>최근 1주에 새로 발생한 실적 변화</strong>가 아니라, <strong>현재 확인 가능한 최신 펀더멘털 상태</strong>에 대한 분석입니다.</p>
+<ul>
+<li>최신 분기: <strong>2026년 9월 30일 종료 분기</strong>, MSFT의 2027회계연도 1분기</li>
+<li>최신 연간: <strong>2026년 6월 30일 종료 회계연도</strong></li>
+<li>내부자 거래 자료의 가장 최근 거래일: <strong>2026년 11월 10일</strong></li>
+<li>재무제표 원자료의 금액 단위는 백만 달러이며, 본문에서는 주로 <strong>십억 달러</strong>로 환산했습니다.</li>
+<li>기업정보 요약과 재무제표 간 일부 지표가 불일치하므로, 특히 잉여현금흐름은 별도 검증했습니다.</li>
+</ul>
+<h5>2. MSFT 기업 개요와 이익 창출 구조</h5>
+<p>MSFT는 기업용 소프트웨어, 클라우드 인프라, 생산성 도구, 운영체제, 보안 및 게임 사업을 운영하는 대형 기술기업입니다. 주요 제품군에는 애저, 마이크로소프트 365, 윈도, 다이내믹스, 링크트인, 엑스박스 및 인공지능 관련 서비스가 포함됩니다.</p>
+<p>펀더멘털 관점의 강점은 다음과 같습니다.</p>
+<ul>
+<li><strong>반복 매출 기반:</strong> 기업용 구독 및 클라우드 서비스는 일회성 판매보다 매출의 연속성을 높일 수 있습니다.</li>
+<li><strong>고객 전환비용:</strong> 생산성 도구, 데이터, 보안, 클라우드가 연결되어 있어 고객이 다른 공급업체로 이전하는 데 비용이 발생합니다.</li>
+<li><strong>교차판매 기반:</strong> 기존 기업 고객을 대상으로 보안·클라우드·인공지능 서비스를 추가 판매할 여지가 있습니다.</li>
+<li><strong>사업 다각화:</strong> 특정 제품이나 소비자 수요에 대한 의존을 줄일 수 있습니다.</li>
+</ul>
+<p>그러나 이번 자료에는 <strong>사업부별 매출, 애저 성장률, 인공지능 서비스 매출, 계약잔액, 고객별 수익성</strong>이 없습니다. 따라서 전체 실적 개선을 특정 사업의 성과로 단정할 수는 없습니다.</p>
+<h5>3. 최신 분기 실적: 성장과 영업 레버리지는 양호</h5>
+<h6>2026년 9월 종료 분기</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025년 9월 분기</th>
+<th style="text-align:right">2026년 9월 분기</th>
+<th style="text-align:right">전년 동기 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">77.673십억 달러</td>
+<td style="text-align:right">92.279십억 달러</td>
+<td style="text-align:right">+18.8%</td>
+</tr>
+<tr>
+<td>매출총이익</td>
+<td style="text-align:right">53.630십억 달러</td>
+<td style="text-align:right">62.559십억 달러</td>
+<td style="text-align:right">+16.6%</td>
+</tr>
+<tr>
+<td>영업이익</td>
+<td style="text-align:right">37.961십억 달러</td>
+<td style="text-align:right">45.915십억 달러</td>
+<td style="text-align:right">+21.0%</td>
+</tr>
+<tr>
+<td>순이익</td>
+<td style="text-align:right">27.747십억 달러</td>
+<td style="text-align:right">36.629십억 달러</td>
+<td style="text-align:right">+32.0%</td>
+</tr>
+<tr>
+<td>희석 주당순이익</td>
+<td style="text-align:right">3.72달러</td>
+<td style="text-align:right">4.92달러</td>
+<td style="text-align:right">+32.3%</td>
+</tr>
+</tbody>
+</table></div>
+<h6>수익성 해석</h6>
+<ul>
+<li><strong>매출총이익률:</strong> 약 69.05% → <strong>67.79%</strong>, 약 <strong>1.25%포인트 하락</strong></li>
+<li><strong>영업이익률:</strong> 약 48.87% → <strong>49.76%</strong>, 약 <strong>0.89%포인트 상승</strong></li>
+<li><strong>순이익률:</strong> 약 35.72% → <strong>39.69%</strong></li>
+</ul>
+<p>매출원가는 전년 동기 대비 약 <strong>23.6%</strong> 증가해 매출 증가율을 웃돌았습니다. 반면 매출총이익에서 영업이익을 차감한 영업비용은 15.669십억 달러에서 16.644십억 달러로 약 <strong>6.2%</strong> 증가하는 데 그쳤습니다.</p>
+<p>이는 <strong>매출원가 부담에도 영업비용 통제로 영업이익률을 개선했다</strong>는 의미입니다. MSFT의 규모 효과를 보여주는 긍정적 신호입니다.</p>
+<p>다만 순이익 증가율이 영업이익 증가율보다 높다는 점은 따로 검토해야 합니다. 제공된 요약 손익계산서에는 세금과 영업외손익 내역이 없으므로, <strong>주당순이익 32.3% 증가를 전부 반복 가능한 본업 성장으로 해석하면 안 됩니다.</strong></p>
+<h5>4. 연간 실적과 재무 역사</h5>
+<p>MSFT의 최근 연간 실적은 외형 성장과 수익성 개선을 동시에 보여줍니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>6월 종료 회계연도</th>
+<th style="text-align:right">매출</th>
+<th style="text-align:right">영업이익</th>
+<th style="text-align:right">순이익</th>
+<th style="text-align:right">희석 주당순이익</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022년</td>
+<td style="text-align:right">198.270십억 달러</td>
+<td style="text-align:right">83.383십억 달러</td>
+<td style="text-align:right">72.738십억 달러</td>
+<td style="text-align:right">9.65달러</td>
+</tr>
+<tr>
+<td>2023년</td>
+<td style="text-align:right">211.915십억 달러</td>
+<td style="text-align:right">88.523십억 달러</td>
+<td style="text-align:right">72.361십억 달러</td>
+<td style="text-align:right">9.68달러</td>
+</tr>
+<tr>
+<td>2024년</td>
+<td style="text-align:right">245.122십억 달러</td>
+<td style="text-align:right">109.433십억 달러</td>
+<td style="text-align:right">88.136십억 달러</td>
+<td style="text-align:right">11.80달러</td>
+</tr>
+<tr>
+<td>2025년</td>
+<td style="text-align:right">281.724십억 달러</td>
+<td style="text-align:right">128.528십억 달러</td>
+<td style="text-align:right">101.832십억 달러</td>
+<td style="text-align:right">13.64달러</td>
+</tr>
+<tr>
+<td>2026년</td>
+<td style="text-align:right">331.839십억 달러</td>
+<td style="text-align:right">155.237십억 달러</td>
+<td style="text-align:right">133.749십억 달러</td>
+<td style="text-align:right">17.95달러</td>
+</tr>
+</tbody>
+</table></div>
+<p>2026회계연도에는 전년 대비:</p>
+<ul>
+<li>매출 <strong>17.8% 증가</strong></li>
+<li>영업이익 <strong>20.8% 증가</strong></li>
+<li>순이익 <strong>31.3% 증가</strong></li>
+<li>희석 주당순이익 <strong>31.6% 증가</strong></li>
+</ul>
+<p>2022~2026회계연도의 매출 연평균 성장률은 약 <strong>13.7%</strong>, 영업이익 연평균 성장률은 약 **16.8%**입니다. 같은 기간 영업이익률은 약 **42.1%에서 46.8%**로 상승했습니다.</p>
+<p>장기적으로도 2020회계연도 매출 143.015십억 달러에서 2026회계연도 331.839십억 달러로 약 2.3배 확대됐습니다.</p>
+<p>그러나 이익 변동 위험이 없는 기업은 아닙니다. 자료상 2015년 6월 분기와 2017년 12월 분기에는 순손실이 기록되어 있습니다. 해당 손실의 원인은 이번 요약 자료만으로 확인할 수 없지만, 장기 분석에서는 손상차손·세금·투자 관련 손익 등 비경상 항목을 구분해야 함을 보여줍니다.</p>
+<h5>5. 현금흐름: 현재 가장 중요한 경계 신호</h5>
+<p>본 보고서의 잉여현금흐름은 다음처럼 계산했습니다.</p>
+<p><strong>잉여현금흐름 = 영업현금흐름 − 현금 설비투자</strong></p>
+<p>이는 인수합병, 금융리스, 기타 투자 약정까지 모두 반영한 포괄적 투자부담 지표는 아닙니다.</p>
+<h6>연간 현금흐름</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">2025회계연도</th>
+<th style="text-align:right">2026회계연도</th>
+<th style="text-align:right">변화</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">136.162십억 달러</td>
+<td style="text-align:right">182.935십억 달러</td>
+<td style="text-align:right">+34.4%</td>
+</tr>
+<tr>
+<td>설비투자</td>
+<td style="text-align:right">64.551십억 달러</td>
+<td style="text-align:right">115.948십억 달러</td>
+<td style="text-align:right">+79.6%</td>
+</tr>
+<tr>
+<td>계산상 잉여현금흐름</td>
+<td style="text-align:right">71.611십억 달러</td>
+<td style="text-align:right">66.987십억 달러</td>
+<td style="text-align:right">-6.5%</td>
+</tr>
+<tr>
+<td>설비투자/매출</td>
+<td style="text-align:right">22.9%</td>
+<td style="text-align:right">34.9%</td>
+<td style="text-align:right">상승</td>
+</tr>
+<tr>
+<td>잉여현금흐름률</td>
+<td style="text-align:right">25.4%</td>
+<td style="text-align:right">20.2%</td>
+<td style="text-align:right">하락</td>
+</tr>
+</tbody>
+</table></div>
+<p>본업의 현금 창출은 강하지만, 투자 지출이 더 빠르게 증가해 주주에게 남는 현금이 줄었습니다.</p>
+<h6>최신 분기에는 이러한 현상이 심화</h6>
+<p>2026년 9월 분기:</p>
+<ul>
+<li>영업현금흐름: <strong>58.000십억 달러</strong>, 전년 동기 대비 <strong>28.7% 증가</strong></li>
+<li>설비투자: <strong>39.367십억 달러</strong>, <strong>103.0% 증가</strong></li>
+<li>계산상 잉여현금흐름: <strong>18.633십억 달러</strong>, <strong>27.4% 감소</strong></li>
+<li>설비투자/매출: <strong>42.7%</strong></li>
+<li>설비투자/영업현금흐름: <strong>67.9%</strong>, 전년 동기 약 43.0%</li>
+<li>잉여현금흐름/순이익: 약 <strong>50.9%</strong>, 전년 동기 약 92.5%</li>
+</ul>
+<p>영업현금흐름 자체가 악화된 것은 아닙니다. 문제는 <strong>대규모 투자가 현금 창출 증가분을 흡수하고 있다는 점</strong>입니다.</p>
+<p>최신 분기의 영업·투자·재무 현금흐름을 합하면 약 <strong>-0.605십억 달러</strong>입니다. 현금성자산이 전 분기보다 감소한 방향과 대체로 일치하지만, 정확한 연결에는 환율 등 추가 항목이 필요합니다.</p>
+<h6>최근 12개월 현금흐름 재구성</h6>
+<p>연간 수치에 최신 분기를 더하고 전년 동기 분기를 빼면:</p>
+<ul>
+<li>영업현금흐름: <strong>195.878십억 달러</strong></li>
+<li>설비투자: <strong>135.921십억 달러</strong></li>
+<li>잉여현금흐름: <strong>59.957십억 달러</strong></li>
+<li>잉여현금흐름률: 약 <strong>17.3%</strong></li>
+</ul>
+<p>반면 기업정보 도구는 잉여현금흐름을 약 <strong>2.994십억 달러</strong>로 표시합니다. 기간과 산식이 제시되지 않아 재무제표 기반 계산과 조정할 수 없습니다. <strong>두 값을 혼용하지 말아야 하며, 현금흐름 판단에는 위 재구성 수치를 우선 참고하는 편이 타당합니다.</strong></p>
+<h5>6. 재무상태: 자본 기반은 강화됐지만 유동성 여유는 축소</h5>
+<p>2026년 9월 말 기준:</p>
+<ul>
+<li>총자산: <strong>779.403십억 달러</strong></li>
+<li>총부채: <strong>308.894십억 달러</strong></li>
+<li>자기자본: <strong>470.509십억 달러</strong></li>
+<li>유동자산: <strong>186.137십억 달러</strong></li>
+<li>유동부채: <strong>151.968십억 달러</strong></li>
+<li>현금 및 현금성자산: <strong>20.281십억 달러</strong></li>
+</ul>
+<p>주요 변화는 다음과 같습니다.</p>
+<ol>
+<li>
+<p><strong>자기자본 강화</strong><br />
+자기자본은 전년 동기 대비 약 <strong>29.6%</strong> 증가했습니다. 총부채/총자산은 약 **42.9%에서 39.6%**로 낮아졌습니다.</p>
+</li>
+<li>
+<p><strong>단기 유동성 완충력 축소</strong><br />
+유동비율은 약 <strong>1.40배에서 1.225배</strong>로 하락했습니다. 순운전자본도 <strong>54.070십억 달러에서 34.169십억 달러</strong>로 감소했습니다.</p>
+</li>
+<li>
+<p><strong>현금 잔액 감소</strong><br />
+현금 및 현금성자산은 전년 동기 대비 약 <strong>29.7%</strong> 감소했습니다. 다만 단기금융상품 세부 내역이 없으므로 이것만으로 전체 유동성 위기를 판단할 수는 없습니다.</p>
+</li>
+</ol>
+<p>기업정보 도구의 부채/자기자본 비율은 **28.465%**입니다. 이는 재무상태표상 총부채/자기자본 약 **65.7%**와 정의가 다른 지표로 보입니다. 이자부 차입금과 총부채를 혼동해서는 안 되며, 이번 자료로는 정확한 순차입금을 계산하기 어렵습니다.</p>
+<h5>7. 가치평가: 이익 기준과 현금 기준의 차이가 큼</h5>
+<p>기업정보 도구가 제시한 지표는 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align:right">제공 값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시가총액</td>
+<td style="text-align:right">약 3.700조 달러</td>
+</tr>
+<tr>
+<td>최근 12개월 주가수익비율</td>
+<td style="text-align:right">26.01배</td>
+</tr>
+<tr>
+<td>예상 주가수익비율</td>
+<td style="text-align:right">20.59배</td>
+</tr>
+<tr>
+<td>최근 12개월 주당순이익</td>
+<td style="text-align:right">19.16달러</td>
+</tr>
+<tr>
+<td>예상 주당순이익</td>
+<td style="text-align:right">24.20084달러</td>
+</tr>
+<tr>
+<td>주가순자산비율</td>
+<td style="text-align:right">7.87배</td>
+</tr>
+<tr>
+<td>주가수익성장비율</td>
+<td style="text-align:right">1.5배</td>
+</tr>
+<tr>
+<td>배당수익률</td>
+<td style="text-align:right">0.77%</td>
+</tr>
+<tr>
+<td>자기자본이익률</td>
+<td style="text-align:right">34.22%</td>
+</tr>
+<tr>
+<td>총자산이익률</td>
+<td style="text-align:right">14.41%</td>
+</tr>
+<tr>
+<td>베타</td>
+<td style="text-align:right">1.045</td>
+</tr>
+</tbody>
+</table></div>
+<p>최근 12개월 매출은 약 <strong>346.445십억 달러</strong>, 순이익은 <strong>142.631십억 달러</strong>입니다.</p>
+<p>이를 바탕으로 계산하면:</p>
+<ul>
+<li>시가총액/매출: 약 <strong>10.7배</strong></li>
+<li>시가총액/재구성 잉여현금흐름: 약 <strong>61.7배</strong></li>
+<li>재구성 잉여현금흐름 수익률: 약 <strong>1.62%</strong></li>
+<li>예상 주당순이익의 최근 12개월 대비 증가율: 약 <strong>26.3%</strong></li>
+</ul>
+<p><strong>이익 기준으로는 성장성을 고려할 여지가 있지만, 현금흐름 기준으로는 높은 평가를 받고 있습니다.</strong> 예상 주가수익비율 20.6배의 매력도는 예상 이익 실현과 설비투자 회수에 달려 있습니다.</p>
+<p>주가수익비율과 주당순이익을 곱한 내재 가격은 약 <strong>498.30달러</strong>입니다. 이는 직접 확인한 현재가가 아니라 지표에서 역산한 값이며, 실제 주문 가격으로 사용하면 안 됩니다.</p>
+<p>예상 주당순이익 24.20084달러가 유지된다는 단순 가정 아래:</p>
+<ul>
+<li>18배 적용: 약 <strong>435.6달러</strong></li>
+<li>20배 적용: 약 <strong>484.0달러</strong></li>
+<li>22배 적용: 약 <strong>532.4달러</strong></li>
+</ul>
+<p>이는 목표주가가 아니라 <strong>배수 변화에 대한 민감도 분석</strong>입니다. 예상 이익의 적용 기간과 산정 근거가 제공되지 않았다는 제약도 있습니다.</p>
+<h5>8. 내부자 거래: 최근 1주 신규 기록은 없고, 직전에는 매도</h5>
+<p>제공된 자료에는 <strong>11월 14~20일 거래 기록이 없습니다.</strong> 이는 거래가 전혀 없었다는 확정이 아니라, 제공 데이터에서 확인되지 않았다는 뜻입니다.</p>
+<p>직전 주요 거래는 다음과 같습니다.</p>
+<ul>
+<li><strong>11월 10일:</strong> 다케시 누모토 임원, 5,000주 매도, 약 <strong>2.655백만 달러</strong></li>
+<li><strong>11월 9일:</strong> 에이미 후드 최고재무책임자, 7,305주 매도, 약 <strong>3.977백만 달러</strong></li>
+<li><strong>11월 6일:</strong> 사티아 나델라 최고경영자, 4,704주 증여</li>
+</ul>
+<p>11월 9~10일 매도 합계는 <strong>12,305주, 약 6.632백만 달러</strong>입니다. 제공된 2026년 자료에는 2월 18일 존 스탠턴 이사의 5,000주 매수도 있습니다.</p>
+<p>최근 방향은 매도 우세지만 다음 사항을 함께 고려해야 합니다.</p>
+<ul>
+<li>증여와 주식보상은 시장 매도·매수와 다릅니다.</li>
+<li>사전 매매계획 여부, 보유지분 대비 매도 비중, 세금 목적은 확인되지 않습니다.</li>
+<li>따라서 내부자 매도만으로 실적 악화나 단기 하락을 예측하기는 어렵습니다.</li>
+</ul>
+<h5>9. 거래 판단에 활용할 조건</h5>
+<h6>긍정적 평가를 강화할 조건</h6>
+<ul>
+<li>매출 성장률이 최근의 <strong>높은 10%대</strong> 수준을 유지</li>
+<li>영업이익률이 <strong>약 49~50%</strong> 수준에서 유지</li>
+<li>설비투자 증가율이 둔화하고 영업현금흐름 대비 투자 비중이 하락</li>
+<li>잉여현금흐름의 전년 동기 감소가 멈추고 증가로 전환</li>
+<li>예상 주당순이익 약 24.20달러의 실현 가능성을 뒷받침하는 추가 자료 확보</li>
+</ul>
+<h6>보수적으로 대응할 조건</h6>
+<ul>
+<li>매출총이익률 하락이 영업이익률 하락으로 이어짐</li>
+<li>설비투자가 영업현금흐름보다 계속 빠르게 증가</li>
+<li>예상 이익이 하향 조정되는데 주가 배수는 유지</li>
+<li>현금과 순운전자본이 추가로 감소하고 자금조달 의존도가 상승</li>
+</ul>
+<p><strong>실행상 시사점:</strong> 기존 보유자는 매출·주당순이익뿐 아니라 <strong>잉여현금흐름과 투자 부담을 핵심 점검 지표로 삼는 접근</strong>이 합리적입니다. 신규 진입 검토자는 예상 이익 기반 저평가만으로 추격하기보다, <strong>평가배수 하락 또는 현금흐름 개선 확인</strong>을 진입 조건으로 설정할 수 있습니다.</p>
+<p>최근 1주 신규 촉매, 실시간 가격, 거래량은 이번 도구로 확인되지 않았으므로 단기 매매 시점이나 손절 가격은 제시하지 않습니다.</p>
+<h5>10. 최종 요약</h5>
+<p>MSFT의 본업 경쟁력과 이익 성장세는 견조합니다. 최신 분기 매출은 18.8%, 영업이익은 21.0% 증가했고 자기자본도 확대됐습니다. 그러나 설비투자가 두 배 이상 증가하면서 분기 잉여현금흐름은 27.4% 감소했습니다.</p>
+<p>따라서 핵심 질문은 **“이익이 성장하는가”가 아니라 “투자 확대가 언제 현금수익으로 돌아오는가”**입니다. 현 단계에서는 강한 사업 실적과 약해진 현금 전환을 함께 반영하는 중립적 연구 의견이 적절합니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>MSFT 확인 내용</th>
+<th>해석</th>
+<th>거래 판단에 활용할 점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최근 1주 정보</td>
+<td>신규 공시·거래를 날짜별로 검증할 자료 부족</td>
+<td>단기 촉매 판단 제한</td>
+<td>최신 공시와 실제 가격 별도 확인</td>
+</tr>
+<tr>
+<td>최신 분기 성장</td>
+<td>매출 +18.8%, 영업이익 +21.0%</td>
+<td>본업 성장 양호</td>
+<td>성장률 유지 여부 점검</td>
+</tr>
+<tr>
+<td>수익성</td>
+<td>매출총이익률 67.8%, 영업이익률 49.8%</td>
+<td>원가 부담을 영업비용 통제로 상쇄</td>
+<td>총이익률 추가 하락 경계</td>
+</tr>
+<tr>
+<td>이익의 질</td>
+<td>순이익 +32.0%, 영업이익보다 빠른 증가</td>
+<td>영업외·세금 영향 확인 필요</td>
+<td>순이익 증가율 단순 연장 금지</td>
+</tr>
+<tr>
+<td>설비투자</td>
+<td>분기 39.367십억 달러, +103.0%</td>
+<td>현금 사용 부담 급증</td>
+<td>투자 증가율 둔화 확인</td>
+</tr>
+<tr>
+<td>잉여현금흐름</td>
+<td>분기 18.633십억 달러, -27.4%</td>
+<td>이익 성장과 현금 성장 괴리</td>
+<td>현금흐름 증가 전환을 주요 조건으로 설정</td>
+</tr>
+<tr>
+<td>최근 12개월 현금 가치평가</td>
+<td>재구성 잉여현금흐름 59.957십억 달러, 수익률 약 1.62%</td>
+<td>현금 기준 평가 부담</td>
+<td>이익 배수만으로 저평가 판단 금지</td>
+</tr>
+<tr>
+<td>재무안정성</td>
+<td>자기자본 470.509십억 달러, 유동비율 1.225배</td>
+<td>자본 강화·단기 완충력 축소</td>
+<td>현금 및 순운전자본 추이 점검</td>
+</tr>
+<tr>
+<td>이익 가치평가</td>
+<td>후행 26.0배, 예상 20.6배</td>
+<td>예상 이익 실현이 중요</td>
+<td>추정치 하향 위험 반영</td>
+</tr>
+<tr>
+<td>내부자 거래</td>
+<td>직전 11월 9~10일 약 6.632백만 달러 매도</td>
+<td>보조 경계 신호</td>
+<td>보유비중·매매계획 없이 과대해석 금지</td>
+</tr>
+<tr>
+<td>데이터 유의점</td>
+<td>기업정보 잉여현금흐름과 재무제표 계산 불일치</td>
+<td>기간·산식 차이 미확인</td>
+<td>동일 산식의 재무제표 수치 우선 활용</td>
+</tr>
+<tr>
+<td>종합 연구 의견</td>
+<td>성장 강세와 현금흐름 부담 공존</td>
+<td>중립적 평가</td>
+<td>보유분 점검, 신규 진입은 가격·현금흐름 조건 확인</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. 투자 검토팀 판단</h2><h3 id="s2-1">상승론 분석가</h3>
+<p>Bull Analyst: # MSFT 강세 투자 논거: 시장은 투자 부담을 보고 있지만, 본업의 성장과 확장성도 봐야 합니다</p>
+<p><strong>투자 의견</strong>: 매수</p>
+<p><em>아래 평가는 제공된 보고서의 2026년 11월 19일 가격과 11월 20일 기준 재무·뉴스 자료에 근거합니다. 실시간 시세나 공시를 별도로 검증한 결과는 아닙니다.</em></p>
+<p><strong>제 입장은 MSFT의 장기 분할매수입니다.</strong> 단기 차트가 좋다는 주장이 아닙니다. 매출과 영업현금흐름이 빠르게 성장하는 플랫폼 기업을, 투자 회수에 대한 우려 때문에 시장이 지나치게 단기적으로 평가할 가능성에 주목하는 것입니다.</p>
+<p>아직 약세 분석가의 발언은 없으므로, 가장 설득력 있는 예상 반론부터 정면으로 다루겠습니다.</p>
+<h5>1. “인공지능 기대만 앞선다”는 주장과 실제 본업 실적은 다릅니다</h5>
+<p>MSFT를 인공지능 기대감에만 의존하는 기업으로 보는 것은 최신 실적과 맞지 않습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 지표</th>
+<th style="text-align:right">최신 분기 실적</th>
+<th style="text-align:right">전년 동기 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">922.79억 달러</td>
+<td style="text-align:right">+18.8%</td>
+</tr>
+<tr>
+<td>영업이익</td>
+<td style="text-align:right">459.15억 달러</td>
+<td style="text-align:right">+21.0%</td>
+</tr>
+<tr>
+<td>영업현금흐름</td>
+<td style="text-align:right">580억 달러</td>
+<td style="text-align:right">+28.7%</td>
+</tr>
+<tr>
+<td>영업이익률</td>
+<td style="text-align:right">49.76%</td>
+<td style="text-align:right">+0.89%포인트</td>
+</tr>
+</tbody>
+</table></div>
+<p>여기서 중요한 것은 순이익 증가율이 아닙니다. 투자 평가손익이나 세금의 영향을 상대적으로 덜 받는 <strong>영업이익과 영업현금흐름도 매출보다 빠르게 증가했다</strong>는 점입니다.</p>
+<p>약세 측이 “주당순이익 32.3% 증가에는 비반복적 요인이 있을 수 있다”고 지적한다면 동의합니다. 그래서 제 강세 논거는 그 수치를 그대로 연장하지 않습니다. <strong>매출 18.8%, 영업이익 21.0%, 영업현금흐름 28.7% 성장만으로도 본업의 경쟁력을 설명할 수 있습니다.</strong></p>
+<p>이것은 한 분기의 우연한 반등도 아닙니다. 제공 자료에서 2022~2026회계연도 매출 연평균 성장률은 약 13.7%, 영업이익은 약 16.8%입니다. 같은 기간 영업이익률은 약 42.1%에서 46.8%로 개선됐습니다.</p>
+<p>규모가 커졌는데도 수익성이 개선됐다는 사실이 MSFT의 확장성을 보여줍니다.</p>
+<h5>2. 경쟁우위는 특정 인공지능 모델이 아니라 고객 접점과 통합 구조입니다</h5>
+<p>“더 좋은 경쟁 모델이 등장하면 MSFT가 밀리는 것 아닌가요?”</p>
+<p>경쟁 모델이 Copilot의 가격 결정력이나 고객 확보에 부담을 줄 수 있다는 점은 인정합니다. 그러나 <strong>모델 경쟁력과 기업용 플랫폼 경쟁력은 같은 것이 아닙니다.</strong></p>
+<p>MSFT는 생산성 도구, 운영체제, 클라우드, 보안, 데이터 관리에 걸친 고객 접점을 갖고 있습니다. 이 구조는 세 가지 강점을 제공합니다.</p>
+<ul>
+<li><strong>교차판매:</strong> 기존 기업 고객에게 인공지능·보안·클라우드 서비스를 추가로 제안할 수 있습니다.</li>
+<li><strong>전환비용:</strong> 고객은 제품 하나뿐 아니라 데이터, 권한 관리, 업무 절차와 통합 환경까지 고려해야 합니다.</li>
+<li><strong>다층적 수익화:</strong> 인공지능 수요가 확대될 때 응용 소프트웨어뿐 아니라 컴퓨팅과 인프라에서도 매출 기회가 생길 수 있습니다.</li>
+</ul>
+<p>물론 경쟁사의 성장이 자동으로 Azure 매출이 된다는 뜻은 아닙니다. 구체적 계약과 사용량 확인이 필요합니다. 다만 경쟁 모델의 등장만으로 MSFT 전체 사업의 경쟁우위가 사라진다고 보는 것도 과도한 단순화입니다.</p>
+<p>제공된 뉴스에서 Jefferies가 Ignite 이후 경영진·고객 면담을 바탕으로 MSFT의 투자 둔화 대응력과 점유율 확대 가능성을 긍정적으로 평가했다는 점은 이러한 플랫폼 논거를 뒷받침합니다. 이는 실현된 점유율 증가의 증거는 아니지만, 단순한 소셜미디어 반등 기대보다는 사업에 밀착된 긍정 신호입니다.</p>
+<h5>3. 가장 강한 약세 논거인 잉여현금흐름 감소도 구분해서 봐야 합니다</h5>
+<p>여기가 이번 논쟁의 핵심입니다.</p>
+<p>최신 분기 설비투자는 393.67억 달러로 103.0% 증가했고, 잉여현금흐름은 186.33억 달러로 27.4% 감소했습니다. 최근 12개월 재구성 잉여현금흐름 수익률도 약 1.62%에 불과합니다.</p>
+<p><strong>이 가격을 현금흐름 기준으로 싸다고 주장하지는 않겠습니다.</strong></p>
+<p>하지만 약세 측에 되묻고 싶습니다. 잉여현금흐름 감소가 고객 수요와 본업 현금 창출의 악화 때문입니까, 아니면 투자 지출 급증 때문입니까?</p>
+<p>제공 자료에서는 후자입니다.</p>
+<ul>
+<li>연간 영업현금흐름은 <strong>34.4% 증가</strong>했습니다.</li>
+<li>최신 분기 영업현금흐름은 <strong>28.7% 증가</strong>했습니다.</li>
+<li>그보다 설비투자가 더 빠르게 늘어 잉여현금흐름이 감소했습니다.</li>
+</ul>
+<p>물론 투자라고 해서 모두 좋은 투자는 아닙니다. 설비의 수익성, 가동률, 감가상각 부담은 반드시 확인해야 합니다. 다만 <strong>현금 창출력이 약해진 기업과, 강해진 현금 창출력을 투자에 사용하는 기업은 다르게 평가해야 합니다.</strong></p>
+<p>민감도를 보면 투자 논리가 선명해집니다. 분기 영업현금흐름이 580억 달러로 유지되고 현금 설비투자가 300억 달러라면, 단순 계산상 잉여현금흐름은 280억 달러입니다. 현재보다 약 50% 많습니다.</p>
+<p>이는 설비투자 감소 전망이 아니라 <strong>현금흐름의 투자 강도 민감도</strong>입니다. 강세 논리는 투자가 곧 줄어든다는 확신이 아니라, 이미 커진 영업현금흐름을 바탕으로 향후 투자 증가율이 안정될 때 현금 회수력이 개선될 여지가 있다는 것입니다.</p>
+<h5>4. 성장 기회와 가치평가: 기대가 있지만, 무제한 낙관은 필요 없습니다</h5>
+<p>MSFT의 성장 경로는 기존 기업 고객에 대한 추가 판매, Azure 사용 확대, Copilot의 유료 도입과 사용 확산입니다. 다만 제공 자료에는 사업별 성장률이나 공식 매출 가이던스가 없어 이를 확정 전망으로 제시할 수 없습니다.</p>
+<p>대신 규모를 가늠해 보겠습니다. 최근 연간 매출 3,318.39억 달러를 기준으로 <strong>15~18% 성장한다고 가정하면</strong>, 다음 연간 매출은 약 <strong>3,816억~3,916억 달러</strong>입니다. 이는 공식 전망이 아니라 성장률 시나리오이며, 현재 규모에서도 수백억 달러의 추가 매출 기회가 있다는 의미입니다.</p>
+<p>가치평가는 다음과 같습니다.</p>
+<ul>
+<li>후행 주가수익비율: 약 <strong>26.0배</strong></li>
+<li>예상 주가수익비율: 약 <strong>20.6배</strong></li>
+<li>제공된 예상 주당순이익: 약 <strong>24.20달러</strong></li>
+</ul>
+<p>예상 이익의 적용 기간과 산정 근거가 충분히 제시되지 않았으므로 할인해서 봐야 합니다. 그럼에도 높은 10%대 매출 성장과 약 50%의 분기 영업이익률을 보이는 MSFT에 예상 이익 약 20.6배가 명백히 과도하다고 단정하기도 어렵습니다.</p>
+<p>예상 주당순이익 24.20달러를 유지한다는 조건에서:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>적용 배수</th>
+<th style="text-align:right">단순 평가가격</th>
+<th style="text-align:right">498.30달러 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>18배</td>
+<td style="text-align:right">435.60달러</td>
+<td style="text-align:right">약 -12.6%</td>
+</tr>
+<tr>
+<td>22배</td>
+<td style="text-align:right">532.40달러</td>
+<td style="text-align:right">약 +6.8%</td>
+</tr>
+<tr>
+<td>24배</td>
+<td style="text-align:right">580.80달러</td>
+<td style="text-align:right">약 +16.6%</td>
+</tr>
+</tbody>
+</table></div>
+<p>목표주가가 아닌 민감도 분석입니다. 예상 이익이 하향되면 하방은 더 커질 수 있습니다. 반대로 <strong>강세 시나리오에는 극단적인 배수 확대가 반드시 필요한 것은 아닙니다.</strong></p>
+<h5>5. 차트 약세는 인정합니다. 그래서 매수 방식이 중요합니다</h5>
+<p>기술적 반론은 유효합니다. MSFT의 확인 종가 498.30달러는 10일·50일 이동평균 아래이고, RSI 39.21과 음의 MACD 히스토그램도 단기 약세를 가리킵니다. 바닥이 확인됐다고 말할 근거는 없습니다.</p>
+<p>다만 가격과 50일 이동평균은 여전히 200일 이동평균 위입니다. 이는 장기 상승 구조가 완전히 훼손됐다는 주장과는 구분해야 합니다.</p>
+<p><strong>장기 투자 판단과 단기 진입 판단을 분리하겠습니다.</strong></p>
+<ul>
+<li>장기 관점에서는 소규모 초기 매수 후 분할 접근이 합리적입니다.</li>
+<li>추가 매수의 확신은 최신 이동평균 회복, 모멘텀 개선, 현금흐름 실적 확인으로 높이는 편이 좋습니다.</li>
+<li>516.31~520.06달러는 제공 시점의 동적 회복 기준이지 고정 저항대가 아닙니다.</li>
+<li>ATR이 약 15.92달러이므로 좁은 손절과 큰 포지션을 결합하는 접근은 피해야 합니다.</li>
+</ul>
+<p>심리 점수 4.8/10도 강한 매수 신호는 아닙니다. 표본 신뢰도가 낮기 때문입니다. 그러나 적어도 제공 자료는 투자자들이 MSFT의 미래를 일방적으로 낙관하고 있다는 증거도 보여주지 않습니다.</p>
+<h5>결론: MSFT의 투자 부담은 실제지만, 성장 엔진도 실제입니다</h5>
+<p>제 강세 논리는 “인공지능이 유망하니 사자”가 아닙니다.</p>
+<p><strong>MSFT는 이미 매출·영업이익·영업현금흐름을 빠르게 늘리고 있고, 기존 고객 기반에서 신규 서비스를 확장할 수 있으며, 투자 부담 때문에 현재 잉여현금흐름이 눌려 있는 기업입니다.</strong></p>
+<p>이 판단이 틀렸다고 인정할 조건도 분명합니다. 매출 둔화와 영업이익률 하락이 겹치거나, 설비투자가 현금 창출보다 계속 빠르게 늘면서 잉여현금흐름 감소가 지속되거나, 예상 이익이 크게 하향된다면 강세 논거를 재평가해야 합니다.</p>
+<p>하지만 현재 제공된 수치에서는 본업의 약화보다 <strong>성장과 투자 확대가 동시에 진행되는 모습</strong>이 더 뚜렷합니다. 따라서 MSFT는 단기 반등에 베팅하기보다, 투자 회수 과정을 지켜보며 장기적으로 분할매수할 가치가 있다는 것이 제 결론입니다.</p>
+<p>최종 매매 제안: 매수</p>
+<h3 id="s2-2">하락론 분석가</h3>
+<p>Bear Analyst: # MSFT 약세 투자 논거: 성장하는 기업이라도, 투자 회수가 불확실한 가격에 살 필요는 없습니다</p>
+<p><strong>투자 의견</strong>: 매도</p>
+<p><em>제공된 2026년 11월 19일 가격과 11월 20일 기준 연구 자료를 바탕으로 한 의견입니다. 실시간 시세나 원공시를 별도로 검증하지 않았습니다.</em></p>
+<p>강세 분석가님, MSFT의 본업이 강하다는 점에는 동의합니다. 매출 18.8%, 영업이익 21.0%, 영업현금흐름 28.7% 증가는 분명 좋은 실적입니다.</p>
+<p>하지만 <strong>좋은 기업이라는 사실과 지금 좋은 투자라는 결론은 다릅니다.</strong> 현재 MSFT의 문제는 성장 부재가 아니라, 그 성장을 유지하는 데 필요한 현금 지출이 급증하는 반면 주가는 여전히 상당한 투자 성공을 요구한다는 점입니다.</p>
+<p>제 결론은 <strong>MSFT 신규 매수를 피하고, 기존 보유자는 위험 노출 축소를 검토해야 한다</strong>는 것입니다. 이는 즉시 공매도하자는 주장이 아니라, 현재 가격에서 장기 분할매수를 시작할 근거가 충분하지 않다는 판단입니다.</p>
+<h5>1. “투자 때문에 현금이 줄었다”는 설명은 맞지만, 투자 매력을 입증하지는 못합니다</h5>
+<p>강세 측은 이렇게 물었습니다.</p>
+<blockquote>
+<p>“잉여현금흐름 감소가 본업 악화 때문입니까, 투자 지출 급증 때문입니까?”</p>
+</blockquote>
+<p>제 답은 이렇습니다. <strong>투자 지출 때문입니다. 그러나 그 투자가 경쟁력 유지를 위해 계속 필요하다면, 주주 입장에서는 결코 가벼운 문제가 아닙니다.</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 지표</th>
+<th style="text-align:right">제공 자료의 변화</th>
+<th>약세 측 해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>연간 설비투자</td>
+<td style="text-align:right">79.6% 증가</td>
+<td>매출 증가율 17.8%를 크게 상회</td>
+</tr>
+<tr>
+<td>분기 설비투자</td>
+<td style="text-align:right">103.0% 증가</td>
+<td>영업현금흐름 증가율 28.7%를 크게 상회</td>
+</tr>
+<tr>
+<td>분기 설비투자/영업현금흐름</td>
+<td style="text-align:right">약 43.0% → 67.9%</td>
+<td>벌어들이는 현금 중 재투자 비중 급증</td>
+</tr>
+<tr>
+<td>분기 잉여현금흐름</td>
+<td style="text-align:right">27.4% 감소</td>
+<td>이익 성장과 주주에게 남는 현금의 괴리</td>
+</tr>
+<tr>
+<td>분기 잉여현금흐름/순이익</td>
+<td style="text-align:right">약 92.5% → 50.9%</td>
+<td>투자 차감 후 현금 전환 약화</td>
+</tr>
+</tbody>
+</table></div>
+<p>강세 측이 제시한 “영업현금흐름 580억 달러를 유지하면서 설비투자가 300억 달러로 내려가면”이라는 계산은 맞습니다. 하지만 이는 <strong>분기 설비투자가 현재보다 약 24% 감소해도 영업현금흐름은 유지되는 상황</strong>을 가정합니다.</p>
+<p>바로 그 동시 달성이 검증되지 않았습니다.</p>
+<ul>
+<li>투자를 줄여도 수요를 충족하고 경쟁력을 유지할 수 있습니까?</li>
+<li>투자를 유지해야 한다면 잉여현금흐름 회복은 얼마나 늦어집니까?</li>
+<li>경쟁 심화로 추가 지출이 필요해지면 투자 회수 기간은 얼마나 늘어납니까?</li>
+</ul>
+<p>또한 <strong>설비투자 증가율 둔화와 설비투자 금액 감소는 다릅니다.</strong> 투자 증가율이 낮아져도 절대 지출액은 계속 늘 수 있습니다. 강세 측의 핵심 논거인 현금 회복에는 투자 증가율 안정만이 아니라, 영업현금흐름 증가분이 추가 투자액을 충분히 넘어서는 변화가 필요합니다.</p>
+<h5>2. 약 50%의 영업이익률 뒤에서는 매출총이익률이 하락하고 있습니다</h5>
+<p>강세 측은 영업이익률 개선을 규모 효과의 증거로 제시했습니다. 맞습니다. 그러나 그 개선의 구성도 봐야 합니다.</p>
+<p>최신 분기에는:</p>
+<ul>
+<li>매출이 <strong>18.8% 증가</strong>했지만 매출원가는 <strong>23.6% 증가</strong>했습니다.</li>
+<li>매출총이익률은 <strong>69.05%에서 67.79%로 약 1.25%포인트 하락</strong>했습니다.</li>
+<li>반면 영업비용 증가는 약 **6.2%**에 그쳐 영업이익률을 방어했습니다.</li>
+</ul>
+<p>현재 실적은 <strong>원가 부담이 커지는 가운데 영업비용 통제로 이를 상쇄한 모습</strong>입니다.</p>
+<p>비용 통제는 강점입니다. 다만 경쟁 대응과 제품 개발을 계속해야 하는 기업이 영업비용을 매출보다 훨씬 느리게 늘리는 방식으로 원가 압박을 무기한 상쇄할 수 있다고 가정해서는 안 됩니다.</p>
+<p>설비투자 확대는 향후 감가상각 부담으로 이어질 수도 있습니다. 제공 자료만으로 그 시점과 규모를 정량화할 수는 없지만, <strong>현재의 높은 영업이익률을 향후 대규모 투자까지 충분히 반영한 정상 수익성으로 단정하기는 어렵습니다.</strong></p>
+<p>제 약세 논거는 수익성이 이미 붕괴했다는 것이 아닙니다. <strong>현금 부담은 먼저 커졌고, 이익률에 미칠 후속 부담은 아직 불확실하다</strong>는 것입니다.</p>
+<h5>3. 고객 전환비용은 기존 사업을 보호하지만, 신규 AI 수익을 보장하지 않습니다</h5>
+<p>“모델 경쟁력과 플랫폼 경쟁력은 다르다”는 강세 측 주장에는 동의합니다. 하지만 그 구분은 약세 논거에도 중요합니다.</p>
+<p>기업 고객은 기존 생산성 도구와 운영체제를 계속 사용하면서도, <strong>추가 AI 예산은 경쟁 서비스에 배분할 수 있습니다.</strong> MSFT의 기존 고객 기반 전체가 이탈해야만 투자 논리가 약해지는 것은 아닙니다.</p>
+<p>다음과 같은 상황만으로도 충분합니다.</p>
+<ul>
+<li>기존 구독은 유지되지만 Copilot 추가 구매가 기대에 못 미치는 경우</li>
+<li>경쟁 서비스 때문에 AI 제품 가격이나 할인 조건이 불리해지는 경우</li>
+<li>클라우드 사용량은 늘어도 관련 인프라 비용 때문에 투자수익률이 낮아지는 경우</li>
+</ul>
+<p>이는 확인된 실적 악화가 아니라 <strong>현재 투자자가 부담하는 위험 경로</strong>입니다. 제공 자료에는 Azure 성장률, Copilot 유료 도입률, AI 서비스별 수익성, 설비 가동률이 없습니다.</p>
+<p>따라서 “통합 플랫폼이므로 여러 단계에서 수익화할 수 있다”는 설명은 사업 기회의 근거이지, 투자수익률의 증거는 아닙니다.</p>
+<p>Jefferies의 Ignite 이후 평가는 긍정적 참고자료입니다. 그러나 <strong>고객 면담에 기초한 낙관적 평가가 실제 유료 사용 확대와 현금 회수를 대신할 수는 없습니다.</strong> 반대로 경쟁자의 점유율 잠식 우려도 아직 확인된 MSFT 점유율 하락으로 과장해서는 안 됩니다. 현재 핵심은 어느 쪽도 정량적으로 입증되지 않은 상태에서 투자 지출만 빠르게 늘고 있다는 점입니다.</p>
+<h5>4. 예상 주가수익비율 20.6배는 안전마진이 아니라, 예상 이익에 대한 의존입니다</h5>
+<p>강세 측은 높은 성장률을 고려하면 예상 이익 20.6배가 과도하지 않다고 주장했습니다. 그러나 그 배수의 분모에는 <strong>최근 12개월 대비 약 26.3% 증가한 예상 주당순이익 24.20달러</strong>가 들어갑니다. 적용 기간과 산정 근거도 충분히 제공되지 않았습니다.</p>
+<p>반면 재무제표에서 재구성한 최근 12개월 수치는 다음과 같습니다.</p>
+<ul>
+<li>잉여현금흐름: 약 <strong>599.57억 달러</strong></li>
+<li>시가총액/잉여현금흐름: 약 <strong>61.7배</strong></li>
+<li>잉여현금흐름 수익률: 약 <strong>1.62%</strong></li>
+</ul>
+<p>여기서는 기간과 산식이 불명확한 기업정보 도구의 별도 현금흐름 값은 사용하지 않았습니다.</p>
+<p><strong>현재 현금흐름이 일시적으로 눌렸을 수는 있습니다. 하지만 시장이 그 일시성을 이미 상당 부분 믿고 있어야 정당화되는 가격이기도 합니다.</strong></p>
+<p>강세 측의 민감도 분석은 예상 이익을 고정하고 배수만 바꿨습니다. 실제 위험은 이익 추정치와 배수가 함께 낮아지는 경우입니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>가정</th>
+<th style="text-align:right">단순 평가가격</th>
+<th style="text-align:right">기준 종가 498.30달러 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>예상 주당순이익 24.20달러 × 22배</td>
+<td style="text-align:right">532.40달러</td>
+<td style="text-align:right">약 +6.8%</td>
+</tr>
+<tr>
+<td>예상 주당순이익 24.20달러 × 18배</td>
+<td style="text-align:right">435.60달러</td>
+<td style="text-align:right">약 -12.6%</td>
+</tr>
+<tr>
+<td>예상 주당순이익 10% 하향, 21.78달러 × 18배</td>
+<td style="text-align:right">392.04달러</td>
+<td style="text-align:right">약 -21.3%</td>
+</tr>
+</tbody>
+</table></div>
+<p>이는 목표주가나 확률 예측이 아니라 조건부 민감도입니다. 다만 <strong>매출 감소나 사업 붕괴 없이도, 예상 이익의 완만한 하향과 평가배수 축소만으로 상당한 손실이 가능하다</strong>는 점을 보여줍니다.</p>
+<p>강세 시나리오에 극단적인 배수 확대가 필요하지 않듯, 약세 시나리오에도 극단적인 경영 실패는 필요하지 않습니다.</p>
+<h5>5. 재무위기는 아니지만, 기다릴 여유가 투자자에게 더 유리합니다</h5>
+<p>MSFT의 자기자본 확대와 강한 영업현금흐름을 감안하면 유동성 위기를 주장할 근거는 없습니다. 다만 완충력의 방향은 살펴야 합니다.</p>
+<ul>
+<li>유동비율: 약 <strong>1.40배 → 1.225배</strong></li>
+<li>순운전자본: <strong>540.70억 달러 → 341.69억 달러</strong></li>
+<li>현금 및 현금성자산: 전년 동기 대비 약 <strong>29.7% 감소</strong></li>
+</ul>
+<p>단기금융상품 세부 내역이 없어 이를 전체 유동성 부족으로 해석하지는 않겠습니다. 그러나 “자금력이 충분하다”는 사실은 <strong>투자를 감당할 능력</strong>을 보여줄 뿐, <strong>그 투자에 높은 가격을 지불할 이유</strong>까지 제공하지는 않습니다.</p>
+<p>거시적으로도 금리 인하를 구원투수로 가정하기 어렵습니다. 실제 정책금리와 국채금리는 확보되지 않았고, 제공된 예측시장 가격은 연내 금리 인하 부재에 무게를 두었습니다. 이를 공식 전망으로 볼 수는 없지만, 적어도 할인율 하락을 당연한 매수 근거로 삼을 수는 없습니다.</p>
+<h5>6. 차트 약세를 인정하면서 지금 매수를 시작해야 할 이유는 무엇입니까?</h5>
+<p>MSFT는 11월 9일 545.18달러에서 11월 19일 498.30달러로 약 <strong>8.6% 하락</strong>했습니다. 그러나 하락했다는 사실 자체가 저평가의 증거는 아닙니다.</p>
+<ul>
+<li>종가는 10일 지수이동평균 <strong>516.31달러</strong>, 50일 단순이동평균 <strong>520.06달러</strong> 아래입니다.</li>
+<li>상대강도지수는 <strong>39.21</strong>로 약세지만 전형적 과매도 수준은 아닙니다.</li>
+<li>이동평균 수렴·확산 히스토그램은 <strong>-4.1927</strong>입니다.</li>
+<li>11월 19일에는 장중 고가 <strong>526.49달러</strong>에서 밀려 당일 저가에 거의 붙어 마감했습니다.</li>
+</ul>
+<p>200일 이동평균 위라는 사실은 장기 추세 붕괴를 단정하지 못하게 합니다. 하지만 <strong>지금 매수해야 한다는 근거도 아닙니다.</strong></p>
+<p>분할매수는 진입 시점 위험을 나누는 방법이지, 가치평가와 투자 회수 위험을 제거하는 방법이 아닙니다. 현금흐름과 추세가 모두 확인되지 않았다면, 소규모라도 반드시 먼저 살 필요는 없습니다.</p>
+<h5>결론: MSFT의 강한 본업보다 더 중요한 것은, 현재 가격이 요구하는 투자 성공입니다</h5>
+<p>강세 분석가님은 투자 회수의 가능성에 투자하자고 말씀하셨습니다. 저는 <strong>투자 회수의 증거를 기다리거나, 불확실성을 충분히 보상하는 가격을 요구하자</strong>고 말씀드리겠습니다.</p>
+<p>현재 MSFT는:</p>
+<ol>
+<li>성장보다 설비투자가 훨씬 빠르게 증가하고,</li>
+<li>잉여현금흐름이 감소하며,</li>
+<li>매출총이익률에 압력이 나타나고,</li>
+<li>현금흐름 기준으로 높은 평가를 받고,</li>
+<li>단기·중기 가격 회복도 확인되지 않았습니다.</li>
+</ol>
+<p>제 약세 의견을 바꿀 조건은 분명합니다. <strong>영업현금흐름 대비 투자 비중 하락, 잉여현금흐름 증가 전환, AI 서비스 수익화의 정량적 증거, 또는 충분한 가격 조정</strong>입니다.</p>
+<p>그전까지 MSFT는 “좋은 기업이니 조금씩 사자”보다 **“좋은 기업이지만 현재 가격에서는 매수를 피하자”**가 더 설득력 있습니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s2-3">투자 검토 책임자</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>판단 근거</strong>: MSFT는 본업의 성장보다 투자 회수의 불확실성이 현재 가격 판단에서 더 중요하다는 약세 측 주장이 근소하지만 우세합니다. 매출 18.8%, 영업이익 21.0%, 영업현금흐름 28.7% 증가는 강한 경쟁력을 뒷받침하므로 전량 매도를 정당화하지는 않습니다. 그러나 분기 설비투자가 103.0% 늘어 영업현금흐름의 67.9%를 차지했고, 잉여현금흐름은 27.4% 감소했습니다. 매출총이익률 하락까지 고려하면 투자 증가가 향후 주주 현금흐름으로 연결될지 확인이 필요합니다. 최근 12개월 잉여현금흐름 수익률 1.62%와 기간·산정 근거가 불명확한 예상 주당순이익에 의존하는 예상 주가수익비율 20.6배는 충분한 안전마진의 증거가 아닙니다. 단기 추세 약세는 보조 근거일 뿐 결정적 근거는 아닙니다. 제공된 2026년 11월 자료는 실시간 시세나 원공시로 검증되지 않았고, Azure 성장률·Copilot 유료 도입률·투자수익률도 없어 확신을 제한합니다. 따라서 강한 본업을 인정하면서 표준 배분보다 완만하게 낮추는 것이 적절합니다.</p>
+<p><strong>대응 계획</strong>: MSFT의 잠정 목표 비중을 표준 배분의 75%로 설정합니다. 이는 전체 포트폴리오의 75%가 아니라 해당 종목 표준 비중의 0.75배입니다. 현재 보유량은 알 수 없으므로 트레이더가 실제 비중과 비교해 초과분만 축소하고, 이미 목표 이하이면 추가 매도나 신규 매수를 하지 않습니다. 초과분은 두 차례로 나누어 절반씩 축소하되, 실제 주문 전 최신 가격·유동성과 제공 수치의 유효성을 확인합니다. 미보유 상태라면 신규 진입을 보류하고 공매도는 권고하지 않습니다. 다음 실적에서 영업현금흐름 대비 설비투자 비율 하락과 잉여현금흐름 전년 대비 증가 전환, 매출·영업이익 성장 유지가 함께 확인되면 표준 배분의 100% 복귀를 재검토합니다. 반대로 잉여현금흐름 감소 지속과 매출 성장 둔화·영업이익률 하락이 겹치면 50%로 추가 축소를 검토합니다. 제공된 498.30달러와 이동평균은 과거 기준이므로 현재 주문가격이나 고정 손절선으로 쓰지 않습니다.</p>
+</section><section id="s3"><h2>III. 매매 계획</h2><h3 id="s3-1">매매 담당</h3>
+<p><strong>대응</strong>: 매도</p>
+<p><strong>판단 근거</strong>: MSFT는 본업 성장에도 설비투자 급증과 잉여현금흐름 감소로 투자 회수의 불확실성이 커져, 연구 계획대로 표준 배분보다 완만하게 낮추는 것이 적절합니다. 최신 검증 종가 498.30달러가 10일 지수이동평균 516.305달러와 50일 단순이동평균 520.059달러 아래이고 RSI 39.2118, MACD 히스토그램 -4.1927로 단기 약세가 이를 뒷받침하지만, 200일 평균선 위의 장기 구조와 본업 성장은 전량 매도를 지지하지 않습니다. 실제 비중이 표준 배분의 75%를 초과할 때만 초과분을 두 차례로 나누어 축소하고, 이미 목표 이하이거나 미보유라면 거래하지 않습니다. 제공 가격은 2026년 11월 19일 기준이며 ATR이 15.9173달러로 높아, 최신 시세 확인 없이 과거 가격을 주문가나 고정 손절선으로 지정하지 않습니다.</p>
+<p><strong>진입 가격</strong>: 제시되지 않음</p>
+<p><strong>손절 기준</strong>: 제시되지 않음</p>
+<p><strong>보유 비중 계획</strong>: MSFT 목표 비중은 해당 종목 표준 배분의 0.75배입니다. 실제 비중이 목표를 초과하면 초과분의 절반씩 두 차례 축소하되, 각 주문 전 최신 가격·유동성과 자료 유효성을 확인합니다. 목표 이하이면 추가 매도나 신규 매수를 하지 않으며, 미보유 시 신규 진입과 공매도를 하지 않습니다.</p>
+<p>최종 매매 제안: <strong>매도</strong></p>
+</section><section id="s4"><h2>IV. 위험 관리팀 판단</h2><h3 id="s4-1">적극적 위험 분석가</h3>
+<p>적극적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 MSFT의 조건부 비중 축소를 지지합니다. 공격적인 투자란 항상 더 많이 보유하는 것이 아닙니다. 투자한 자본의 기대수익이 약해질 때 과감하게 노출을 줄여, 더 유리한 기회에 대응할 선택권을 확보하는 것도 공격적인 전략입니다. 이번 판단의 핵심은 MSFT의 성장성을 포기하는 것이 아니라, AI 성장의 과실이 현금으로 전환되기까지의 불확실성에 표준 비중 전체를 걸지 않겠다는 것입니다.</p>
+<p>아직 보수적·중립적 분석가의 실제 발언은 없으므로, 제공 보고서에서 예상되는 반론을 상대로 논의를 시작하겠습니다.</p>
+<p>보수적 관점에서 “MSFT는 우량 기업이고 장기 상승 구조도 살아 있으니 그대로 보유하자”고 주장한다면, 저는 기업의 질과 보유 비중의 적절성을 혼동하고 있다고 반박하겠습니다. 최신 분기 매출은 18.8%, 영업이익은 21.0% 증가했습니다. 고객 전환비용과 소프트웨어·클라우드의 교차판매 기반도 분명한 경쟁우위입니다. 하지만 이런 강점이 어떤 가격과 비중에서도 충분한 투자수익을 보장하지는 않습니다. 분기 설비투자는 103.0% 증가했고, 영업현금흐름이 28.7% 늘었는데도 잉여현금흐름은 27.4% 감소했습니다. 현재 투자자가 감수하는 것은 단순한 주가 변동이 아니라, 대규모 선행투자가 얼마나 빨리 수익화될지에 대한 위험입니다.</p>
+<p>반대로 같은 보수적 관점에서 “현금흐름이 나빠졌으니 전량 매도해야 한다”고 한다면, 그것도 지나칩니다. MSFT의 영업이익률은 약 49.76%로 개선됐고 본업의 현금 창출력도 성장하고 있습니다. AI 인프라 투자가 향후 고객 확보와 서비스 확장의 기반이 될 가능성은 여전히 유효합니다. Jefferies의 Ignite 이후 우호적 평가도 이러한 사업 방어력을 뒷받침하는 의견입니다. 따라서 표준 배분의 75%를 남기는 전략은 성장의 상방을 유지하면서 투자 회수 지연에 대한 노출만 줄입니다. 전량 매도보다 미래의 성공에 참여할 여지가 크다는 점에서, 이쪽이 제 고수익 관점에 더 부합합니다.</p>
+<p>중립적 관점의 “좋은 성장과 나쁜 현금흐름이 공존하니 보유 유지 또는 WAIT가 적절하다”는 결론에는 더 직접적으로 이의를 제기하겠습니다. 정보가 혼재한다고 해서 기존 비중이 자동으로 최적이 되는 것은 아닙니다. MSFT의 재구성 최근 12개월 잉여현금흐름 수익률은 약 1.62%, 시가총액 대비 잉여현금흐름 배수는 약 61.7배입니다. 예상 주가수익비율 20.6배만 보면 성장 대비 매력적으로 보일 수 있지만, 그 판단은 예상 이익의 실현과 향후 투자수익에 의존합니다. 확인을 기다리는 동안에도 초과 보유분은 계속 위험에 노출됩니다. 목표를 넘긴 비중부터 줄이는 것은 불확실성에 대한 합리적인 행동이지, MSFT의 실패를 단정하는 행동이 아닙니다.</p>
+<p>기술적 자료도 무조건적인 대기보다 부분 축소에 힘을 실어줍니다. 제공된 11월 19일 종가 498.30달러는 10일 EMA보다 약 3.5%, 50일 SMA보다 약 4.2% 낮습니다. RSI 39.2118은 약세지만 전형적인 과매도 수준은 아니며, MACD 히스토그램 -4.1927도 아직 반전 근거를 제공하지 않습니다. 특히 당일 526.49달러까지 올랐다가 저가 498.16달러에 근접한 498.30달러로 끝났다는 점은 상승 시도가 유지되지 못했음을 보여줍니다. 이것이 추가 하락의 보장은 아니지만, 회복을 전제로 초과 비중을 유지할 근거도 부족합니다.</p>
+<p>“이미 하락했으니 지금 줄이면 반등을 놓친다”는 반론은 인정할 부분이 있습니다. 그래서 이번 제안은 공매도도, 전량 매도도 아닙니다. 목표 비중을 남기고 초과분만 두 번에 나누어 줄이면 반등 참여와 위험 축소를 함께 추구할 수 있습니다. 다만 분할 자체가 더 좋은 체결가격을 보장하지는 않습니다. ATR 15.9173달러는 제공 종가의 약 3.2%에 해당하므로, 과거 가격에 고정 주문이나 촘촘한 손절선을 붙이는 방식은 피해야 합니다.</p>
+<p>심리 자료를 매수 반론으로 쓰는 것도 설득력이 약합니다. StockTwits의 강세 태그 7개·약세 태그 0개는 전체 30개 중 일부이며, 강세 태그가 붙어도 본문은 투자 회수와 경쟁을 우려하는 사례가 있습니다. 종합 점수 4.8/10은 신뢰도가 낮은 혼재 신호이지, 강력한 역발상 매수 신호가 아닙니다. 동시에 이것을 시장 전체의 공포나 확정적인 매도 압력으로 확대해석해서도 안 됩니다. 제 매도 논거의 중심은 소셜 분위기가 아니라 현금 전환 부담, 가치평가, 약해진 가격 흐름입니다.</p>
+<p>실행은 명확해야 합니다. MSFT의 표준 배분을 S, 실제 비중을 W라고 하면 목표는 0.75S입니다. W가 목표를 넘을 때만 초과분을 줄이고, 최초 산정한 초과분의 절반을 1차 축소 대상으로 삼습니다. 2차 주문 전에는 가격과 포트폴리오 가치 변화를 반영해 목표 초과 여부를 다시 계산해야 합니다. 이미 목표 이하라면 추가 매도하지 않고, 미보유라면 신규 진입이나 공매도를 하지 않습니다. 제공 자료의 최신 가격은 2026년 11월 19일 기준이므로, 실행 전 최신 가격·유동성·공시와 투자 논리의 유효성을 확인해야 합니다.</p>
+<p>제 결론은 “MSFT의 혁신을 부정하자”가 아닙니다. 혁신의 잠재력은 남겨두되, 아직 입증되지 않은 투자 회수에 과도한 자본을 묶어두지 말자는 것입니다. 축소한 자금이 반드시 더 높은 수익을 낸다고 주장할 근거는 없지만, 새로운 기회에 대응할 유연성은 확보됩니다. 무조건 보유하거나 전량 철수하는 양극단보다, 표준 배분의 75%를 목표로 하는 조건부 매도이 상방 참여와 자본의 기동성을 더 설득력 있게 결합합니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-2">보수적 위험 분석가</h3>
+<p>보수적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>MSFT의 조건부 비중 축소에는 동의합니다. 다만 공격적 분석가가 강조한 “상방 참여와 자본의 기동성”보다 먼저 확인해야 할 것은, 축소 후 남는 보유분이 실제로 감당 가능한 손실 범위 안에 있는가입니다. 표준 배분의 75%는 실행 기준이지 안전성을 보장하는 수치가 아닙니다. 포트폴리오 정보가 없는 상황에서는 그 비중이 적정하다고 확정할 수 없습니다.</p>
+<p>먼저 공격적 분석가가 제시한 보수적 관점의 두 가지 가정부터 바로잡겠습니다. 보수적 운용은 우량 기업이라는 이유로 무조건 보유하는 것도, 현금흐름이 감소했다는 이유로 전량 매도하는 것도 아닙니다. MSFT의 본업 경쟁력은 인정하되, 투자 회수 지연과 가격 재평가가 겹칠 때 자산에 미치는 손실을 제한하는 것이 핵심입니다. 따라서 이번 매도의 목적은 더 높은 수익을 낼 다른 기회를 찾는 것이 아니라, 아직 검증되지 않은 수익화에 대한 노출을 줄이는 데 두어야 합니다.</p>
+<p>공격적 분석가의 “표준 배분의 75%를 남기면 성장의 상방을 유지할 수 있다”는 주장은 맞지만 불완전합니다. 남겨 둔 MSFT에도 동일한 투자 회수 위험이 존재합니다. 제공된 최신 분기 자료에서 설비투자는 103.0% 증가했고, 잉여현금흐름은 27.4% 감소했습니다. 영업현금흐름 증가 자체는 긍정적이지만, 설비투자가 그중 67.9%를 사용한다는 점이 중요합니다. 향후 기업 정보기술 수요가 둔화하거나 AI 서비스의 가격 경쟁이 심해진다면, 투자 지출 부담과 수익화 지연이 동시에 나타날 수 있습니다. 이는 확인된 결과가 아니라 반드시 대비해야 할 하방 시나리오입니다.</p>
+<p>재무적 완충력도 함께 봐야 합니다. MSFT의 자기자본 확대와 총부채 비중 하락은 긍정적입니다. 그러나 유동비율은 약 1.40배에서 1.225배로 낮아졌고, 순운전자본과 현금성자산도 감소했습니다. 이것을 유동성 위기라고 부를 근거는 없습니다. 다만 “규모가 크고 현금 창출력이 강하므로 투자 부담을 충분히 견딜 것”이라는 낙관만으로 넘어갈 사안도 아닙니다. 금융리스와 투자 약정까지 모두 반영한 현금 부담이 확인되지 않았다는 점도 추가 검증 사항입니다.</p>
+<p>가치평가 역시 공격적 분석가보다 더 엄격하게 해석하겠습니다. 예상 주가수익비율 약 20.6배는 예상 이익이 실현된다는 전제에 의존합니다. 반면 제공 재무제표로 재구성한 최근 12개월 잉여현금흐름 수익률은 약 1.62%입니다. 이 수치만으로 MSFT가 반드시 고평가됐다고 단정할 수는 없지만, 현재 현금 창출액에 비해 향후 개선에 대한 기대가 상당히 반영되어 있다는 경계 근거는 됩니다. 예상 이익 하향과 평가배수 하락이 겹치면, 본업이 계속 성장하더라도 주가는 하락할 수 있습니다.</p>
+<p>중립적 분석가는 아직 발언하지 않았으므로 실제 주장에 대한 반박으로 표현하지는 않겠습니다. 다만 제공 보고서의 보유 유지와 WAIT를 근거로 “정보가 혼재하니 그대로 기다리자”는 결론을 내린다면, 투자 판단과 보유 위험 관리를 혼동하는 것입니다. 신규 매수를 기다리는 것과 기존 초과 비중을 유지하는 것은 다릅니다. MSFT가 목표를 초과한 상태라면, 실적 확인을 기다리는 동안에도 그 초과분의 하락 위험은 계속 부담합니다. 반대로 이미 목표 이하라면 추가 매도하지 않는 것이 원래 계획에 부합합니다. 보수적 대응은 일률적인 매도가 아니라 보유 상태에 따른 조건부 축소입니다.</p>
+<p>기술적 약세는 이 결론의 보조 근거이지, 하락 예측의 확증은 아닙니다. 제공된 2026년 11월 19일 MSFT 종가는 단·중기 평균선 아래이고 RSI와 MACD 히스토그램도 약세입니다. 그러나 이 지표들은 상당 부분 같은 가격 흐름에서 나온 것이므로, 서로 완전히 독립적인 증거처럼 합산해서는 안 됩니다. 또한 200일 평균선 위에 있다는 사실도 손실을 막아주지 않습니다. 제공 종가에서 당시 200일 평균선까지의 거리는 약 11.2%이며, 그 평균선이 확실한 지지선이라는 근거도 없습니다. 이는 목표가격이나 하락 전망이 아니라, 장기 구조가 유지된다는 설명만으로 무시할 수 없는 손실 폭의 예입니다.</p>
+<p>심리와 거시 자료에서는 확신보다 불확실성을 읽어야 합니다. MSFT 심리 점수 4.8점은 신뢰도가 낮고, Reddit 자료도 확보되지 않았습니다. 이를 강한 매도 신호로 부풀릴 수 없지만, 반등을 기대할 확실한 근거로 삼을 수도 없습니다. 실제 금리 자료가 없는 상태에서 예측시장 가격을 금리 환경의 대체물로 사용하는 것도 피해야 합니다. 확인하지 못한 위험은 사라진 위험이 아닙니다.</p>
+<p>따라서 트레이더의 계획은 유지하되, 위험 점검과 실행 조건을 보강하겠습니다. MSFT의 표준 배분을 S, 실제 비중을 W라고 할 때 기본 목표는 0.75S로 두고, W가 이를 초과할 때만 축소합니다. 다만 0.75S를 반드시 채워야 할 보유량으로 해석해서는 안 됩니다. 다른 기술주나 펀드를 통한 MSFT 간접 노출, 현금 필요, 계좌 손실 한도를 먼저 확인해야 합니다. 예를 들어 MSFT가 20% 하락하는 가상 상황에서 포트폴리오 손실 기여도는 대략 ‘MSFT 비중 × 20%’입니다. 이 단순 점검조차 허용 한도를 넘는다면, 0.75S보다 낮은 목표를 별도로 검토해야 합니다. 여기서 20%는 예측이 아니라 스트레스 점검용 가정입니다.</p>
+<p>분할 매도도 그 자체로 위험 관리가 완성되는 것은 아닙니다. 첫 주문은 최초 초과분의 절반을 기준으로 하되, 두 번째 주문은 최신 포트폴리오 가치와 MSFT 비중으로 남은 초과분을 재계산해야 합니다. “반등하면 나머지를 팔겠다”며 기한 없이 미루지 않도록 재검토 시점을 사전에 정하는 것이 좋습니다. 각 주문 전 최신 가격·공시·호가를 확인하고, 과거 498.30달러를 주문가나 고정 손절선으로 사용하지 않아야 합니다. 지정가 주문은 가격 통제에 도움이 되지만 미체결될 수 있고, 시장가 주문은 급변 시 불리한 체결 위험이 있으므로 당시 유동성과 축소 필요성을 함께 판단해야 합니다.</p>
+<p>마지막으로 MSFT 매도대금을 곧바로 더 변동성이 큰 자산에 재투입한다면 이번 축소의 보수적 목적은 훼손됩니다. 자금 용도와 투자 기간을 확인하기 전에는 유동성 확보를 우선해야 합니다. 이미 목표 이하이거나 미보유라면 추가 매도·신규 매수·공매도는 하지 않습니다.</p>
+<p>결론적으로 MSFT의 조건부 매도을 지지합니다. 다만 그 이유는 반등 참여나 새로운 고수익 기회 확보가 아니라, 현금흐름 전환의 불확실성과 집중 위험을 통제하기 위해서입니다. 남은 비중의 손실 감내 가능성을 검증하고, 초과분만 계획적으로 줄이는 접근이 현재 자료에서 가장 방어적인 선택입니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-3">중립적 위험 분석가</h3>
+<p>중립적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>두 분석가 모두 MSFT의 조건부 축소에 동의하지만, 같은 결론이라고 해서 매도의 확신까지 높여서는 안 됩니다. 두 주장 모두 상당 부분 동일한 현금흐름과 가격 자료에 근거하고 있습니다. 제 판단은 MSFT의 추가 하락을 예측하는 매도가 아니라, 본업의 성장 가능성을 유지하면서 투자 회수의 불확실성에 대한 노출을 조정하는 제한적 매도입니다.</p>
+<p>먼저 공격적 분석가에게는 “자본의 기동성 확보”와 “기대수익 개선”을 구분해야 한다고 말씀드리겠습니다. MSFT를 줄이면 다른 기회에 대응할 여지는 생깁니다. 그러나 대체 투자 대상의 가치평가, 위험, 거래비용을 모르는 상황에서 자금을 이동하는 것이 더 유리하다고 판단할 수는 없습니다. 매도 이후 다른 AI 관련 자산으로 옮긴다면 종목만 바뀌고 공통 위험은 그대로 남을 수도 있습니다. 이번 축소의 일차적 근거는 새로운 고수익 기회가 아니라, 정해진 배분 기준에 맞춘 위험 조절이어야 합니다.</p>
+<p>공격적 분석가가 강조한 잉여현금흐름 배수 약 61.7배도 경계 근거로는 유효하지만, 그것만으로 MSFT의 투자 매력이 구조적으로 약해졌다고 단정하기는 어렵습니다. 최신 분기 영업현금흐름은 28.7% 증가했습니다. 잉여현금흐름 감소는 본업의 현금 창출 감소가 아니라 설비투자가 더 빠르게 증가한 결과입니다. 이 투자가 향후 수익을 낼지는 불확실하지만, 현재 지출을 모두 가치 훼손으로 취급하는 것도 성급합니다. 투자 지연으로 수요를 확보하지 못하는 위험 역시 고려해야 합니다.</p>
+<p>반대로 예상 주가수익비율 약 20.6배와 성장률을 근거로 편안하게 보유할 상황도 아닙니다. 분기 설비투자는 103.0% 증가했고 잉여현금흐름은 27.4% 감소했습니다. 예상 이익이 실현되더라도 현금 전환이 계속 약해지면 평가배수는 낮아질 수 있습니다. 따라서 공격적 분석가의 부분 축소에는 동의하지만, “표준 배분의 75%가 최적”이라는 확신에는 동의하지 않습니다. 0.75배는 연구 계획의 운용 기준이지, 자료에서 계산된 최적 비중은 아닙니다.</p>
+<p>보수적 분석가에게는 손실 감내 능력을 확인하자는 제안이 타당하다고 답하겠습니다. 다만 불확실성이 많다는 이유로 목표를 계속 낮추는 접근은 경계해야 합니다. MSFT의 유동비율 하락과 현금 감소는 점검할 사항이지만, 자기자본 증가와 총부채 비중 하락도 함께 확인됩니다. 최신 분기 매출은 18.8%, 영업이익은 21.0% 증가했고 영업이익률도 약 49.8%로 개선됐습니다. 현재 자료는 투자 부담 확대를 보여주지만, 재무 위기나 본업 경쟁력 붕괴를 보여주지는 않습니다.</p>
+<p>따라서 보수적 분석가가 제시한 “필요하면 0.75배보다 낮추자”는 조정은 실제 집중도, 현금 필요, 손실 한도가 확인될 때만 정당화됩니다. 포트폴리오 정보가 없는 지금, 더 낮은 비중을 기본값으로 권할 근거는 부족합니다. 확인되지 않은 위험은 사라진 위험이 아니지만, 확인되지 않았다는 사실 자체가 추가 매도의 증거도 아닙니다.</p>
+<p>매도대금의 처리에서도 양쪽의 중간이 필요합니다. 공격적 분석가처럼 즉시 새로운 기회를 찾을 필요도 없고, 보수적 분석가처럼 유동성 확보를 장기적인 기본 해답으로 삼을 필요도 없습니다. 단기 자금 수요가 있다면 현금성 자산이 적합할 수 있지만, 장기 자금이라면 현금 보유에도 기회비용과 구매력 위험이 있습니다. MSFT 직접 보유와 펀드를 통한 간접 보유, 다른 기술주와의 공통 노출을 확인한 뒤 분산 여부를 판단해야 합니다. MSFT를 팔았다는 사실만으로 포트폴리오가 분산되지는 않습니다.</p>
+<p>기술적 자료는 축소의 보조 근거로만 사용하겠습니다. 제공된 2026년 11월 19일 MSFT 종가 498.30달러는 10일 EMA와 50일 SMA 아래이며 RSI 39.2118, MACD 히스토그램 -4.1927도 약세를 나타냅니다. 그러나 이 지표들은 같은 가격 움직임을 상당 부분 공유하므로 독립적인 매도 증거 여러 개처럼 합산해서는 안 됩니다. 200일 SMA 위에 있다는 점도 장기 구조가 아직 훼손되지 않았다는 의미이지, 손실을 막아주는 보장은 아닙니다. 결론은 전량 매도도 저가 매수도 아닌, 초과 노출의 제한적 축소입니다.</p>
+<p>심리와 거시 자료는 어느 쪽의 확신도 크게 높여주지 않습니다. MSFT 심리 점수 4.8/10은 신뢰도가 낮고, 뉴스와 소셜에서 반복되는 투자 회수 우려를 별개의 위험 사건으로 중복 계산해서는 안 됩니다. 실제 금리 자료도 확보되지 않았으므로 예측시장 가격을 현재 할인율의 대체 지표로 사용할 수 없습니다. 장기금리가 오르면 가치평가에 부담이 될 수 있지만, 금리 하락 역시 기업 정보기술 수요 둔화를 동반한다면 무조건적인 호재가 아닙니다. 금리와 기업 수요를 함께 확인해야 합니다.</p>
+<p>실행은 원래 계획을 유지하되 더 명확하게 하겠습니다. MSFT 표준 배분을 S, 최신 실제 비중을 W라고 하면 목표는 0.75S입니다. W가 목표를 초과할 때만 최초 초과분의 절반을 1차로 축소합니다. 이는 현재 보유량의 절반을 파는 것도, 포트폴리오의 75%를 MSFT로 보유하는 것도 아닙니다. 예를 들어 표준 배분이 8%라면 목표는 6%이고, 실제 비중이 7%라면 최초 축소 대상은 포트폴리오의 1%포인트에 해당하는 초과분입니다.</p>
+<p>2차 주문에서는 남은 초과분을 다시 계산해야 합니다. 매번 새 초과분의 절반만 팔면 목표에 도달하지 못할 수 있으므로, 두 번째에는 최신 비중 기준으로 목표까지 필요한 잔여분을 축소하는 것이 원래 계획에 부합합니다. 가격 하락으로 이미 목표 이하가 됐다면 두 번째 주문은 하지 않습니다. 재검토 시점은 첫 주문 전에 정하되, 반등을 기다린다는 이유로 무기한 미루거나 과거 가격 도달을 조건으로 삼지는 않겠습니다.</p>
+<p>각 주문 전에는 최신 가격·호가·공시와 자료 유효성을 확인해야 합니다. 제공된 ATR 15.9173달러는 당시 종가의 약 3.2%로, 촘촘한 고정 손절에 불리한 환경을 보여줍니다. 하지만 과거 ATR이나 498.30달러를 현재 주문가·손절가로 사용할 수는 없습니다. 취득원가와 세금, 거래비용도 확인해야 하며, 작은 초과분을 반복 매매하는 비용이 위험 축소 효과를 잠식하지 않도록 해야 합니다.</p>
+<p>향후에는 MSFT의 설비투자 증가율이 영업현금흐름 증가율에 비해 안정되는지, 잉여현금흐름이 회복되는지, 매출과 영업이익률이 유지되는지를 보겠습니다. 현금 전환이 개선되면 방어적 비중을 계속 유지해야 할 근거도 재검토할 수 있습니다. 반대로 성장 둔화와 투자 부담 확대가 함께 확인되면 추가 위험 평가가 필요합니다. 어느 경우든 가격 움직임 하나만으로 목표를 바꾸지는 않겠습니다.</p>
+<p>정리하면, 공격적 분석가에게는 매도 후 선택권이 더 높은 수익을 보장하지 않는다고, 보수적 분석가에게는 불확실성만으로 방어 수준을 계속 높여서는 안 된다고 반박합니다. MSFT의 성장성을 남겨두면서 목표 초과분만 줄이는 조건부 매도이 현재 자료에 가장 비례적인 대응입니다. 이미 목표 이하이거나 미보유라면 거래하지 않고, 신규 매수와 공매도도 하지 않습니다.</p>
+<p>최종 매매 제안: 매도</p>
+</section><section id="s5"><h2>V. 최종 투자 판단</h2><h3 id="s5-1">투자 총괄</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>핵심 요약</strong>: MSFT는 전량 매도가 아니라 목표 초과분의 제한적 축소를 권고하며, 잠정 목표는 해당 종목 표준 배분의 0.75배로 설정합니다. 현재 비중이 목표를 넘으면 최초 초과분의 절반을 먼저 축소하고, 사전에 정한 두 번째 점검에서 최신 비중을 다시 계산해 목표까지 남은 초과분만 줄이되, 이미 목표 이하이거나 미보유라면 추가 매도·신규 매수·공매도를 하지 않습니다. 각 주문 전 최신 시세·유동성·공시와 세금·거래비용을 확인하고, 다음 실적 발표까지 현금 전환을 점검하되 제공된 과거 가격을 주문가나 고정 손절선으로 사용하지 않습니다.</p>
+<p><strong>투자 근거</strong>: MSFT에 대한 세 분석가의 표면적 등급은 매도이지만, 실제 권고는 모두 전량 청산이 아닌 조건부 비중 축소이므로 지정된 등급 체계에서는 비중 축소가 적합합니다. 약세 논거가 근소하게 우세한 결정적 이유는 본업 부진이 아니라 투자 지출과 현금 회수의 불균형입니다. 제공 자료에서 매출은 18.8%, 영업이익은 21.0%, 영업현금흐름은 28.7% 증가했지만, 설비투자가 103.0% 증가해 영업현금흐름의 67.9%를 사용했고 잉여현금흐름은 27.4% 감소했습니다. 재구성한 최근 12개월 잉여현금흐름 수익률 1.62%는 현금 전환 개선 기대에 대한 의존도를 보여주며, 예상 이익의 기간과 산정 근거가 불명확한 예상 주가수익비율 20.6배만으로 안전마진을 입증할 수 없습니다. 다만 영업이익률 약 49.8%, 자기자본 증가와 총부채 비중 하락은 본업 경쟁력 붕괴나 재무 위기라는 해석을 지지하지 않습니다. 중립적 분석가의 지적대로 설비투자를 모두 가치 훼손으로 간주해서도 안 되므로 전량 매도는 과도합니다. 기술적 약세는 보조 근거에 한정합니다. 제공된 2026년 11월 19일 가격 498.30달러는 단·중기 이동평균 아래였지만 관련 지표는 같은 가격 흐름을 공유하며, 200일 이동평균 위라는 사실도 하방 보호를 보장하지 않습니다. 세 분석가의 동의 역시 동일한 자료에 기반하므로 독립적인 증거 세 개로 계산하지 않습니다. 자료는 실시간 시세나 원공시로 검증되지 않았고 Azure 성장률, Copilot 유료 도입률, 투자수익률 및 리스·투자 약정의 전체 부담이 없어 확신을 제한합니다. 표준 배분의 0.75배는 산출된 최적 비중이나 안전 보장이 아니라 잠정 운용 기준이며, 실제 직접·간접 노출과 손실 감내 한도를 별도로 확인해야 합니다. 다음 실적에서 설비투자/영업현금흐름 비율 하락, 잉여현금흐름의 전년 대비 증가 전환, 매출·영업이익 성장 유지가 함께 확인되면 표준 배분 복귀를 검토합니다. 반대로 잉여현금흐름 감소가 지속되는 가운데 매출 성장 둔화와 영업이익률 하락이 겹치면 표준 배분의 0.50배로 추가 축소를 검토합니다. 검증된 현재 가격과 가치평가 가정이 없어 목표주가나 고정 손절가는 제시하지 않습니다.</p>
+<p><strong>목표 가격</strong>: 제시되지 않음</p>
+<p><strong>투자 기간</strong>: 다음 실적 발표까지 점검하고 발표 후 재평가</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">맨 위로</a>
+</body>
+</html>
