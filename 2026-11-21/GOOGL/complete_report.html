@@ -1,0 +1,1413 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
+<title>GOOGL 2026-11-21 비중 축소: 주식 분석 보고서</title>
+<style>
+:root {
+  --paper: #fbfbfa; --ink: #1c2126; --muted: #5d6670; --rule: #e2e5e8; --wash: #f2f4f5;
+  --accent: #087a59; --up: #087a59; --down: #b4372f; --level: #5d6670; --edge: #d3d8dc; --mark: #878f97;
+  --serif: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #131a1f; --ink: #e4e8eb; --muted: #9aa6af; --rule: #263239; --wash: #1a242a;
+    --accent: #14c290; --up: #14c290; --down: #ef6f63; --level: #9aa6af; --edge: #3d4c55; --mark: #66737c;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  .masthead .logo [stroke="#363636"] { stroke: var(--muted); }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font: 17px/1.62 var(--serif); font-kerning: normal;
+}
+.page { max-width: 46rem; margin: 0 auto; padding: 3.5rem 1.5rem 6rem; }
+main h2, main h3 { scroll-margin-top: 1rem; }
+a { color: var(--accent); text-underline-offset: 0.15em; }
+h1, h2, h3, h4 { text-wrap: balance; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.masthead { padding-bottom: 1.75rem; border-bottom: 1px solid var(--rule); }
+/* The logo leads at the top left, where readers look for it, 24px tall (the usual
+   on-screen floor for a wordmark) with at least its height clear below. */
+.masthead .logo { display: block; width: fit-content; margin: 0 0 2.25rem; }
+.masthead .logo svg { display: block; height: 1.5rem; width: auto; }
+.masthead h1 {
+  margin: 0; font: 600 2.6rem/1.1 var(--sans); letter-spacing: -0.02em;
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2em 0.5em;
+}
+.masthead .rating { font-weight: 500; }
+.rating.up { color: var(--up); } .rating.down { color: var(--down); } .rating.level { color: var(--level); }
+.rating.review { color: var(--muted); font-style: italic; }
+.masthead .date { margin: 0.55rem 0 1.5rem; font: 1rem/1.4 var(--sans); color: var(--muted); }
+.run { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 0.45rem 1.25rem;
+  font: 0.85rem/1.5 var(--sans); }
+.run > div { display: contents; }
+.run dt { color: var(--muted); }
+.run dd { margin: 0; overflow-wrap: anywhere; }
+.run .note dd { color: var(--down); }
+.field { display: inline-block; margin: 0 0.15rem 0.15rem 0; padding: 0 0.4rem; border: 1px solid var(--edge);
+  border-radius: 4px; background: var(--wash); font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.run .group { display: inline-block; margin-right: 0.9rem; white-space: nowrap; }
+.run .group > .name { color: var(--muted); margin-right: 0.3rem; }
+.run .then { color: var(--muted); margin: 0 0.2rem; }
+
+/* The sections: listed under the header on narrow screens. On wide ones, a
+   quiet rail centred on the left edge (numerals for the sections, short bars
+   for their agents) that opens into the full list when pointed at or focused. */
+.contents { margin: 2.25rem 0 0; font: 0.9rem/1.45 var(--sans); }
+.contents ul { margin: 0; padding: 0; list-style: none; }
+.contents > ul > li { margin: 0 0 0.75rem; }
+.contents ul ul { margin-top: 0.2rem; padding-left: 1.6rem; font-size: 0.85rem; }
+.contents ul ul li { margin: 0.1rem 0; }
+.contents a { display: flex; align-items: center; gap: 0.6rem; color: var(--muted); text-decoration: none; }
+.contents > ul > li > a { color: var(--ink); }
+.contents .num { min-width: 1.6rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.contents .bar { display: none; }
+.contents a:hover .label, .contents a:focus-visible .label { color: var(--accent); text-decoration: underline; }
+.to-top { position: fixed; right: 1rem; bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding: 0.25rem 0.6rem; border: 1px solid var(--edge); border-radius: 4px; background: var(--paper);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); text-decoration: none; }
+
+@media (min-width: 60rem) {
+  .contents { position: fixed; left: 1rem; top: 50%; transform: translateY(-50%); z-index: 1;
+    max-height: 86vh; overflow-y: auto; overscroll-behavior: contain; margin: 0;
+    padding: 0.7rem 0.9rem; border: 1px solid transparent; border-radius: 6px;
+    transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s; }
+  .contents > ul > li { margin: 0 0 0.35rem; }
+  .contents ul ul { margin-top: 0; padding-left: 0; }
+  .contents ul ul li { margin: 0; }
+  /* Marks reach 3:1 contrast and rows 24px, the WCAG 2.2 floors for a control's
+     visual cue and its pointer target. */
+  .contents a { min-height: 1.5rem; }
+  .contents .num { min-width: 1.4rem; }
+  .contents .bar { display: block; flex: none; width: 1.25rem; height: 2px; margin-left: 0.2rem;
+    border-radius: 1px; background: var(--mark); }
+  .contents .label { max-width: 0; opacity: 0; overflow: hidden; white-space: nowrap;
+    transition: opacity 0.15s, max-width 0.2s; }
+  .contents:hover, .contents:focus-within { background: var(--paper); border-color: var(--rule);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.08); }
+  .contents:hover .label, .contents:focus-within .label { max-width: 18rem; opacity: 1; }
+  .contents a:hover .bar, .contents a:focus-visible .bar { background: var(--accent); }
+  .to-top { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contents, .contents .label { transition: none; }
+}
+
+/* The maker's credit: one quiet line at the foot. */
+.credit { margin-top: 4.5rem; padding-top: 1.25rem; border-top: 1px solid var(--rule);
+  color: var(--muted); font: 0.8rem/1.4 var(--sans); }
+.credit a { color: inherit; text-decoration: none; }
+.credit a.brand { color: var(--accent); }
+.credit a:hover, .credit a:focus-visible { text-decoration: underline; }
+
+/* Three levels of separation: the five groups, the agents within a group, and
+   breaks an agent draws inside its own text. */
+main h2 {
+  margin: 4.5rem 0 0.25rem; padding-top: 1.5rem; border-top: 2px solid var(--ink);
+  font: 600 1.45rem/1.3 var(--sans); letter-spacing: -0.01em;
+}
+main section:first-child h2 { margin-top: 3rem; }
+main h3 { margin: 2.75rem 0 0.75rem; padding-top: 1.1rem; border-top: 1px solid var(--rule);
+  font: 600 1.15rem/1.35 var(--sans); color: var(--accent); }
+main h2 + h3 { margin-top: 1.25rem; padding-top: 0; border-top: 0; }
+main h4, main h5, main h6 { margin: 1.75rem 0 0.5rem; font: 600 1rem/1.4 var(--sans); }
+main h5, main h6 { color: var(--muted); }
+main p, main ul, main ol { margin: 0 0 1rem; }
+main li { margin: 0.25rem 0; }
+main strong { font-weight: 650; }
+main blockquote { margin: 1.25rem 0; padding: 0.1rem 0 0.1rem 1rem; border-left: 3px solid var(--rule);
+  color: var(--muted); }
+main code { font: 0.88em/1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--wash); padding: 0.1em 0.3em; border-radius: 3px; }
+main pre { background: var(--wash); padding: 0.9rem 1rem; border-radius: 4px; overflow-x: auto; }
+main pre code { background: none; padding: 0; }
+main hr { width: 3rem; margin: 2rem auto; border: 0; border-top: 1px solid var(--rule); }
+
+.table { overflow-x: auto; margin: 0 0 1.25rem; }
+table { border-collapse: collapse; width: 100%; font: 0.86rem/1.45 var(--sans);
+  font-variant-numeric: tabular-nums; }
+th, td { padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; border-bottom-color: var(--muted); }
+tbody tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 34rem) {
+  body { font-size: 16px; }
+  .page { padding: 2rem 1rem 3rem; }
+  .masthead h1 { font-size: 2rem; }
+  .masthead .logo svg { height: 1.25rem; }
+  .run { grid-template-columns: 1fr; gap: 0 0; }
+  .run dd { margin-bottom: 0.45rem; }
+  .run .group { white-space: normal; }
+}
+@media print {
+  :root { --paper: #fff; --ink: #000; --muted: #444; --rule: #bbb; --accent: #000; --wash: #f2f2f2;
+    --edge: #bbb; --up: #087a59; --down: #b4372f; --level: #444; }
+  body { font-size: 11pt; }
+  .table { overflow: visible; }
+  .page { max-width: none; padding: 0; }
+  .contents, .to-top { display: none; }
+  main h2 { break-before: page; border-top: 0; margin-top: 0; }
+  main section:first-child h2 { break-before: auto; }
+  main h3, main h4 { break-after: avoid; }
+  a { color: inherit; text-decoration: none; }
+  table { break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+<div class="page" id="top">
+<header class="masthead">
+<a class="logo" href="https://tauric.ai" rel="noopener" aria-label="Tauric Research"><svg width="993" height="115" viewBox="0 0 993 115" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M189.86 95.0459V37.9779H165.924V29.9259H223.74V37.9779H199.804V95.0459H189.86ZM251.026 46.4259C256.071 46.4259 260.178 47.0272 263.345 48.2299C266.514 49.4032 268.89 51.3686 270.474 54.1259C272.058 56.8832 272.85 60.6379 272.85 65.3899V95.0459H264.666L263.961 89.8979H263.434C261.644 91.7752 259.386 93.2419 256.657 94.2979C253.929 95.3246 251.025 95.8379 247.946 95.8379C244.426 95.8379 241.419 95.2952 238.925 94.2099C236.432 93.0952 234.54 91.5406 233.249 89.5459C231.959 87.5512 231.313 85.2046 231.313 82.5059C231.313 78.2526 232.897 74.9672 236.065 72.6499C239.263 70.3032 244.337 68.8219 251.29 68.2059L263.258 67.0179V64.7299C263.258 61.9139 262.774 59.7139 261.806 58.1299C260.838 56.5459 259.371 55.4312 257.406 54.7859C255.47 54.1406 252.888 53.8179 249.662 53.8179C247.432 53.8179 245.012 54.0086 242.401 54.3899C239.82 54.7712 237.341 55.3432 234.965 56.1059V48.8019C237.312 48.0392 239.908 47.4526 242.754 47.0419C245.628 46.6312 248.386 46.4259 251.026 46.4259ZM250.541 89.0619C252.888 89.0619 255.162 88.6512 257.362 87.8299C259.562 86.9792 261.527 85.7179 263.258 84.0459V72.8259L252.038 73.9259C248.136 74.3659 245.35 75.2166 243.678 76.4779C242.005 77.7099 241.169 79.4699 241.169 81.7579C241.169 84.0752 241.947 85.8792 243.501 87.1699C245.056 88.4312 247.403 89.0619 250.541 89.0619ZM313.339 95.8379C307.59 95.8379 303.087 94.2979 299.831 91.2179C296.575 88.1086 294.947 83.2686 294.947 76.6979V47.1739H304.715V76.1699C304.715 80.1886 305.624 83.0779 307.443 84.8379C309.291 86.5979 311.916 87.4779 315.319 87.4779C317.871 87.4779 320.379 86.9939 322.843 86.0259C325.336 85.0286 327.492 83.5766 329.311 81.6699V47.1739H339.079V95.0459H330.983L330.367 89.9419H329.883C327.624 91.8486 325.072 93.3152 322.227 94.3419C319.382 95.3392 316.419 95.8379 313.339 95.8379ZM362.371 47.1739H370.423L371.171 53.2899H371.743C373.474 51.2072 375.703 49.5792 378.431 48.4059C381.188 47.2326 384.063 46.6459 387.055 46.6459C388.756 46.6459 390.355 46.7926 391.851 47.0859V55.8419C390.414 55.5779 388.654 55.4459 386.571 55.4459C383.99 55.4459 381.364 55.9446 378.695 56.9419C376.026 57.9392 373.84 59.4206 372.139 61.3859V95.0459H362.371V47.1739ZM409.069 95.0459V47.1739H418.837V95.0459H409.069ZM413.953 37.8459C411.871 37.8459 410.287 37.3912 409.201 36.4819C408.145 35.5726 407.617 34.2672 407.617 32.5659C407.617 30.8352 408.145 29.5152 409.201 28.6059C410.287 27.6672 411.871 27.1979 413.953 27.1979C416.036 27.1979 417.605 27.6672 418.661 28.6059C419.747 29.5152 420.289 30.8352 420.289 32.5659C420.289 34.2672 419.747 35.5726 418.661 36.4819C417.605 37.3912 416.036 37.8459 413.953 37.8459ZM464.85 95.9259C456.607 95.9259 450.315 93.8432 445.974 89.6779C441.662 85.5126 439.506 79.3526 439.506 71.1979C439.506 63.0139 441.779 56.8392 446.326 52.6739C450.902 48.5086 457.575 46.4259 466.346 46.4259C470.716 46.4259 474.735 46.9246 478.402 47.9219V55.7099C476.378 55.2406 474.486 54.8886 472.726 54.6539C470.966 54.4192 469.118 54.3019 467.182 54.3019C461.168 54.3019 456.71 55.6512 453.806 58.3499C450.931 61.0486 449.494 65.2872 449.494 71.0659C449.494 76.8739 450.858 81.1566 453.586 83.9139C456.343 86.6712 460.42 88.0499 465.818 88.0499C467.695 88.0499 469.616 87.8886 471.582 87.5659C473.547 87.2139 475.82 86.6712 478.402 85.9379V93.7259C474.236 95.1926 469.719 95.9259 464.85 95.9259ZM574.428 95.0459L553.704 69.0859C553.176 69.1152 552.37 69.1299 551.284 69.1299C548.38 69.1299 544.978 68.9832 541.076 68.6899V95.0459H531.308V31.4659C537.967 29.9699 544.846 29.2219 551.944 29.2219C561.595 29.2219 568.752 30.8059 573.416 33.9739C578.08 37.1126 580.412 42.1286 580.412 49.0219C580.412 54.0086 579.004 58.0859 576.188 61.2539C573.402 64.4219 569.266 66.6366 563.78 67.8979L585.648 95.0459H574.428ZM541.076 61.2099C543.071 61.4152 544.816 61.5619 546.312 61.6499C547.838 61.7379 549.627 61.7819 551.68 61.7819C558.427 61.7819 563.34 60.7699 566.42 58.7459C569.5 56.6926 571.04 53.4952 571.04 49.1539C571.04 46.0739 570.395 43.6099 569.104 41.7619C567.843 39.9139 565.863 38.5792 563.164 37.7579C560.495 36.9366 556.975 36.5259 552.604 36.5259C550.404 36.5259 548.424 36.6139 546.664 36.7899C544.904 36.9659 543.042 37.2299 541.076 37.5819V61.2099ZM642.947 74.0139H608.231C608.407 77.4752 609.155 80.2766 610.475 82.4179C611.795 84.5299 613.775 86.0846 616.415 87.0819C619.055 88.0792 622.443 88.5779 626.579 88.5779C630.686 88.5779 635.233 87.9472 640.219 86.6859V93.9459C635.027 95.2659 630.026 95.9259 625.215 95.9259C616.298 95.9259 609.61 93.9166 605.151 89.8979C600.722 85.8499 598.507 79.6166 598.507 71.1979C598.507 65.9179 599.402 61.4299 601.191 57.7339C602.981 54.0379 605.562 51.2366 608.935 49.3299C612.338 47.3939 616.43 46.4259 621.211 46.4259C628.251 46.4259 633.634 48.5819 637.359 52.8939C641.085 57.1766 642.947 63.3659 642.947 71.4619V74.0139ZM621.079 52.8939C616.973 52.8939 613.834 54.1406 611.663 56.6339C609.493 59.0979 608.334 62.9259 608.187 68.1179H633.751C633.634 62.9259 632.519 59.0979 630.407 56.6339C628.295 54.1406 625.186 52.8939 621.079 52.8939ZM677.365 95.9259C671.352 95.9259 665.896 95.2219 660.997 93.8139V86.7299C666.248 88.1966 671.718 88.9299 677.409 88.9299C681.809 88.9299 684.977 88.3432 686.913 87.1699C688.849 85.9672 689.817 84.2219 689.817 81.9339C689.817 80.7019 689.597 79.6899 689.157 78.8979C688.717 78.0766 687.969 77.4019 686.913 76.8739C685.857 76.3166 684.405 75.8912 682.557 75.5979L674.065 74.2779C669.137 73.4859 665.573 71.9899 663.373 69.7899C661.202 67.5899 660.117 64.6419 660.117 60.9459C660.117 56.4579 661.965 52.9232 665.661 50.3419C669.386 47.7312 675.062 46.4259 682.689 46.4259C685.094 46.4259 687.485 46.5872 689.861 46.9099C692.266 47.2032 694.481 47.6432 696.505 48.2299V55.2699C692.046 54.0379 687.456 53.4219 682.733 53.4219C677.893 53.4219 674.476 54.0526 672.481 55.3139C670.486 56.5752 669.489 58.3206 669.489 60.5499C669.489 62.2219 670.002 63.5859 671.029 64.6419C672.056 65.6686 673.889 66.4166 676.529 66.8859L685.021 68.2059C689.92 68.9686 693.513 70.3766 695.801 72.4299C698.089 74.4832 699.233 77.4606 699.233 81.3619C699.233 84.3832 698.412 86.9792 696.769 89.1499C695.156 91.3206 692.706 92.9926 689.421 94.1659C686.165 95.3392 682.146 95.9259 677.365 95.9259ZM760.579 74.0139H725.863C726.039 77.4752 726.787 80.2766 728.107 82.4179C729.427 84.5299 731.407 86.0846 734.047 87.0819C736.687 88.0792 740.075 88.5779 744.211 88.5779C748.317 88.5779 752.864 87.9472 757.851 86.6859V93.9459C752.659 95.2659 747.657 95.9259 742.847 95.9259C733.929 95.9259 727.241 93.9166 722.783 89.8979C718.353 85.8499 716.139 79.6166 716.139 71.1979C716.139 65.9179 717.033 61.4299 718.823 57.7339C720.612 54.0379 723.193 51.2366 726.567 49.3299C729.969 47.3939 734.061 46.4259 738.843 46.4259C745.883 46.4259 751.265 48.5819 754.991 52.8939C758.716 57.1766 760.579 63.3659 760.579 71.4619V74.0139ZM738.711 52.8939C734.604 52.8939 731.465 54.1406 729.295 56.6339C727.124 59.0979 725.965 62.9259 725.819 68.1179H751.383C751.265 62.9259 750.151 59.0979 748.039 56.6339C745.927 54.1406 742.817 52.8939 738.711 52.8939ZM796.986 46.4259C802.032 46.4259 806.138 47.0272 809.306 48.2299C812.474 49.4032 814.85 51.3686 816.434 54.1259C818.018 56.8832 818.81 60.6379 818.81 65.3899V95.0459H810.626L809.922 89.8979H809.394C807.605 91.7752 805.346 93.2419 802.618 94.2979C799.89 95.3246 796.986 95.8379 793.906 95.8379C790.386 95.8379 787.38 95.2952 784.886 94.2099C782.393 93.0952 780.501 91.5406 779.21 89.5459C777.92 87.5512 777.274 85.2046 777.274 82.5059C777.274 78.2526 778.858 74.9672 782.026 72.6499C785.224 70.3032 790.298 68.8219 797.25 68.2059L809.218 67.0179V64.7299C809.218 61.9139 808.734 59.7139 807.766 58.1299C806.798 56.5459 805.332 55.4312 803.366 54.7859C801.43 54.1406 798.849 53.8179 795.622 53.8179C793.393 53.8179 790.973 54.0086 788.362 54.3899C785.781 54.7712 783.302 55.3432 780.926 56.1059V48.8019C783.273 48.0392 785.869 47.4526 788.714 47.0419C791.589 46.6312 794.346 46.4259 796.986 46.4259ZM796.502 89.0619C798.849 89.0619 801.122 88.6512 803.322 87.8299C805.522 86.9792 807.488 85.7179 809.218 84.0459V72.8259L797.998 73.9259C794.097 74.3659 791.31 75.2166 789.638 76.4779C787.966 77.7099 787.13 79.4699 787.13 81.7579C787.13 84.0752 787.908 85.8792 789.462 87.1699C791.017 88.4312 793.364 89.0619 796.502 89.0619ZM841.524 47.1739H849.576L850.324 53.2899H850.896C852.627 51.2072 854.856 49.5792 857.584 48.4059C860.341 47.2326 863.216 46.6459 866.208 46.6459C867.909 46.6459 869.508 46.7926 871.004 47.0859V55.8419C869.567 55.5779 867.807 55.4459 865.724 55.4459C863.143 55.4459 860.517 55.9446 857.848 56.9419C855.179 57.9392 852.993 59.4206 851.292 61.3859V95.0459H841.524V47.1739ZM909.164 95.9259C900.921 95.9259 894.629 93.8432 890.288 89.6779C885.976 85.5126 883.82 79.3526 883.82 71.1979C883.82 63.0139 886.093 56.8392 890.64 52.6739C895.216 48.5086 901.889 46.4259 910.66 46.4259C915.03 46.4259 919.049 46.9246 922.716 47.9219V55.7099C920.692 55.2406 918.8 54.8886 917.04 54.6539C915.28 54.4192 913.432 54.3019 911.496 54.3019C905.482 54.3019 901.024 55.6512 898.12 58.3499C895.245 61.0486 893.808 65.2872 893.808 71.0659C893.808 76.8739 895.172 81.1566 897.9 83.9139C900.657 86.6712 904.734 88.0499 910.132 88.0499C912.009 88.0499 913.93 87.8886 915.896 87.5659C917.861 87.2139 920.134 86.6712 922.716 85.9379V93.7259C918.55 95.1926 914.033 95.9259 909.164 95.9259ZM941.796 23.9419H951.564V52.2779H952.048C954.248 50.3712 956.756 48.9192 959.572 47.9219C962.417 46.9246 965.395 46.4259 968.504 46.4259C974.019 46.4259 978.375 47.9952 981.572 51.1339C984.769 54.2432 986.368 59.0686 986.368 65.6099V95.0459H976.6V66.0939C976.6 62.0459 975.661 59.1566 973.784 57.4259C971.936 55.6952 969.237 54.8299 965.688 54.8299C963.048 54.8299 960.481 55.3286 957.988 56.3259C955.524 57.2939 953.383 58.7312 951.564 60.6379V95.0459H941.796V23.9419Z" fill="#14C290"/>
+<rect x="0.205322" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="14.679" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="86.6055" y="44.0371" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" y="29.1787" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="58.7158" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="87.1592" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="73.0205" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="29.3579" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="71.9265" y="87.3262" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="43.1211" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="57.2478" y="101.631" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="101.284" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+<rect x="15.0187" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="44.3771" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="59.0558" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="73.3605" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="87.6662" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="0.34" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="101.624" y="101.971" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="43.4611" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="57.5876" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="15.0187" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="29.6979" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.2668" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.9455" y="0.34" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="72.445" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="86.7506" y="15.213" width="10.0489" height="10.0489" rx="5.02447" stroke="#363636" stroke-width="0.68"/>
+<rect x="100.716" y="14.873" width="10.7289" height="10.7289" rx="5.36447" fill="#14C290"/>
+</svg></a>
+<h1><span class="ticker">GOOGL</span> <span class="rating down">비중 축소</span></h1><p style="font:16px/1.6 system-ui"><strong>항목별 매수 매력도: 47~57점 / 100점</strong><br>점수는 기존 TradingAgents 보고서에 동일한 8개 항목을 적용한 별도 AI 평가입니다. 1~3년 관점의 매수 매력도를 비교하며, 높을수록 긍정적입니다. 가격 20 · 성장 20 · 수익성 15 · 재무 10 · 주가 흐름 15 · 관심·수급 5 · 향후 재료 5 · 하락 위험 관리 10점. 각 항목을 0~5점으로 평가한 뒤 배점에 맞춰 합산합니다. 자료가 부족하면 가능한 총점 범위로 표시합니다. 프로그램의 최종 매매 의견과 별도이며, 상승 확률·예상 수익률이나 검증된 수익 예측 모형이 아닙니다. 기존의 등급별 고정 점수(비중 축소 25점)는 더 이상 사용하지 않습니다.</p>
+<p class="date">분석 기준일 2026-11-21</p>
+<dl class="run"><div class="detail"><dt>생성 시각</dt><dd>2026-11-21 07:15</dd></div><div class="detail"><dt>심층 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>빠른 분석 모델</dt><dd><span class="field">chatgpt</span> <span class="field">gpt-6.1-sol</span></dd></div><div class="detail"><dt>분석 담당</dt><dd><span class="field">market</span> <span class="field">sentiment</span> <span class="field">뉴스</span> <span class="field">재무</span></dd></div><div class="detail"><dt>토론 횟수</dt><dd><span class="group"><span class="name">research</span><span class="field">1</span></span> <span class="group"><span class="name">risk</span><span class="field">1</span></span></dd></div><div class="detail"><dt>자료 출처</dt><dd><span class="group"><span class="name">시세</span><span class="field">yfinance</span></span> <span class="group"><span class="name">기술지표</span><span class="field">yfinance</span></span> <span class="group"><span class="name">재무</span><span class="field">sec_edgar</span> <span class="then">→</span> <span class="field">yfinance</span></span> <span class="group"><span class="name">뉴스</span><span class="field">yfinance</span></span> <span class="group"><span class="name">거시경제</span><span class="field">fred</span></span> <span class="group"><span class="name">예측시장</span><span class="field">polymarket</span></span></dd></div><div class="detail"><dt>버전</dt><dd>TradingAgents 0.7.1</dd></div></dl>
+</header>
+<nav class="contents" aria-label="Sections"><ul><li><a href="#s1"><span class="num">I</span> <span class="label">분석팀 보고서</span></a><ul><li><a href="#s1-1"><span class="bar"></span> <span class="label">시장 분석가</span></a></li><li><a href="#s1-2"><span class="bar"></span> <span class="label">투자심리 분석가</span></a></li><li><a href="#s1-3"><span class="bar"></span> <span class="label">뉴스 분석가</span></a></li><li><a href="#s1-4"><span class="bar"></span> <span class="label">재무 분석가</span></a></li></ul></li><li><a href="#s2"><span class="num">II</span> <span class="label">투자 검토팀 판단</span></a><ul><li><a href="#s2-1"><span class="bar"></span> <span class="label">상승론 분석가</span></a></li><li><a href="#s2-2"><span class="bar"></span> <span class="label">하락론 분석가</span></a></li><li><a href="#s2-3"><span class="bar"></span> <span class="label">투자 검토 책임자</span></a></li></ul></li><li><a href="#s3"><span class="num">III</span> <span class="label">매매 계획</span></a><ul><li><a href="#s3-1"><span class="bar"></span> <span class="label">매매 담당</span></a></li></ul></li><li><a href="#s4"><span class="num">IV</span> <span class="label">위험 관리팀 판단</span></a><ul><li><a href="#s4-1"><span class="bar"></span> <span class="label">적극적 위험 분석가</span></a></li><li><a href="#s4-2"><span class="bar"></span> <span class="label">보수적 위험 분석가</span></a></li><li><a href="#s4-3"><span class="bar"></span> <span class="label">중립적 위험 분석가</span></a></li></ul></li><li><a href="#s5"><span class="num">V</span> <span class="label">최종 투자 판단</span></a><ul><li><a href="#s5-1"><span class="bar"></span> <span class="label">투자 총괄</span></a></li></ul></li></ul></nav>
+<main><section><h2>항목별 매수 매력도: 47~57점 / 100점</h2><p>2026년 11월 21일 기준 1~3년 상대적 매수 매력은 강한 매출·영업이익 성장과 높은 영업마진, 양호한 유동성이 지지하지만, 급증한 자본지출과 낮은 현금흐름 수익률이 제약한다. 낮은 표면 PER이나 최근 급락만으로 저평가를 판단하기 어렵고, 가격 추세도 불리하다. 반복 가능한 이익의 확인, 자본지출 증가 둔화와 분기 잉여현금흐름 흑자 전환, 투자 수익화 증거가 동반되면 평가를 높일 수 있다. 반대로 현금 적자·외부 조달 의존·영업마진 하락이 지속되면 낮출 수 있다. 이는 제공 보고서에 대한 추가적인 주관적 평가이며, TradingAgents의 원래 등급이나 보정된 확률이 아니다. 종합점수 및 매매 주문은 제시하지 않는다.</p><p>보고서 기준 시세: 2026년 11월 20일 종가 265.29달러. 제공된 기술적 보고서의 최신 가격이며 실시간 시세가 아니다.</p><p>자료 한계: 제공 보고서만 사용했으며 공시 원문이나 외부 자료를 독립 검증하지 않았다. 재무상태는 2026년 9월 말, 기술적 자료는 11월 20일, 뉴스·심리는 최근 일주일에 해당하므로 기준일과 시차가 있고 1~3년 전망을 직접 보장하지 않는다. 최근 12개월 잉여현금흐름은 재무제표 재구성 197.47억 달러와 요약 도구 −11.62억 달러가 충돌해 전자를 우선하되 불확실성을 반영했다. 예상 EPS의 기간·출처, 비경상 이익의 원인, 부채·자산·자금조달 구성 및 사업부별 실적은 불명확하다. 뉴스와 심리 보고서의 동일 기사 반복은 독립적인 확인으로 취급하지 않았다. 대표성 있는 수급 자료와 확정된 촉매 자료가 부족한 항목은 중립점 대신 null로 처리했다.</p><details><summary>8개 항목과 평가 근거 보기</summary><ul><li><strong>가격 매력도: 8 / 20점</strong><p>최근 PER 13.85배와 예상 PER 17.34배는 강한 영업 성장 대비 매력의 여지가 있다. 그러나 순이익이 영업이익을 크게 웃돌아 정상화 PER은 확인되지 않으며, 재구성 잉여현금흐름 수익률 0.61%와 매출배수 6.92배는 현금 기준 저평가를 뒷받침하지 못한다. 예상 EPS의 기간·출처와 현금흐름 산정 충돌도 있어 1~3년 관점의 가격 매력은 균형 이하로 판단한다.</p><blockquote>이익 기준으로는 저렴해 보이지만 현재 투자지출을 반영한 현금흐름 기준으로는 저렴하다고 보기 어렵습니다.</blockquote></li><li><strong>사업 성장성: 16 / 20점</strong><p>보고된 2026년 3분기 매출 증가율 24.7%, 영업이익 증가율 29.9%와 1~9월 매출 증가율 23.6%는 1~3년 성장 매력을 뒷받침한다. 다만 사업부별 실적과 인수 효과 분리가 없어 이를 모두 클라우드·AI의 유기적 성장으로 해석하지 않는다. Gemini 생태계 확장과 수요 낙관론은 미검증 보도이며, 회사의 확정 성장 가이던스로 반영하지 않았다.</p><blockquote>2026년 3분기 매출은 전년 동기 대비 **24.7%**, 영업이익은 **29.9%** 증가했습니다.</blockquote></li><li><strong>기업 수익성: 9 / 15점</strong><p>최근 12개월 영업이익률 33.32%와 누적 영업이익률 개선은 높은 본업 수익성을 보여준다. 반면 3분기 영업이익률은 전분기보다 2.23%포인트 낮아졌고, 1~9월 자본지출이 영업현금흐름을 넘어 잉여현금흐름은 적자다. 원인과 반복성이 불명확한 상반기 순이익 급증을 지속 수익력에서 제외하면, 영업 수익성은 우수하지만 현금 전환의 지속 가능성은 제한적이다.</p><blockquote>- 영업현금흐름: **1,271.49억 달러**, 전년 동기 대비 **13.2% 증가**
+- 자본지출: **1,319.53억 달러**, **107.5% 증가**
+- 잉여현금흐름: **−48.04억 달러**</blockquote></li><li><strong>재무건전성: 7 / 10점</strong><p>2026년 9월 말 유동비율 2.79배, 현금 563.34억 달러와 총부채/총자산 32.5%는 단기 지급능력을 지지한다. 다만 전년 말 대비 총부채가 81.0% 늘었고 재무활동 유입의 차입·주식발행 구성이 불명확해 순현금 및 희석 위험을 확정할 수 없다. 외부 조달에 따른 현금 증가를 영업 수익성으로 보지 않으며, 투자 지출이 지속될 경우의 부담을 감안했다.</p><blockquote>- 순운전자본: **2,401.64억 달러**
+- 유동비율: 약 **2.79배**
+- 총부채/총자산: 약 **32.5%**</blockquote></li><li><strong>주가 흐름: 3 / 15점</strong><p>11월 20일 종가는 단·중·장기 이동평균을 모두 밑돌고 역배열이며, 최근 30거래일 종가 중 최저로 반등 실패가 확인된다. MACD 히스토그램도 음수다. RSI 27.7822는 과매도이나 저점 확정 근거가 아니고, 264.22달러도 검증된 지지선이 아니다. 1~3년 평가에서는 보조 요인이지만 현재 추세 자체는 불리하다.</p><blockquote>종가 265.29달러 &lt; 10일 EMA 282.005달러 &lt; 50일 SMA 322.301달러 &lt; 200일 SMA 336.709달러</blockquote></li><li><strong>관심·수급의 질: 자료 부족</strong><p>뉴스의 약세 프레이밍은 관찰되지만 중복 사건과 업종 기사가 섞여 있고 원문 검증도 없다. StockTwits·Reddit 수집이 실패했으며, 기관 자금 흐름·옵션 포지셔닝·평균 대비 거래량 자료도 없다. 단일 거래일 거래량이나 뉴스 심리 점수만으로 대표성 있는 관심·수급의 질을 평가할 수 없어 점수를 부여하지 않는다.</p></li><li><strong>향후 재료: 자료 부족</strong><p>현금흐름 회복, 클라우드·Gemini 수익화, 유튜브 합의와 투자자산 현금화는 향후 확인 변수다. 그러나 확정 실적발표·출시 일정이나 회사 가이던스가 없고, 칩 계획 감축·지분가치·합의는 언론 추정 또는 미확정 보도다. 1~3년 내 촉매의 실현 시점·경제적 기여·기대 반영 정도를 평가할 충분한 근거가 없어 판단을 유보한다.</p></li><li><strong>하락 위험 관리: 4 / 10점</strong><p>높은 영업 수익성과 양호한 유동성은 완충재다. 그러나 광고 경기 민감도, 급증한 투자지출과 현금 회수 불확실성, 높은 가격 변동성이 1~3년 하방 관리를 어렵게 한다. 유튜브 합의와 데이터센터 과세는 확정 비용이 아닌 조건부 위험으로만 반영했으며, 투자자산 추정가치를 즉시 가용한 방어 현금으로 인정하지 않았다.</p><blockquote>GOOGL의 최신 ATR은 **11.314달러**입니다. 최신 거래일의 고가와 저가 차이는 **18.92달러**로, ATR보다 큰 장중 범위를 보였습니다.</blockquote></li></ul></details></section>
+<section id="s1"><h2>I. 분석팀 보고서</h2><h3 id="s1-1">시장 분석가</h3>
+<h4>GOOGL 기술적 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 21일</strong><br />
+<strong>최근 거래일: 2026년 11월 20일</strong><br />
+<strong>분석 대상: GOOGL — Alphabet Inc., 커뮤니케이션 서비스 / 인터넷 콘텐츠·정보, NMS</strong></p>
+<h5>1. 핵심 판단</h5>
+<p><strong>GOOGL은 단기·중기·장기 이동평균선 아래에서 거래되는 하락 추세이며, 최근 반등 이후 매도 압력이 다시 강화되는 모습입니다. RSI는 과매도 구간에 있지만, 이를 바닥 확인이나 즉시 매수 신호로 해석하기는 어렵습니다.</strong></p>
+<p>현재 관찰되는 핵심은 다음 세 가지입니다.</p>
+<ul>
+<li><strong>추세:</strong> 종가가 10일 EMA, 50일 SMA, 200일 SMA를 모두 밑돌며, 이동평균선도 단기선부터 장기선까지 낮은 순서로 배열되어 있습니다.</li>
+<li><strong>모멘텀:</strong> MACD 히스토그램이 음수이고 RSI가 30을 하회해, 하락 압력이 유지되는 동시에 단기 반등 가능성도 커진 상태입니다.</li>
+<li><strong>위험:</strong> 최근 거래일의 장중 변동폭이 크고 종가가 저가에 가까워, 가격이 싸 보인다는 이유만으로 진입하기보다 안정화 여부를 확인하는 접근이 적절합니다.</li>
+</ul>
+<p>이 보고서는 <strong>GOOGL의 기술적 조건과 대응 시나리오를 제공하는 분석 자료</strong>이며, 최종 거래 결정은 별도로 판단해야 합니다.</p>
+<hr />
+<h5>2. 데이터 기준과 선택 지표</h5>
+<p>2026년 11월 21일은 비거래일이므로, 최신 검증 스냅숏의 <strong>2026년 11월 20일 자료</strong>를 기준으로 분석했습니다. 주가 데이터를 먼저 조회하고 개별 지표를 산출한 뒤, 최종 검증 자료와 대조했습니다.</p>
+<p>이번에는 다음 <strong>7개 지표</strong>를 선택했습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>선택 지표</th>
+<th>선택 이유</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>close_10_ema</code></td>
+<td>급락 이후 단기 반등이 추세 회복으로 연결되는지 판단</td>
+</tr>
+<tr>
+<td><code>close_50_sma</code></td>
+<td>중기 하락 추세와 회복에 필요한 가격대 확인</td>
+</tr>
+<tr>
+<td><code>close_200_sma</code></td>
+<td>장기 추세의 기준 제공</td>
+</tr>
+<tr>
+<td><code>macdh</code></td>
+<td>MACD와 신호선의 차이를 통해 하락 모멘텀 변화 확인</td>
+</tr>
+<tr>
+<td><code>rsi</code></td>
+<td>과매도와 반등 가능성을 추세 판단과 구분</td>
+</tr>
+<tr>
+<td><code>atr</code></td>
+<td>변동성에 맞는 손절 거리와 포지션 규모 설정</td>
+</tr>
+<tr>
+<td><code>vwma</code></td>
+<td>거래량을 반영한 평균가격과 현재 가격의 관계 확인</td>
+</tr>
+</tbody>
+</table></div>
+<p>MACD 관련 지표는 중복을 줄이기 위해 히스토그램만 개별 선택했습니다. 볼린저밴드는 이번 핵심 지표군에서 제외했습니다. 현재는 밴드 접촉보다 <strong>추세 훼손, 반등 실패, 변동성 관리</strong>가 더 중요한 판단 요소이기 때문입니다.</p>
+<p><strong>데이터 유의사항:</strong> 검증 스냅숏에 포함된 주요 가격과 지표는 개별 조회 결과와 반올림 범위에서 일치합니다. 다만 VWMA는 검증 스냅숏에 없으므로, 아래에서는 개별 조회 결과에 기반한 방향성만 보조적으로 사용하며 정확한 수치를 매매 기준으로 제시하지 않습니다.</p>
+<hr />
+<h5>3. 가격 구조: 반등 이후 다시 낮아진 종가</h5>
+<h6>최신 거래일의 모습</h6>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">GOOGL 검증값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시가</td>
+<td style="text-align:right">274.36달러</td>
+</tr>
+<tr>
+<td>고가</td>
+<td style="text-align:right">283.14달러</td>
+</tr>
+<tr>
+<td>저가</td>
+<td style="text-align:right">264.22달러</td>
+</tr>
+<tr>
+<td>종가</td>
+<td style="text-align:right"><strong>265.29달러</strong></td>
+</tr>
+<tr>
+<td>거래량</td>
+<td style="text-align:right"><strong>57,134,050주</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>GOOGL은 장중 283.14달러까지 상승했지만 265.29달러로 마감했습니다. 종가는 당일 저가 264.22달러에 가까워, <strong>장중 반등을 유지하지 못하고 매도 우위로 거래를 마쳤다</strong>고 해석할 수 있습니다.</p>
+<p>다만 이 거래량만으로 투매의 종료나 기관 매도를 확정할 수는 없습니다. 거래 주체와 장기 평균 거래량 대비 수준은 별도 검증이 필요합니다.</p>
+<h6>최근 종가 흐름</h6>
+<p>검증 자료에서 확인되는 주요 변화는 다음과 같습니다.</p>
+<ul>
+<li>10월 28일 <strong>324.89달러</strong> → 10월 29일 <strong>283.82달러</strong>: 종가가 크게 낮아졌습니다.</li>
+<li>11월 2일 <strong>278.99달러</strong> → 11월 12일 <strong>298.70달러</strong>: 이후 반등이 나타났습니다.</li>
+<li>11월 13일 <strong>295.77달러</strong> → 11월 20일 <strong>265.29달러</strong>: 반등을 유지하지 못하고 다시 하락했습니다.</li>
+</ul>
+<p>특히 11월 20일 종가는 검증 스냅숏에 제시된 <strong>최근 30개 거래일 종가 중 최저</strong>입니다. 따라서 현재 가격 구조는 추세 전환이 확인된 상태라기보다, <strong>급락 후 반등이 실패하면서 하락이 재개된 상태</strong>에 더 가깝습니다.</p>
+<p>급락의 원인이 실적, 규제, 뉴스 중 무엇인지는 이 도구 자료만으로 판단할 수 없습니다.</p>
+<hr />
+<h5>4. 추세: 이동평균선 역배열</h5>
+<p>최신 검증값은 다음과 같습니다.</p>
+<blockquote>
+<p><strong>종가 265.29달러 &lt; 10일 EMA 282.005달러 &lt; 50일 SMA 322.301달러 &lt; 200일 SMA 336.709달러</strong></p>
+</blockquote>
+<h6>단기: 10일 EMA 회복이 첫 관문</h6>
+<p>GOOGL의 종가는 10일 EMA 아래에 있습니다. 따라서 장중 반등이 발생하더라도, 우선은 하락 추세 안의 기술적 반등일 가능성을 고려해야 합니다.</p>
+<p><strong>282.005달러 부근은 고정된 저항선이 아니라 최신 단기 평균가격 기준</strong>입니다. 향후 가격이 이 선을 종가로 회복하고, 이후 되돌림에서도 유지하는지 확인하는 것이 단순 장중 돌파보다 의미가 큽니다.</p>
+<h6>중·장기: 단기 반등과 추세 전환은 구분해야 함</h6>
+<p>50일 SMA는 322.301달러, 200일 SMA는 336.709달러입니다. 현재 가격과 상당히 떨어져 있어, 단기 반등만으로 중·장기 구조가 즉시 개선되지는 않습니다.</p>
+<p>따라서 GOOGL이 단기 평균선을 회복하더라도, 그것만으로 장기 상승 추세 복귀를 선언해서는 안 됩니다. <strong>단기 회복 확인 → 중기 가격 구조 개선 → 장기 추세 재평가</strong> 순서로 접근하는 편이 타당합니다.</p>
+<hr />
+<h5>5. 모멘텀: 과매도이지만 반전은 미확인</h5>
+<h6>RSI: 27.7822</h6>
+<p>GOOGL의 RSI는 일반적인 과매도 기준인 30 아래입니다.</p>
+<p>이는 두 가지 의미를 동시에 가집니다.</p>
+<ul>
+<li>최근 하락 압력이 강했다는 뜻입니다.</li>
+<li>단기 매도 피로에 따른 반등 가능성이 존재한다는 뜻입니다.</li>
+</ul>
+<p>그러나 <strong>과매도는 저평가나 바닥 확정과 다릅니다.</strong> 강한 하락 추세에서는 RSI가 낮게 유지되는 동안 가격이 추가 하락할 수 있습니다.</p>
+<p>반등의 신뢰도를 높이려면 RSI의 30 재진입뿐 아니라, 가격의 저점 안정화와 단기 평균선 회복이 함께 나타나는지 확인해야 합니다.</p>
+<h6>MACD 히스토그램: -0.531782</h6>
+<p>GOOGL의 MACD 히스토그램은 음수입니다. 이는 현재 MACD가 신호선 아래에 있어, 최신 시점의 모멘텀 관계가 약세라는 의미입니다.</p>
+<p>개별 지표 시계열에서는 직전 거래일의 양수에서 최신 거래일에 음수로 전환된 흐름이 관찰됩니다. 가격의 최근 반등 실패와 함께 보면, <strong>반등 과정에서 개선되던 모멘텀이 다시 약해진 상황</strong>으로 해석할 수 있습니다.</p>
+<p>다만 이 신호 하나로 추가 하락의 크기나 기간을 예측할 수는 없습니다. 향후 히스토그램의 음수 폭 축소는 하락 속도 둔화의 단서이지, 그 자체로 상승 추세 확정 신호는 아닙니다.</p>
+<h6>VWMA: 거래량 가중 평균도 회복 필요</h6>
+<p>개별 조회상 GOOGL은 거래량 가중 평균가격 아래에 있고, VWMA도 최근 낮아지는 방향입니다. 이는 거래량을 반영해 보더라도 현재 가격이 상대적으로 약한 위치라는 보조 근거입니다.</p>
+<p>다만 대량 거래가 발생한 날이 VWMA를 크게 움직일 수 있고, 최신 검증 스냅숏에 수치가 없으므로 독립적인 진입 기준으로 사용하지 않는 것이 좋습니다.</p>
+<hr />
+<h5>6. 변동성과 위험 관리</h5>
+<p>GOOGL의 최신 ATR은 <strong>11.314달러</strong>입니다. 최신 거래일의 고가와 저가 차이는 <strong>18.92달러</strong>로, ATR보다 큰 장중 범위를 보였습니다.</p>
+<p>이는 현재 환경에서 지나치게 좁은 손절을 사용하면 정상적인 가격 흔들림에도 청산될 가능성이 높다는 점을 시사합니다. 반대로 손절 거리를 넓히면서 수량을 그대로 유지하면 계좌 위험이 커집니다.</p>
+<p>실무적으로는 다음 원칙이 중요합니다.</p>
+<ul>
+<li><strong>손절 거리가 넓어지면 수량을 줄입니다.</strong></li>
+<li>ATR은 변동성 기준이며, 지지선이나 최대 손실 보장값이 아닙니다.</li>
+<li>손절 주문도 갭과 슬리피지로 인해 예상보다 불리하게 체결될 수 있습니다.</li>
+<li>포지션 수량은 대략 <strong>허용 손실액 ÷ 주당 손절 거리</strong>로 계산하되, 비용과 체결 위험을 추가 반영합니다.</li>
+</ul>
+<p>GOOGL은 현재 방향성 예측보다 <strong>잘못 판단했을 때 손실을 제한할 구조를 먼저 설정하는 것</strong>이 중요한 구간입니다.</p>
+<hr />
+<h5>7. 조건별 대응 시나리오</h5>
+<h6>시나리오 A: 하락 지속</h6>
+<p><strong>관찰 조건:</strong> GOOGL이 최신 거래일 저가인 <strong>264.22달러</strong>를 이탈하고, 빠르게 회복하지 못하는 경우.</p>
+<ul>
+<li>하방 압력이 이어진다는 경고로 해석할 수 있습니다.</li>
+<li>기존 보유자는 미리 정한 위험 한도와 비중을 재점검할 필요가 있습니다.</li>
+<li>신규 매수자는 과매도라는 이유만으로 추가 하락을 받아들이는 접근을 경계해야 합니다.</li>
+</ul>
+<p>264.22달러는 <strong>최근 저가이자 관찰 기준</strong>이지, 반복적으로 검증된 지지선은 아닙니다. 제공 자료만으로 그 아래의 신뢰할 만한 다음 지지대를 지정할 수 없습니다.</p>
+<h6>시나리오 B: 기술적 반등</h6>
+<p><strong>관찰 조건:</strong> GOOGL이 <strong>272.66달러</strong>를 회복하고, 이어 <strong>282.005달러 부근의 10일 EMA</strong>를 종가로 회복하는 경우.</p>
+<p>272.66달러는 11월 19일 종가이며, 반등 진행 상황을 확인하는 참고값입니다. 해당 수준에 특별한 지지·저항 효력이 검증된 것은 아닙니다.</p>
+<p>반등의 신뢰도는 다음 조건이 함께 나타날 때 높아집니다.</p>
+<ul>
+<li>RSI가 30 위로 복귀</li>
+<li>MACD 히스토그램의 음수 폭 축소</li>
+<li>단기 평균선 회복 후 유지</li>
+<li>반등 이후 더 높은 저점 형성</li>
+</ul>
+<p>다만 이 단계에서도 중·장기 하락 구조가 자동으로 해소되지는 않습니다.</p>
+<h6>시나리오 C: 보다 의미 있는 회복</h6>
+<p><strong>관찰 조건:</strong> GOOGL이 단기 평균선을 회복한 뒤, 11월 12일 종가 <strong>298.70달러</strong>를 넘어서는 가격 구조를 형성하는 경우.</p>
+<p>298.70달러는 최근 반등의 종가 기준 고점으로, 회복 강도를 평가할 참고값입니다. 장중 고점이나 반복 검증된 저항선과 동일하게 취급해서는 안 됩니다.</p>
+<p>이 수준을 회복하더라도 50일·200일 이동평균선과의 관계를 다시 점검해야 합니다.</p>
+<hr />
+<h5>8. 종합 결론</h5>
+<p>GOOGL의 현재 기술적 증거는 <strong>하락 추세 우위, 과매도에 따른 반등 가능성, 높은 체결·변동성 위험</strong>을 동시에 가리킵니다.</p>
+<p>신규 매수 관점에서는 가격 안정화와 단기 평균선 회복을 기다리는 접근이 더 많은 확인 근거를 제공합니다. 기존 보유 관점에서는 반등 기대와 별개로 손실 허용 범위와 비중을 먼저 점검할 필요가 있습니다. 하락 추종 관점에서도 이미 과매도인 만큼, 저가 부근 추격은 급반등 위험을 동반합니다.</p>
+<p><strong>핵심은 “많이 하락했다”와 “하락이 끝났다”를 구분하는 것입니다. 현재 자료에서는 전자는 확인되지만, 후자는 아직 확인되지 않았습니다.</strong></p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>구분</th>
+<th>GOOGL 핵심 근거</th>
+<th>해석</th>
+<th>대응 시 확인할 사항</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>최신 가격</td>
+<td>11월 20일 종가 265.29달러</td>
+<td>최근 30개 거래일 종가 중 최저</td>
+<td>추가 저점 형성 여부</td>
+</tr>
+<tr>
+<td>당일 가격 행동</td>
+<td>저가 264.22달러에 가까운 종가</td>
+<td>마감까지 매도 우위</td>
+<td>저가 이탈 후 회복 여부</td>
+</tr>
+<tr>
+<td>단기 추세</td>
+<td>10일 EMA 282.005달러 아래</td>
+<td>단기 약세</td>
+<td>종가 회복 및 유지</td>
+</tr>
+<tr>
+<td>중기 추세</td>
+<td>50일 SMA 322.301달러 아래</td>
+<td>중기 구조 훼손</td>
+<td>단기 반등과 추세 전환 구분</td>
+</tr>
+<tr>
+<td>장기 추세</td>
+<td>200일 SMA 336.709달러 아래</td>
+<td>장기 기준 대비 약세</td>
+<td>장기 추세 회복은 별도 확인</td>
+</tr>
+<tr>
+<td>과매도</td>
+<td>RSI 27.7822</td>
+<td>반등 가능성은 있으나 바닥 미확인</td>
+<td>RSI 30 복귀와 가격 안정화</td>
+</tr>
+<tr>
+<td>모멘텀</td>
+<td>MACD 히스토그램 -0.531782</td>
+<td>최신 모멘텀 약세</td>
+<td>음수 폭 축소 및 가격 확인</td>
+</tr>
+<tr>
+<td>거래량 보조</td>
+<td>개별 조회상 가격이 VWMA 아래</td>
+<td>거래량 가중 기준도 약세</td>
+<td>검증 수치 부재로 보조 활용</td>
+</tr>
+<tr>
+<td>변동성</td>
+<td>ATR 11.314달러</td>
+<td>손절·수량 관리 중요</td>
+<td>손절 확대 시 수량 축소</td>
+</tr>
+<tr>
+<td>반등 참고값</td>
+<td>272.66달러, 282.005달러, 298.70달러</td>
+<td>단계별 회복 관찰값</td>
+<td>검증된 고정 저항선으로 단정 금지</td>
+</tr>
+<tr>
+<td>분석상 한계</td>
+<td>뉴스·실적 원인 및 하단 지지 자료 미확인</td>
+<td>기술적 분석에 한정</td>
+<td>최종 거래 전 별도 정보 확인</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-2">투자심리 분석가</h3>
+<p><strong>Overall Sentiment:</strong> <strong>Bearish</strong> (Score: 3.2/10)
+<strong>Confidence:</strong> Low</p>
+<h4>GOOGL 주간 시장 심리 보고서</h4>
+<ul>
+<li>분석 기간: 2026-11-14~2026-11-21</li>
+<li>분석 기준일: 2026-11-21</li>
+<li>대상: GOOGL, Alphabet Inc., 커뮤니케이션 서비스 / 인터넷 콘텐츠·정보, NMS</li>
+<li>종합 판단: 약세 우위. 점수는 10점 만점에 3.2점이며 신뢰도는 낮음이다. 제공된 뉴스에서 자금조달·현금흐름 부담과 인공지능 관련 위험회피가 긍정적 투자자산 가치 및 수요 논리를 압도한다. 다만 소셜 데이터 두 종류가 모두 수집 실패했으므로 시장 참여자 전체의 심리로 일반화할 수 없다.</li>
+</ul>
+<h5>1. 출처별 분석</h5>
+<h6>뉴스: 부정적 프레이밍이 우세하지만 호재도 존재</h6>
+<p>제공된 뉴스 항목은 총 20건이다. 이는 독립적인 사건 20개나 GOOGL 직접 관련 기사 20개를 뜻하지 않는다. 유튜브 합의 보도 2건과 엔비디아 회계조사 관련 보도 2건 등에는 사건 중복이 있고, 경쟁사·업종 전반의 기사도 섞여 있다. 따라서 기사를 독립 표본처럼 합산한 상승·하락 비율은 제시하지 않는다. 아래 내용은 제공된 제목과 요약에 기반한 보도 해석이며, 원문이나 공시로 별도 검증하지 않았다.</p>
+<p><strong>직접적인 부정 신호</strong></p>
+<ul>
+<li>GuruFocus는 GOOGL 관련 주가가 3.46% 하락했다고 보도했다. 같은 기사에서 앤스로픽 지분가치를 1,720억 달러로 평가했음에도 주가가 하락했다는 점은, 해당 보도상 자산가치 호재보다 위험회피 압력이 강했음을 시사한다. 이 수치는 주간 전체 수익률이 아니다.</li>
+<li>별도 GuruFocus 보도는 잉여현금흐름이 음수로 전환된 가운데 60억 캐나다달러, 미화 약 41.9억 달러의 투자등급 부채를 발행했다고 전한다. 차입 자체가 재무위기를 입증하지는 않지만, 인프라 투자 확대를 내부 현금창출만으로 감당할 수 있는지에 대한 우려를 강화하는 프레이밍이다. 현금흐름의 해당 회계기간과 상세 계산은 제공되지 않았다.</li>
+<li>NY Post와 Investing.com은 유튜브가 미국 교육구들과 약 30억 달러 규모의 합의에 근접했다고 보도했다. 같은 사안을 반복 보도한 것으로 보이며, 확정된 지급으로 볼 수 없다. 다수 교육구의 참여와 수개월의 마무리 절차가 필요하다는 조건, 청소년 대상 제품 안전장치 도입 가능성이 제시됐다.</li>
+<li>TIKR는 GOOGL이 52주 저점에 도달했고 시가총액이 약 3.34조 달러라고 전했다. 이는 약한 가격 심리를 보여주는 보도지만, 다른 대형 기술기업보다 저평가됐다는 주장은 해당 매체의 가치평가 의견이다.</li>
+<li>우주 기반 인공지능 계획인 Suncatcher와 관련해서는 New Glenn 운송 계약에도 불구하고 로켓 운항 중단으로 성과 실현이 2029년까지 지연된다는 보도가 있다. 단기 수익 기여보다는 실행 지연 위험이 부각된다.</li>
+</ul>
+<p><strong>긍정적·상쇄 신호</strong></p>
+<ul>
+<li>앤스로픽 상장 첫날 17.07% 상승 보도와 GOOGL 보유 지분가치 1,720억 달러 추정은 투자자산 가치의 긍정 요인이다. 다만 평가이익을 즉시 사용할 수 있는 현금이나 영업현금흐름과 동일시할 수 없다. 다른 기사에는 데뷔 후 하락 및 관련 펀드 약세도 등장하므로, 시점이 명확하지 않은 기사들을 단일 가격 경로로 재구성하지 않는다.</li>
+<li>Motley Fool은 엔비디아·구글 클라우드·앤스로픽 관련 수요 자료가 매도세와 다른 그림을 보여준다고 주장한다. 이는 수요 붕괴 서사에 대한 반론이나, 제공된 요약에는 구글 클라우드 성장률 등 검증 가능한 세부 수치가 없다.</li>
+<li>애플의 인공지능 에이전트가 Gemini 기반으로 재구축된 모델을 사용한다는 TIKR 보도는 GOOGL의 기술 기반 및 생태계 영향력에 긍정적이다. 동시에 애플의 자체 에이전트 진출은 경쟁 심화라는 반대 방향의 해석도 가능하다.</li>
+</ul>
+<p><strong>업종·거시 맥락</strong></p>
+<ul>
+<li>야후 파이낸스는 나스닥의 연초 대비 수익률이 음수로 전환되고 인공지능 관련주가 매도 압력을 받는다고 보도했다. 엔비디아의 SEC 회계조사 관련 보도는 GOOGL 자체 조사나 회계 문제의 증거가 아니라 업종 위험회피의 간접 요인이다.</li>
+<li>OpenRouter 자료를 인용한 보도에서는 1월 이후 모델 가격이 57% 하락한 반면 사용량은 늘고 최근 지출은 정체됐다고 한다. 인공지능 채택 확대에는 긍정적이지만 사용 증가가 매출·이익 증가로 이어지는지는 불확실하다. 이는 GOOGL 고유의 가격이나 실적 수치가 아니다.</li>
+<li>GOOGL이 2027년 브로드컴 설계 인공지능 칩 계획에서 약 100만 개를 줄였다는 애널리스트 발언 보도가 있다. 공급사에는 부정적이지만 GOOGL에는 지출 조정, 설계·공급 구성 변경, 수요 약화 등 여러 해석이 가능하다. 제공 자료만으로 감축의 원인을 확정할 수 없다.</li>
+<li>미국 기업의 해외 데이터센터 건설에 세금을 부과하겠다는 대통령 발언은 정책 불확실성이다. 시행 방법과 법적 권한이 제시되지 않았으므로 확정된 세금 비용으로 반영할 수 없다.</li>
+<li>아마존 광고 생태계 확대 보도는 GOOGL의 광고 경쟁 환경을 보여주지만, GOOGL의 실제 점유율이나 매출 감소를 입증하지는 않는다.</li>
+</ul>
+<h6>StockTwits: 수집 실패로 평가 불가</h6>
+<p>HTTPError가 반환됐다. 분석 가능한 메시지는 제공되지 않았고, 실제 게시량은 알 수 없다. 강세·약세 태그 수, 비율, 무표시 메시지, 대표 게시물, 과열 여부를 계산할 수 없다. 이를 중립 심리나 소매 관심 부재로 해석해서는 안 된다.</p>
+<h6>Reddit: 세 커뮤니티 모두 수집 실패</h6>
+<p>r/wallstreetbets, r/stocks, r/investing의 수집이 실패했다. 분석할 게시물 본문이 없으므로 단기 투기 성향, 중기 투자 논리, 장기 가치 논리를 비교할 수 없다. 게시물 수나 참여도를 추정하지 않으며, 데이터 부재는 토론 부재를 의미하지 않는다.</p>
+<h5>2. 출처 간 일치와 괴리</h5>
+<p>소셜 데이터가 없으므로 뉴스와 개인투자자 사이의 방향 일치 또는 괴리는 확인할 수 없다. 기관 프레이밍에 가까운 뉴스만 관찰되며, 실제 기관 포지셔닝이나 자금 흐름 자료도 없다.</p>
+<p>확인 가능한 괴리는 뉴스 내부에 있다. 앤스로픽 지분가치 상승, 클라우드 수요 낙관론, Gemini 생태계 확장이라는 긍정적 논리와 주가 하락, 현금흐름 부담, 법적 비용, 업종 매도세가 충돌한다. 특히 지분가치 호재와 주가 3.46% 하락이 함께 보도된 점은 긍정적 뉴스의 단기 흡수력이 약하다는 신호다. 다만 이것만으로 하락 원인을 특정하거나 향후 반등을 예측할 수는 없다.</p>
+<h5>3. 지배적 서사</h5>
+<ol>
+<li><strong>인공지능 수요보다 투자 회수와 자금 부담이 쟁점이다.</strong> 사용량·수요 확대 보도는 존재하지만 가격 하락, 지출 정체, 음의 잉여현금흐름 보도가 수익화의 질에 의문을 제기한다.</li>
+<li><strong>투자자산 평가가치와 현금창출은 다르다.</strong> 앤스로픽 지분가치가 커졌다는 보도는 긍정적이지만, 인프라 투자와 잠재적 법적 비용에 필요한 현금을 자동으로 제공하지 않는다.</li>
+<li><strong>업종 위험회피가 개별 호재를 압도한다.</strong> 나스닥 약세와 인공지능 관련주 매도 보도는 GOOGL의 기업별 긍정 요인이 단기 심리로 연결되기 어려운 환경을 나타낸다.</li>
+<li><strong>플랫폼 확장과 비영업 위험이 공존한다.</strong> Gemini 기반 생태계 확대와 클라우드 수요 논리 옆에 유튜브 소송, 경쟁사 에이전트·광고 확대, 데이터센터 정책 불확실성이 놓여 있다.</li>
+</ol>
+<h5>4. 촉매와 위험</h5>
+<ul>
+<li><strong>유튜브 합의의 확정 여부와 조건:</strong> 약 30억 달러 보도가 최종 합의, 지급 시점, 안전장치 의무로 구체화되는지가 중요하다. 합의는 불확실성을 줄일 수 있지만 현금 유출과 제품 변경 부담을 수반할 수 있다.</li>
+<li><strong>투자지출·현금흐름 관련 후속 설명:</strong> 음의 잉여현금흐름의 지속성, 신규 차입의 사용 목적, 칩 계획 감축 배경이 확인되면 효율 개선인지 투자 회수 우려인지 구분하는 데 도움이 된다. 제공 자료에는 해당 설명 일정이 없다.</li>
+<li><strong>앤스로픽 관련 평가 변동:</strong> 보유 지분가치는 호재이나 상장 이후 변동성과 실제 현금화 가능성을 구분해야 한다. 매각 가능 시점이나 제한 조건은 제공되지 않았다.</li>
+<li><strong>해외 데이터센터 과세 구체화:</strong> 시행 범위와 법적 근거가 확인되기 전에는 정량적 비용 산정이 불가능하다.</li>
+<li><strong>클라우드·Gemini 수익화 증거:</strong> 수요 강세가 실제 매출과 이익으로 연결되는지가 긍정 논리의 검증 지점이다. 이번 자료에는 이를 계산할 상세 수치가 없다.</li>
+<li><strong>업종 관련 후속 보도:</strong> 엔비디아 조사 보도와 인공지능 투자심리 변화는 간접 위험이다. 이를 GOOGL의 직접적인 회계 위험으로 전이해서는 안 된다.</li>
+</ul>
+<p>이번 자료에는 GOOGL의 차기 실적발표일, 확정된 단기 제품 출시일, 거래량·옵션 포지셔닝·기술적 지표가 없다. 별도의 매매 방향이나 목표가격을 제시하지 않는다.</p>
+<h5>5. 핵심 심리 신호 요약</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 신호</th>
+<th>방향</th>
+<th>출처</th>
+<th>근거 및 해석상 한계</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>지분가치 호재에도 주가 하락</td>
+<td>약세</td>
+<td>GuruFocus</td>
+<td>GOOGL 관련 주가 3.46% 하락과 앤스로픽 지분가치 1,720억 달러가 함께 보도됨. 주간 수익률은 아님</td>
+</tr>
+<tr>
+<td>차입 확대와 현금흐름 부담</td>
+<td>약세</td>
+<td>GuruFocus</td>
+<td>60억 캐나다달러, 약 41.9억 달러 발행 및 잉여현금흐름 음수 보도. 상세 회계기간 미제공</td>
+</tr>
+<tr>
+<td>유튜브 교육구 합의</td>
+<td>약세, 불확실성 완화 가능</td>
+<td>NY Post·Investing.com</td>
+<td>약 30억 달러 합의 접근 보도 2건은 같은 사건. 아직 확정 아님</td>
+</tr>
+<tr>
+<td>앤스로픽 투자자산 가치</td>
+<td>강세, 변동성 동반</td>
+<td>GuruFocus·관련 상장 기사</td>
+<td>데뷔 상승과 높은 지분가치 평가. 현금 유입과 동일하지 않음</td>
+</tr>
+<tr>
+<td>인공지능 업종 매도세</td>
+<td>약세</td>
+<td>Yahoo Finance·Barrons.com</td>
+<td>나스닥 연초 대비 음수 전환 및 엔비디아 조사 관련 보도. GOOGL에는 간접 신호</td>
+</tr>
+<tr>
+<td>클라우드 수요와 Gemini 기반 확대</td>
+<td>강세</td>
+<td>Motley Fool·TIKR</td>
+<td>수요 낙관론과 애플의 Gemini 기반 모델 보도. 구체적 수익 기여 수치는 없음</td>
+</tr>
+<tr>
+<td>모델 가격 하락과 사용량 증가</td>
+<td>혼재</td>
+<td>Yahoo Finance Video</td>
+<td>모델 가격 57% 하락, 사용량 증가, 최근 지출 정체. GOOGL 고유 지표 아님</td>
+</tr>
+<tr>
+<td>2027년 칩 계획 축소</td>
+<td>불확실</td>
+<td>24/7 Wall St.</td>
+<td>약 100만 개 감축이라는 애널리스트 발언 보도. 효율화인지 수요 약화인지 미확인</td>
+</tr>
+<tr>
+<td>해외 데이터센터 세금 발언</td>
+<td>약세 위험</td>
+<td>Investing.com</td>
+<td>시행 방식과 법적 권한이 미제시된 정책 발언</td>
+</tr>
+<tr>
+<td>개인투자자 단기 심리</td>
+<td>판단 불가</td>
+<td>StockTwits</td>
+<td>HTTPError. 메시지 수와 강세·약세 비율 산출 불가</td>
+</tr>
+<tr>
+<td>커뮤니티 투자 논리</td>
+<td>판단 불가</td>
+<td>Reddit</td>
+<td>3개 커뮤니티 수집 실패. 토론 부재를 의미하지 않음</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>최종 해석:</strong> GOOGL의 관찰 가능한 주간 뉴스 심리는 약세 우위다. 긍정적 수요와 자산가치 이야기가 사라진 것은 아니지만, 현재 제공된 프레이밍에서는 자금 부담·법적 위험·업종 위험회피가 더 강하다. 두 소셜 출처가 모두 누락돼 신뢰도는 낮으며, 이 평가는 과거 일주일의 심리 신호이지 미래 가격 예측이나 매매 지시가 아니다.</p>
+<h3 id="s1-3">뉴스 분석가</h3>
+<h4>GOOGL 주간 뉴스·거시환경 보고서</h4>
+<p><strong>기준일:</strong> 2026년 11월 21일<br />
+<strong>분석 기간:</strong> 2026년 11월 14~21일<br />
+<strong>분석 대상:</strong> GOOGL — 알파벳, 커뮤니케이션 서비스·인터넷 콘텐츠 및 정보</p>
+<h5>1. 핵심 판단</h5>
+<p><strong>GOOGL의 단기 투자환경은 인공지능 관련주 전반의 위험회피, 인프라 투자에 따른 현금흐름 우려, 정책·소송 불확실성이 겹친 상태다.</strong> 인공지능 이용 확대와 보유 투자자산의 가치 상승은 긍정적이나, 이를 즉각적인 영업현금 창출과 동일시해서는 안 된다.</p>
+<p>이번 주의 핵심은 <strong>“인공지능 수요가 증가하는가”보다 “그 수요를 얼마나 수익성 있게 현금화하는가”로 시장의 관심이 이동하고 있다는 점</strong>이다.</p>
+<p>다만 아래 분석은 뉴스 검색 결과와 예측시장에 근거한다. 공식 공시 원문, 실시간 주가·거래량, 재무제표는 확인하지 못했다. 따라서 <strong>확정적인 거래 지시보다는 추가 검증과 조건부 대응을 위한 연구 의견</strong>으로 해석해야 한다.</p>
+<h5>2. 세계 시장: 인공지능 투자 회수에 대한 불안 확대</h5>
+<h6>위험회피가 개별 기업을 넘어 시장 전반으로 확산</h6>
+<p>검색된 로이터 보도는 인공지능 관련주 매도 속에 미국 주요 지수가 급락하고, 대형주 지수가 조정 영역에 진입했다고 전한다. 다른 매체들도 기술주 중심 지수의 연간 상승분 반납과 주간 급락을 보도했다.</p>
+<ul>
+<li><a href="https://finance.yahoo.com/markets/stocks/articles/wall-st-futures-slip-anthropic-104746137.html">로이터: 인공지능 매도세로 미국 증시 급락</a></li>
+<li><a href="https://finance.yahoo.com/markets/stocks/articles/p-500-dow-sink-correction-214248905.html">미국 주요 지수 조정 및 국채 선호 보도</a></li>
+</ul>
+<p><strong>GOOGL에 대한 의미:</strong> 개별 호재가 있어도 업종 전반의 포지션 축소가 주가를 압박할 수 있다. 국채 선호에 따른 금리 하락이 발생하더라도, 성장 우려와 위험 프리미엄 상승이 더 크면 GOOGL에는 반드시 호재가 되지 않는다.</p>
+<p>또한 엔비디아에 대한 미국 증권거래위원회 회계 조사 관련 보도가 반도체·인공지능 투자심리를 악화시켰다. 이는 <strong>조사 관련 보도이며 위법 사실의 확정이 아니다.</strong> GOOGL에 대한 직접적인 회계 문제로 연결할 근거도 없다.</p>
+<h6>소비 지표가 다음 확인 지점</h6>
+<p>로이터는 블랙프라이데이를 앞두고 소비지출에 관심이 집중되고 있다고 보도했다.</p>
+<p><strong>GOOGL에 대한 경로:</strong> 소비 둔화 → 광고주의 매출 기대 약화 → 검색·동영상 광고 예산 압박이다. 반대로 소비가 견조하면 광고 수요의 방어력을 뒷받침할 수 있다. 현재 확보한 자료만으로 소비가 실제로 악화됐다고 단정할 수는 없다.</p>
+<h5>3. GOOGL의 주요 기업 뉴스</h5>
+<h6>① 자금조달과 잉여현금흐름: 가장 먼저 확인할 항목</h6>
+<p>구루포커스는 GOOGL이 <strong>60억 캐나다달러, 약 41억9,000만 미국달러 규모의 투자등급 부채</strong>를 발행했으며 잉여현금흐름이 마이너스로 전환됐다고 보도했다.</p>
+<p><a href="https://finance.yahoo.com/technology/articles/alphabet-raises-4-19-billion-214109252.html">관련 보도</a></p>
+<p><strong>해석</strong></p>
+<ul>
+<li>차입 자체가 재무위기를 의미하지는 않는다.</li>
+<li>그러나 대규모 인공지능 설비투자와 현금흐름 악화가 함께 확인되면, 투자 회수기간과 주주환원 여력에 대한 우려가 커질 수 있다.</li>
+<li>기사 요약에는 잉여현금흐름의 측정 기간과 계산 근거가 없어, 지속적인 악화로 일반화할 수 없다.</li>
+</ul>
+<p><strong>확인할 자료:</strong> 공식 부채발행 조건, 영업현금흐름, 설비투자, 잉여현금흐름의 분기·누적 추이. 해당 항목이 확인되기 전에는 “현금흐름 악화”를 확정된 투자 논거로 삼지 않는 편이 적절하다.</p>
+<h6>② 인공지능 칩 계획 축소설: 투자 효율화인가, 수요 둔화인가</h6>
+<p>한 매체는 분석가 밍치궈를 인용해 GOOGL이 2027년 브로드컴 설계 인공지능 칩 계획을 약 100만 개 줄였다고 보도했다.</p>
+<p><a href="https://247wallst.com/investing/2026/11/20/broadcom-stock-plunges-12-and-loses-191-billion-after-a-report-that-google-cut-its-plans-for-broadcom-ai-chips/">관련 보도</a></p>
+<p>이는 기업의 공식 확인이 아닌 분석가발 주장이다. 가능한 해석은 서로 다르다.</p>
+<ul>
+<li><strong>긍정적:</strong> 공급업체 다변화, 효율 개선, 투자 규율 강화.</li>
+<li><strong>부정적:</strong> 수요 기대 하향, 설비투자 지연, 인프라 확장 차질.</li>
+</ul>
+<p><strong>GOOGL 관찰 기준:</strong> 칩 구매 감소 여부보다 클라우드 매출·수주, 처리능력, 서비스 수익성 변화가 중요하다. 구매 감소만으로 수요 붕괴나 투자 효율 개선을 단정할 수 없다.</p>
+<h6>③ 유튜브 약 30억 달러 합의 보도: 일회성 비용 이상의 문제</h6>
+<p>인베스팅닷컴과 뉴욕포스트는 블룸버그를 인용해 유튜브가 미국 학교 교육구들과 <strong>약 30억 달러 규모의 합의</strong>에 가까워졌다고 보도했다. 청소년 보호 조치가 포함될 수 있으며, 다수 교육구의 참여와 최종화 절차가 남아 있다고 전했다.</p>
+<p><a href="https://finance.yahoo.com/media-advertising/articles/youtube-reportedly-nearing-3-billion-183458006.html">관련 보도</a></p>
+<p><strong>GOOGL에 대한 의미</strong></p>
+<ul>
+<li>합의가 확정되면 현금 유출 및 비용 인식 가능성이 있다.</li>
+<li>청소년 대상 제품 설계 변경은 장기적으로 이용시간·광고 노출에 영향을 줄 수 있다.</li>
+<li>반대로 합의는 소송 불확실성을 줄일 수 있다.</li>
+</ul>
+<p>현재는 <strong>확정된 합의나 확정 지급액이 아니다.</strong> 비용뿐 아니라 보호조치의 적용 범위를 확인해야 한다.</p>
+<h6>④ 앤스로픽 보유지분: 자산가치와 현금화 가능성을 구분</h6>
+<p>구루포커스는 앤스로픽의 상장 이후 GOOGL 보유지분 가치가 약 <strong>1,720억 달러</strong>로 평가됐다고 보도했다. 다른 보도는 상장 직후 주가의 큰 변동성을 전했다.</p>
+<p><a href="https://finance.yahoo.com/markets/stocks/articles/alphabet-stocks-fall-3-46-214144947.html">GOOGL 보유지분 가치 관련 보도</a></p>
+<p>이 수치는 공식 보유내역과 지분 조건을 독립적으로 검증하지 못한 언론 추정치다.</p>
+<p><strong>GOOGL에 대한 의미:</strong> 투자자산 가치 상승은 잠재적 완충재지만, 보호예수·주식 종류·세금·매각 제약을 확인하지 않고 이를 가용현금이나 기업가치 증가분으로 일대일 반영해서는 안 된다.</p>
+<h6>⑤ 인공지능 가격 하락과 이용 확대: 수요에는 긍정적, 이익에는 미정</h6>
+<p>야후파이낸스 영상 요약은 오픈라우터 자료를 인용해 인공지능 모델 가격이 연초 이후 <strong>57% 하락</strong>했고 이용량은 늘었지만 최근 지출은 정체됐다고 전한다.</p>
+<p><a href="https://finance.yahoo.com/video/jevons-paradox-and-ai-data-shows-usage-soars-as-prices-plunge-220139526.html">관련 보도</a></p>
+<p>이는 GOOGL 자체의 가격·사용량 지표가 아니다. 다만 업계 전반에서 <strong>이용량 증가가 매출 증가를 보장하지 않는다</strong>는 점을 보여준다.</p>
+<p>GOOGL에는 저렴한 추론 비용이 서비스 확산을 촉진하는 기회와, 모델 가격 경쟁이 수익성을 압박하는 위험이 동시에 존재한다.</p>
+<h5>4. 정책·거시경제와 예측시장</h5>
+<h6>해외 데이터센터 과세 발언</h6>
+<p>인베스팅닷컴은 미국 대통령이 해외 데이터센터를 건설하는 미국 기업에 과세하겠다고 발언했다고 보도했다. 실행 방식과 법적 근거는 제시되지 않았다.</p>
+<p><a href="https://finance.yahoo.com/economy/policy/articles/trump-vows-tax-u-firms-190429074.html">관련 보도</a></p>
+<p><strong>GOOGL에 대한 의미:</strong> 실제 시행될 경우 글로벌 클라우드 투자비용과 입지 선택에 영향을 줄 수 있다. 그러나 아직은 <strong>정책 발언 단계</strong>이며, 세율·시행일·적용 대상이 확인되지 않아 이익 영향을 수치화할 수 없다.</p>
+<h6>거시지표: 확인 불가 항목을 명확히 구분</h6>
+<p>정책금리, 미국 10년 국채금리, 소비자물가, 실업률을 조회했으나 자료 제공 시스템의 인증키 미설정으로 모두 실패했다.</p>
+<p>따라서 이번 보고서는 현재 금리 수준, 물가상승률, 실업률이나 해당 지표의 개선·악화를 수치로 주장하지 않는다. <strong>증시 급락을 곧바로 경기침체나 물가 재가속의 증거로 해석할 수 없다.</strong></p>
+<h6>예측시장: 금리 인하 기대는 낮고, 침체 확률은 낮지만 상승</h6>
+<p>조회 시점의 폴리마켓 자료는 다음과 같다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>사건</th>
+<th style="text-align:right">시장 내재 확률</th>
+<th style="text-align:right">최근 1주 변화</th>
+<th style="text-align:right">누적 거래액</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026년 연준 금리 인하가 한 번도 없을 가능성</td>
+<td style="text-align:right">98%</td>
+<td style="text-align:right">+0.1%포인트</td>
+<td style="text-align:right">약 977만 달러</td>
+</tr>
+<tr>
+<td>2026년 말까지 미국 경기침체 발생 가능성</td>
+<td style="text-align:right">4%</td>
+<td style="text-align:right">+2.1%포인트</td>
+<td style="text-align:right">약 252만 달러</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>해석상 주의</strong></p>
+<ul>
+<li>연간 무인하 계약의 98%를 특정 12월 회의의 동결 확률로 그대로 사용하면 안 된다.</li>
+<li>연말까지 남은 기간이 짧아 침체 확률 4%는 향후 12개월 침체 확률과 다르다.</li>
+<li>예측시장은 계약 정의와 참여자 구성의 영향을 받으며 공식 통계나 확정 전망이 아니다.</li>
+</ul>
+<p><strong>GOOGL에 대한 시사점:</strong> 금리 인하만을 근거로 한 반등 논리는 약하다. 단기 주가 회복에는 투자 회수 가능성, 현금흐름, 광고·클라우드 수요 확인이 더 중요하다.</p>
+<h5>5. 거래 판단에 활용할 조건</h5>
+<p>최종 매매 결정은 담당 거래 판단자에게 남긴다. 이번 조사로 지지되는 대응 원칙은 다음과 같다.</p>
+<ul>
+<li><strong>신규 GOOGL 진입 검토:</strong> 급락 자체보다 업종 매도세 안정, 공식 현금흐름 검증, 칩 계획 변경의 성격 확인을 우선한다.</li>
+<li><strong>기존 GOOGL 보유 검토:</strong> 확인되지 않은 단일 기사보다 현금흐름·투자계획·광고수요의 동반 악화 여부를 기준으로 위험노출을 재평가한다.</li>
+<li><strong>반등의 질 확인:</strong> 투자자산 평가이익만으로 오른 반등보다 영업현금 창출과 수익성 개선이 동반된 반등에 더 높은 신뢰를 부여한다.</li>
+<li><strong>가격 기준 설정 보류:</strong> 실시간 가격·거래량·변동성 자료가 없어 목표가, 지지선, 손절가를 제시할 근거는 부족하다.</li>
+</ul>
+<p><strong>종합하면, GOOGL은 장기 성장 기회가 사라졌다고 판단할 근거는 없지만, 단기적으로는 인공지능 투자비용과 현금화 능력에 대한 검증이 필요한 국면이다.</strong> 이번 주 자료는 무조건적인 저가매수보다 확인 중심의 접근을 뒷받침한다.</p>
+<h5>핵심 요약표</h5>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 변수</th>
+<th>확보한 근거·상태</th>
+<th>GOOGL 영향</th>
+<th>우선 확인 및 대응</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>시장 전반 위험회피</td>
+<td>주요 지수 조정·인공지능주 급락 보도</td>
+<td>단기 부정적</td>
+<td>업종 안정 여부를 확인하고 급락만으로 진입하지 않기</td>
+</tr>
+<tr>
+<td>차입·현금흐름</td>
+<td>약 41.9억 달러 조달 및 잉여현금흐름 악화 보도, 공시 미검증</td>
+<td>잠재적 부정적</td>
+<td>공식 현금흐름과 설비투자 대조</td>
+</tr>
+<tr>
+<td>인공지능 칩 계획 축소설</td>
+<td>분석가 인용 보도, 기업 확인 없음</td>
+<td>양면적</td>
+<td>효율화·공급 변경·수요 둔화 구분</td>
+</tr>
+<tr>
+<td>유튜브 합의</td>
+<td>약 30억 달러 협상 보도, 미확정</td>
+<td>비용 부담과 불확실성 완화 병존</td>
+<td>최종 금액·제품 변경 조건 확인</td>
+</tr>
+<tr>
+<td>앤스로픽 지분 가치</td>
+<td>약 1,720억 달러 언론 추정</td>
+<td>잠재적 긍정적</td>
+<td>보유 조건·현금화 제약 검증</td>
+</tr>
+<tr>
+<td>모델 가격 하락</td>
+<td>업계 가격 하락·사용 증가 보도</td>
+<td>수요 확대와 마진 압박 병존</td>
+<td>사용량보다 매출·수익성 확인</td>
+</tr>
+<tr>
+<td>해외 데이터센터 과세</td>
+<td>대통령 발언, 세부안 없음</td>
+<td>정책 위험</td>
+<td>법적 근거·적용 범위 확인</td>
+</tr>
+<tr>
+<td>금리·물가·고용</td>
+<td>공식 시계열 조회 실패</td>
+<td>방향 판단 유보</td>
+<td>실제 지표 확보 전 거시 수치 단정 금지</td>
+</tr>
+<tr>
+<td>예측시장</td>
+<td>연간 무인하 98%, 연말 침체 4%</td>
+<td>금리 인하 의존 반등 논리 제한</td>
+<td>계약 기간·정의를 구분해 활용</td>
+</tr>
+<tr>
+<td>종합 연구 의견</td>
+<td>위험회피와 투자 회수 우려 우세</td>
+<td>단기 신중</td>
+<td>GOOGL 공식 자료 검증 후 최종 거래 판단</td>
+</tr>
+</tbody>
+</table></div>
+<h3 id="s1-4">재무 분석가</h3>
+<h4>GOOGL 펀더멘털 분석 보고서</h4>
+<p><strong>분석 기준일: 2026년 11월 21일</strong><br />
+<strong>최근 1주 검토 기간: 2026년 11월 15~21일</strong><br />
+<strong>대상: GOOGL — Alphabet Inc., 나스닥 NMS, 커뮤니케이션 서비스 / 인터넷 콘텐츠·정보</strong></p>
+<p><strong>투자 의견</strong>: 보유 유지</p>
+<h5>1. 핵심 판단</h5>
+<p><strong>GOOGL은 매출과 영업이익의 성장세가 강하지만, 순이익의 지속 가능성과 급격히 늘어난 자본지출을 확인하기 전까지는 낮은 주가수익비율만으로 저평가를 단정하기 어렵습니다.</strong></p>
+<p>제공된 자료에서 중요한 투자 포인트는 다음과 같습니다.</p>
+<ul>
+<li><strong>본업 성장:</strong> 2026년 3분기 매출은 전년 동기 대비 <strong>24.7%</strong>, 영업이익은 <strong>29.9%</strong> 증가했습니다.</li>
+<li><strong>이익의 질:</strong> 2026년 상반기에는 순이익이 영업이익을 크게 웃돌았습니다. 최근 12개월 순이익률도 **50.0%**로 영업이익률 **33.3%**보다 높습니다. 영업외손익과 세금 주석을 확인해야 합니다.</li>
+<li><strong>현금흐름 부담:</strong> 2026년 1~9월 자본지출은 <strong>1,319.53억 달러</strong>로 영업현금흐름 <strong>1,271.49억 달러</strong>를 초과했습니다.</li>
+<li><strong>유동성은 양호:</strong> 2026년 9월 말 유동비율은 <strong>2.79배</strong>, 현금및현금성자산은 <strong>563.34억 달러</strong>입니다.</li>
+<li><strong>자료 검증 필요:</strong> 요약 도구의 잉여현금흐름과 재무제표로 계산한 최근 12개월 잉여현금흐름이 일치하지 않습니다.</li>
+</ul>
+<p>따라서 GOOGL에 대한 연구상 판단은 <strong>기존 보유분 관찰 유지, 신규 비중 확대는 현금흐름 및 비경상 이익 확인 후 검토</strong>입니다. 실제 매매 결정은 다른 시장·위험 자료와 함께 내려야 합니다.</p>
+<blockquote>
+<p><strong>최근 1주 분석의 한계:</strong> 제공된 도구에는 해당 주간의 신규 공시 목록, 뉴스, 실적 가이던스 변경 이력이 없습니다. 따라서 아래 보고서는 <strong>기준일 현재 조회 가능한 재무자료를 분석한 것</strong>이며, 실적 수치를 지난주에 새로 발표된 정보로 해석하면 안 됩니다. 제공된 내부자 거래 목록에서도 해당 주간 거래는 확인되지 않았지만, 목록의 완전성이 보장되지는 않습니다.</p>
+</blockquote>
+<h5>2. 기업 개요와 사업 평가</h5>
+<p>GOOGL은 Alphabet Inc.의 상장 주식으로, 검색·디지털 광고, 동영상 플랫폼, 클라우드, 구독 서비스 및 기타 기술 사업에 노출된 기업입니다.</p>
+<p>핵심 사업을 평가할 때는 다음을 구분해야 합니다.</p>
+<ul>
+<li><strong>검색·광고:</strong> 이용자 접근성과 광고 수익화 능력이 핵심 경쟁력입니다. 경기와 광고주 지출, 검색 이용 방식 변화에 민감합니다.</li>
+<li><strong>동영상·구독:</strong> 광고 외 매출원을 확대할 수 있지만 콘텐츠·인프라 비용을 함께 봐야 합니다.</li>
+<li><strong>클라우드·인공지능 인프라:</strong> 장기 성장 기회인 동시에 설비투자, 전력, 감가상각 부담을 유발할 수 있습니다.</li>
+<li><strong>기타 투자·사업:</strong> 본업 이외 자산의 평가변동이 연결 순이익에 영향을 줄 가능성을 점검해야 합니다.</li>
+</ul>
+<p>다만 제공된 재무제표에는 <strong>사업부별 매출·영업이익, 광고 단가, 클라우드 수주잔고, 인공지능 관련 매출 및 투자 세부 내역</strong>이 없습니다. 따라서 이번 매출 성장이나 자본지출 증가를 특정 사업에 전부 귀속할 수는 없습니다.</p>
+<h5>3. 최근 실적: 매출 성장과 마진 변화를 분리해서 볼 필요</h5>
+<p>이하 금액은 별도 표시가 없으면 <strong>미국 달러 기준, 억 달러</strong>이며, 비율은 제공된 원자료로 계산했습니다.</p>
+<h6>2026년 3분기</h6>
+<ul>
+<li><strong>매출:</strong> 1,275.77억 달러
+<ul>
+<li>전년 동기 대비 <strong>24.7% 증가</strong></li>
+<li>전분기 대비 <strong>6.5% 증가</strong></li>
+</ul>
+</li>
+<li><strong>영업이익:</strong> 405.76억 달러
+<ul>
+<li>전년 동기 대비 <strong>29.9% 증가</strong></li>
+<li>전분기 대비 <strong>0.5% 감소</strong></li>
+</ul>
+</li>
+<li><strong>영업이익률:</strong> <strong>31.81%</strong>
+<ul>
+<li>전년 동기 약 **30.51%**보다 개선</li>
+<li>전분기 약 **34.03%**보다 <strong>2.23%포인트 하락</strong></li>
+</ul>
+</li>
+<li><strong>순이익:</strong> 264.68억 달러, 전년 동기 대비 <strong>24.3% 감소</strong></li>
+<li><strong>희석 주당순이익:</strong> <strong>2.12달러</strong>, 전년 동기 <strong>2.87달러</strong> 대비 <strong>26.1% 감소</strong></li>
+</ul>
+<p>매출에서 매출원가를 차감한 계산상 매출총이익은 <strong>761.58억 달러</strong>, 매출총이익률은 약 **59.70%**입니다. 이는 전년 동기 약 **59.58%**와 유사합니다.</p>
+<p><strong>해석:</strong> GOOGL의 본업 수요가 급격히 악화됐다는 신호보다는, 강한 매출 성장 속에서 영업비용 부담과 영업외손익 변동을 구분해야 하는 상황입니다. 전년 대비 영업이익은 늘었는데 순이익은 감소했기 때문입니다.</p>
+<p>특히 전분기 대비 매출이 증가했음에도 영업이익이 소폭 줄었다는 점은 주의해야 합니다. 다음 실적에서 비용 증가의 일시성 여부와 감가상각·인력·연구개발비의 영향을 확인할 필요가 있습니다.</p>
+<h6>2026년 1~9월 누적</h6>
+<ul>
+<li>매출: <strong>3,572.69억 달러</strong>, 전년 동기 대비 <strong>23.6% 증가</strong></li>
+<li>영업이익: <strong>1,210.42억 달러</strong>, <strong>30.0% 증가</strong></li>
+<li>순이익: <strong>2,012.39억 달러</strong>, 약 <strong>105.9% 증가</strong></li>
+</ul>
+<p>누적 영업이익률은 약 **33.88%**로 전년 동기 약 **32.22%**보다 개선됐습니다. 다만 순이익 증가율은 본업 이익 증가율을 훨씬 웃돌아, 이를 정상적인 반복 성장률로 사용하기 어렵습니다.</p>
+<h5>4. 이익의 질: 낮은 PER을 그대로 신뢰하기 어려운 이유</h5>
+<p>2026년 분기별 영업이익과 순이익은 다음과 같습니다.</p>
+<ul>
+<li><strong>1분기:</strong> 영업이익 396.96억 달러 / 순이익 625.78억 달러</li>
+<li><strong>2분기:</strong> 영업이익 407.70억 달러 / 순이익 1,121.93억 달러</li>
+<li><strong>3분기:</strong> 영업이익 405.76억 달러 / 순이익 264.68억 달러</li>
+</ul>
+<p>상반기 순이익이 영업이익을 크게 초과했다는 점은 확인되지만, 제공된 도구에는 영업외손익과 세금의 세부 내역이 없습니다. <strong>투자자산 평가이익, 처분이익 또는 세금 효과 중 무엇이 원인인지 단정할 수 없습니다.</strong></p>
+<p>최근 12개월 수치는 다음과 같습니다.</p>
+<ul>
+<li>매출: <strong>4,710.98억 달러</strong></li>
+<li>영업이익: 약 <strong>1,569.76억 달러</strong></li>
+<li>순이익: 약 <strong>2,356.94억 달러</strong></li>
+<li>영업이익률: 약 <strong>33.32%</strong></li>
+<li>순이익률: 약 <strong>50.03%</strong></li>
+</ul>
+<p><strong>거래상 시사점:</strong> 최근 12개월 순이익 기반 PER보다, <strong>반복 가능한 영업이익과 정상화된 현금창출력</strong>에 더 높은 비중을 두는 것이 합리적입니다. 현재 자료만으로 신뢰할 만한 정상화 주당순이익이나 목표주가를 제시하기는 어렵습니다.</p>
+<h5>5. 현금흐름과 자본배분: 가장 중요한 경계 신호</h5>
+<p>잉여현금흐름은 여기서 <strong>영업현금흐름 − 자본지출</strong>로 정의했습니다.</p>
+<h6>연간 추이</h6>
+<ul>
+<li><strong>2023년:</strong> 영업현금흐름 1,017.46억 달러, 자본지출 322.51억 달러, 잉여현금흐름 <strong>694.95억 달러</strong></li>
+<li><strong>2024년:</strong> 영업현금흐름 1,252.99억 달러, 자본지출 525.35억 달러, 잉여현금흐름 <strong>727.64억 달러</strong></li>
+<li><strong>2025년:</strong> 영업현금흐름 1,647.13억 달러, 자본지출 914.47억 달러, 잉여현금흐름 <strong>732.66억 달러</strong></li>
+</ul>
+<p>2025년 영업현금흐름은 크게 늘었지만, 자본지출 증가로 잉여현금흐름은 전년 대비 약 <strong>0.7% 증가</strong>에 그쳤습니다.</p>
+<h6>2026년 들어 투자 부담 확대</h6>
+<p>2026년 1~9월:</p>
+<ul>
+<li>영업현금흐름: <strong>1,271.49억 달러</strong>, 전년 동기 대비 <strong>13.2% 증가</strong></li>
+<li>자본지출: <strong>1,319.53억 달러</strong>, <strong>107.5% 증가</strong></li>
+<li>잉여현금흐름: <strong>−48.04억 달러</strong></li>
+<li>전년 동기 잉여현금흐름: <strong>487.15억 달러</strong></li>
+<li>자본지출/매출 비율: 약 <strong>36.9%</strong>, 전년 동기 약 <strong>22.0%</strong></li>
+</ul>
+<p>누적 수치의 차이로 산출한 분기별 잉여현금흐름도 악화됐습니다.</p>
+<ul>
+<li>1분기: <strong>+101.16억 달러</strong></li>
+<li>2분기: <strong>−58.55억 달러</strong></li>
+<li>3분기: <strong>−90.65억 달러</strong></li>
+</ul>
+<p>3분기 영업현금흐름은 <strong>422.90억 달러</strong>, 자본지출은 <strong>513.55억 달러</strong>로, 자본지출이 영업현금흐름의 약 **121.4%**에 달했습니다.</p>
+<h6>최근 12개월 잉여현금흐름의 자료 불일치</h6>
+<p>재무제표로 재구성하면:</p>
+<ul>
+<li>영업현금흐름: <strong>1,795.51억 달러</strong></li>
+<li>자본지출: <strong>1,598.04억 달러</strong></li>
+<li>잉여현금흐름: <strong>197.47억 달러</strong></li>
+</ul>
+<p>반면 종합 요약 도구는 잉여현금흐름을 약 <strong>−11.62억 달러</strong>로 제시합니다. 산정 기간이나 정의가 확인되지 않아 이 차이를 해소할 수 없습니다. 본 보고서는 기간을 추적할 수 있는 <strong>재무제표 기반 계산값</strong>을 우선 사용했습니다.</p>
+<p><strong>거래상 시사점:</strong> 대규모 투자가 장기 수익으로 연결될 수는 있지만, 현재는 현금 회수보다 현금 투입이 빠릅니다. 다음 분기에 <strong>영업현금흐름이 자본지출을 다시 초과하는지</strong>가 신규 비중 확대의 중요한 확인 조건입니다.</p>
+<h5>6. 재무상태: 유동성은 견조하지만 자산 급증의 구성 확인 필요</h5>
+<p>2026년 9월 말 기준:</p>
+<ul>
+<li>총자산: <strong>1조 33.12억 달러</strong></li>
+<li>총부채: <strong>3,257.63억 달러</strong></li>
+<li>자기자본: <strong>6,775.49억 달러</strong></li>
+<li>현금및현금성자산: <strong>563.34억 달러</strong></li>
+<li>유동자산: <strong>3,746.65억 달러</strong></li>
+<li>유동부채: <strong>1,345.01억 달러</strong></li>
+<li>순운전자본: <strong>2,401.64억 달러</strong></li>
+<li>유동비율: 약 <strong>2.79배</strong></li>
+<li>총부채/총자산: 약 <strong>32.5%</strong></li>
+</ul>
+<p>단기 지급능력은 양호해 보입니다. 다만 현금및현금성자산만으로 유동부채 전체를 충당하는 구조는 아니며, 유동자산의 나머지 구성도 확인해야 합니다.</p>
+<p>2025년 말 대비 총자산은 약 <strong>68.5%</strong>, 자기자본은 약 <strong>63.2%</strong>, 총부채는 약 <strong>81.0%</strong> 증가했습니다. 큰 폭의 재무상태 변화인 만큼, 유형자산·투자자산·인수 관련 자산·차입의 세부 구성이 중요합니다.</p>
+<p>2026년 1~9월 현금흐름은:</p>
+<ul>
+<li>투자활동: <strong>−2,171.71억 달러</strong></li>
+<li>재무활동: <strong>+1,157.57억 달러</strong></li>
+</ul>
+<p>따라서 현금 증가를 본업의 잉여현금 창출만으로 해석하면 안 됩니다. 재무활동 유입이 차입, 주식 발행 또는 다른 항목에서 발생했는지는 제공 자료로 확인되지 않습니다.</p>
+<p>요약 도구의 부채/자본 비율 **22.19%**는 총부채/자기자본 비율과 다릅니다. 이자부채 기준일 가능성이 있으나 정의가 명시되지 않았으므로, 이를 총부채 비율로 사용하지 않았습니다. <strong>순현금·순차입금 역시 확정할 수 없습니다.</strong></p>
+<h5>7. 재무 이력과 밸류에이션</h5>
+<h6>장기 실적의 방향</h6>
+<p>연간 매출은 2021년 <strong>2,576.37억 달러</strong>에서 2025년 <strong>4,028.36억 달러</strong>로 증가해, 연평균 약 <strong>11.8%</strong> 성장했습니다.</p>
+<p>영업이익률은:</p>
+<ul>
+<li>2022년: 약 <strong>26.46%</strong></li>
+<li>2023년: 약 <strong>27.42%</strong></li>
+<li>2024년: 약 <strong>32.11%</strong></li>
+<li>2025년: 약 <strong>32.03%</strong></li>
+</ul>
+<p>2022년 수익성 저하 이후 회복한 흐름은 긍정적입니다. 그러나 과거보다 훨씬 높아진 자본지출 집약도가 향후 잉여현금흐름과 투자수익률에 어떤 영향을 줄지는 별도 판단이 필요합니다.</p>
+<p>과거 주당순이익 자료에는 주식분할 조정 기준이 혼재한 것으로 보여, 오래된 주당순이익과 최근 수치를 직접 비교한 장기 성장률은 사용하지 않았습니다.</p>
+<h6>현재 제공된 평가 지표</h6>
+<ul>
+<li>시가총액: 약 <strong>3.261조 달러</strong></li>
+<li>최근 12개월 PER: <strong>13.85배</strong></li>
+<li>예상 PER: <strong>17.34배</strong></li>
+<li>최근 12개월 주당순이익: <strong>19.15달러</strong></li>
+<li>예상 주당순이익: <strong>15.30달러</strong></li>
+<li>PBR: <strong>4.95배</strong></li>
+<li>배당수익률: <strong>0.32%</strong></li>
+<li>베타: <strong>1.226</strong></li>
+<li>요약 도구 기준 자기자본이익률: <strong>44.29%</strong></li>
+</ul>
+<p>예상 주당순이익은 최근 12개월 수치보다 약 <strong>20.1% 낮습니다</strong>. 다만 예상치의 기준 기간과 출처가 제공되지 않아, 이를 특정 회계연도 컨센서스로 단정할 수는 없습니다.</p>
+<p>시가총액을 기준으로 계산하면:</p>
+<ul>
+<li>주가매출비율: 약 <strong>6.92배</strong></li>
+<li>재구성한 최근 12개월 잉여현금흐름 수익률: 약 <strong>0.61%</strong></li>
+<li>같은 기준의 시가총액/잉여현금흐름: 약 <strong>165배</strong></li>
+</ul>
+<p><strong>결론적으로, 이익 기준으로는 저렴해 보이지만 현재 투자지출을 반영한 현금흐름 기준으로는 저렴하다고 보기 어렵습니다.</strong> 낮은 PER과 높은 현금흐름 배수가 동시에 나타나는 이유를 해소하는 것이 핵심입니다.</p>
+<p>실시간 주가가 별도로 제공되지 않았으므로 매수 가격, 지지선, 손절선을 제시하지 않았습니다.</p>
+<h5>8. 내부자 거래와 실행 가능한 관찰 기준</h5>
+<h6>내부자 거래</h6>
+<p>제공된 목록에서 가장 최근 거래는 <strong>2026년 10월 13일 이사 보유 주식 396,700주의 증여</strong>입니다. 2026년 8월에도 주요 내부자의 증여가 확인되며, 일부 행은 중복 가능성이 있어 단순 합산하지 않았습니다.</p>
+<p>2026년 1~2월에는 이사의 소규모 매도가 있으나, 이번 분석 기간과는 거리가 있습니다.</p>
+<ul>
+<li><strong>증여는 공개시장 매도가 아닙니다.</strong></li>
+<li>제공 목록에서는 최근 주간의 내부자 매수 신호를 확인할 수 없습니다.</li>
+<li>목록에 없다는 이유만으로 실제 거래나 공시가 전혀 없었다고 단정할 수 없습니다.</li>
+</ul>
+<h6>GOOGL 거래 판단에 활용할 조건</h6>
+<p><strong>신규 비중 확대 전 확인할 사항</strong></p>
+<ol>
+<li>분기 잉여현금흐름의 흑자 전환.</li>
+<li>자본지출 증가율 둔화 또는 투자 회수 성과의 구체적인 공개.</li>
+<li>2026년 상반기 순이익 급증의 원인과 반복 가능성.</li>
+<li>3분기 영업이익률 하락이 일시적이라는 증거.</li>
+<li>급증한 자산과 재무활동 유입의 세부 구성.</li>
+</ol>
+<p><strong>방어적 대응을 검토할 사항</strong></p>
+<ol>
+<li>영업현금흐름 증가율이 계속 매출 증가율을 밑도는 경우.</li>
+<li>자본지출이 영업현금흐름을 지속해서 초과하는 경우.</li>
+<li>전분기 대비 영업이익률 하락이 이어지는 경우.</li>
+<li>외부 자금조달 부담이 커지거나, 일회성 이익을 제외한 수익력이 기대에 미달하는 경우.</li>
+</ol>
+<p><strong>종합적으로 GOOGL은 본업 성장의 증거는 충분하지만, 현재의 낮은 PER을 매수 근거로 삼기에는 이익의 질과 현금 전환에 대한 확인이 부족합니다.</strong> 아래 제안은 펀더멘털 연구 단계의 잠정 의견이며, 최종 거래 결정은 가격·시장 상황·포트폴리오 위험을 종합하는 담당자가 내려야 합니다.</p>
+<p>최종 매매 제안: 보유 유지</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>핵심 항목</th>
+<th>확인 수치·사실</th>
+<th>GOOGL 투자 시사점</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>분석 기간</td>
+<td>2026년 11월 15~21일, 기준일 현재 자료 사용</td>
+<td>해당 주간 신규 공시·가이던스 변경은 확인 불가</td>
+</tr>
+<tr>
+<td>2026년 3분기 매출</td>
+<td>1,275.77억 달러, 전년 대비 +24.7%</td>
+<td>본업 성장세는 강함</td>
+</tr>
+<tr>
+<td>2026년 3분기 영업이익</td>
+<td>405.76억 달러, 전년 대비 +29.9%</td>
+<td>전년 대비 수익성 개선</td>
+</tr>
+<tr>
+<td>2026년 3분기 영업이익률</td>
+<td>31.81%, 전분기 대비 −2.23%포인트</td>
+<td>단기 비용 압력 점검 필요</td>
+</tr>
+<tr>
+<td>2026년 3분기 순이익</td>
+<td>264.68억 달러, 전년 대비 −24.3%</td>
+<td>영업외손익·세금 영향 분리 필요</td>
+</tr>
+<tr>
+<td>최근 12개월 이익률</td>
+<td>영업 33.32%, 순이익 50.03%</td>
+<td>순이익의 지속 가능성을 검증해야 함</td>
+</tr>
+<tr>
+<td>2026년 1~9월 자본지출</td>
+<td>1,319.53억 달러, 전년 대비 +107.5%</td>
+<td>투자 집약도와 현금 부담 급증</td>
+</tr>
+<tr>
+<td>2026년 1~9월 잉여현금흐름</td>
+<td>−48.04억 달러</td>
+<td>신규 비중 확대의 주요 제약</td>
+</tr>
+<tr>
+<td>최근 12개월 잉여현금흐름</td>
+<td>재무제표 계산 197.47억 달러</td>
+<td>요약 도구 수치와 불일치, 검증 필요</td>
+</tr>
+<tr>
+<td>단기 유동성</td>
+<td>유동비율 2.79배, 현금 563.34억 달러</td>
+<td>즉각적인 유동성 압박 신호는 제한적</td>
+</tr>
+<tr>
+<td>재무상태 변화</td>
+<td>2025년 말 대비 자산 +68.5%, 부채 +81.0%</td>
+<td>자산·조달 구성과 주석 확인 필요</td>
+</tr>
+<tr>
+<td>밸류에이션</td>
+<td>최근 PER 13.85배, 예상 PER 17.34배</td>
+<td>비경상 이익에 따른 저평가 착시 가능</td>
+</tr>
+<tr>
+<td>현금흐름 평가</td>
+<td>재구성 잉여현금흐름 수익률 약 0.61%</td>
+<td>현금 기준 매력은 제한적</td>
+</tr>
+<tr>
+<td>내부자 거래</td>
+<td>최근 목록은 증여 중심, 주간 거래 미확인</td>
+<td>뚜렷한 공개시장 매수 신호 없음</td>
+</tr>
+<tr>
+<td>잠정 대응</td>
+<td>보유 관찰, 신규 확대는 확인 후 검토</td>
+<td>현금흐름 회복·정상화 이익 확인이 우선</td>
+</tr>
+</tbody>
+</table></div>
+</section><section id="s2"><h2>II. 투자 검토팀 판단</h2><h3 id="s2-1">상승론 분석가</h3>
+<p>Bull Analyst: # GOOGL 강세 논거: 주가는 약하지만, 본업의 성장까지 약해진 것은 아니다</p>
+<p><strong>투자 의견</strong>: 매수</p>
+<p><strong>분석 기준: 제공된 2026년 11월 21일자 자료. 투자 관점은 단기 반등 매매보다 2~3년의 중장기에 둡니다. 뉴스 추정치와 재무자료의 불일치는 별도로 구분합니다.</strong></p>
+<p>제 강세 논거는 “많이 떨어졌으니 오른다”가 아닙니다. <strong>GOOGL은 매출과 영업이익이 각각 20%대, 30% 가까이 성장하는 가운데, 시장이 투자비용과 현금 회수의 불확실성에 집중하는 기업</strong>입니다. 그 불확실성이 실적 훼손으로 확정되기 전에, 제한적인 비중으로 분할 접근할 가치가 있다는 판단입니다.</p>
+<p>약세 측에 먼저 묻겠습니다. <strong>현재 확인되는 것은 핵심 사업의 붕괴입니까, 아니면 성장 중인 사업의 투자 부담입니까?</strong> 제공된 실적은 후자에 더 가깝습니다.</p>
+<h5>1. 성장의 근거는 인공지능 기대감이 아니라 실제 영업실적입니다</h5>
+<p>GOOGL의 2026년 3분기 실적은 다음과 같습니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>항목</th>
+<th style="text-align:right">실적</th>
+<th style="text-align:right">전년 동기 대비</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출</td>
+<td style="text-align:right">1,275.77억 달러</td>
+<td style="text-align:right">+24.7%</td>
+</tr>
+<tr>
+<td>영업이익</td>
+<td style="text-align:right">405.76억 달러</td>
+<td style="text-align:right">+29.9%</td>
+</tr>
+<tr>
+<td>영업이익률</td>
+<td style="text-align:right">31.81%</td>
+<td style="text-align:right">약 1.30%포인트 개선</td>
+</tr>
+</tbody>
+</table></div>
+<p>매출이 늘어나는 속도보다 영업이익이 더 빠르게 증가했습니다. 1~9월 누적으로도 매출은 <strong>23.6%</strong>, 영업이익은 <strong>30.0%</strong> 늘었습니다. 이는 단순한 투자자산 평가이익이 아니라 <strong>본업 차원의 성장과 비용 흡수 능력</strong>을 보여줍니다.</p>
+<p>물론 전분기 대비 영업이익률이 2.23%포인트 하락한 점은 경계해야 합니다. 하지만 이 한 가지로 전년 대비 수익성 개선과 누적 성장 전체를 무효화할 수는 없습니다.</p>
+<p>성장의 절대 규모도 중요합니다. 최근 12개월 매출 <strong>4,710.98억 달러</strong>를 출발점으로 삼으면:</p>
+<ul>
+<li>향후 12개월 성장률이 <strong>10%로 둔화</strong>해도 매출은 약 <strong>5,182억 달러</strong></li>
+<li><strong>15% 성장</strong>하면 약 <strong>5,418억 달러</strong></li>
+</ul>
+<p>입니다. 이는 공식 전망이 아니라 단순 시나리오지만, 현재 성장률이 상당히 낮아져도 연간 수백억 달러의 추가 매출 기회가 있다는 뜻입니다. 다만 그 매출이 이익과 현금으로 전환되는지는 별도로 검증해야 합니다.</p>
+<h5>2. 경쟁력은 모델 하나가 아니라, 기술을 배포하고 수익화할 수 있는 사업 기반입니다</h5>
+<p>약세 측은 “인공지능 모델이 저렴해지면 경쟁력이 사라진다”고 주장할 수 있습니다. 그러나 GOOGL의 투자 논거를 모델 판매가격 하나에 묶는 것은 지나치게 좁습니다.</p>
+<p>GOOGL에는 검색·광고, 동영상, 구독, 클라우드라는 서로 다른 수익화 경로가 있습니다.</p>
+<ul>
+<li><strong>검색·광고:</strong> 기존 이용자 접점과 광고주 관계에 새로운 기술을 적용할 수 있습니다.</li>
+<li><strong>동영상·구독:</strong> 광고 외 반복 매출을 확대할 여지가 있습니다.</li>
+<li><strong>클라우드:</strong> 기업의 인공지능 도입을 연산·저장·서비스 수요로 연결할 수 있습니다.</li>
+<li><strong>기술·인프라의 공동 활용:</strong> 같은 기술 기반을 여러 제품에 적용할 수 있다는 확장성이 있습니다.</li>
+</ul>
+<p>이 구조가 미래 수익성을 보장하지는 않습니다. 하지만 새로운 기업처럼 고객 확보와 유통망 구축을 처음부터 시작할 필요가 없다는 점은 중요한 경쟁우위입니다.</p>
+<p>애플의 인공지능 에이전트가 Gemini 기반 모델을 활용한다는 <strong>제공된 보도가 사실이라면</strong>, 이는 외부 생태계에서도 기술의 활용 가치를 인정받는 신호입니다. 계약 조건이나 매출 기여는 확인되지 않았으므로 숫자로 반영하지 않겠습니다.</p>
+<p>또한 사업부별 수치가 없기 때문에 전체 매출 증가를 클라우드나 인공지능의 성과라고 단정하지도 않겠습니다. <strong>강세 논거의 확실한 출발점은 연결 영업실적이고, 생태계 확장은 추가 기회입니다.</strong></p>
+<h5>3. “잉여현금흐름이 마이너스다” — 맞습니다. 하지만 영업현금 창출이 무너진 것은 아닙니다</h5>
+<p>이 부분이 약세 논거의 가장 강한 지점입니다.</p>
+<p>2026년 1~9월:</p>
+<ul>
+<li>영업현금흐름: <strong>1,271.49억 달러</strong>, 전년 대비 <strong>13.2% 증가</strong></li>
+<li>자본지출: <strong>1,319.53억 달러</strong>, <strong>107.5% 증가</strong></li>
+<li>잉여현금흐름: <strong>−48.04억 달러</strong></li>
+</ul>
+<p>핵심은 <strong>영업현금흐름 감소가 아니라, 투자지출 급증이 적자의 직접적인 원인</strong>이라는 점입니다.</p>
+<p>물론 투자라는 이름이 붙었다고 모두 좋은 지출은 아닙니다. 감가상각과 유지비 부담이 커지고, 수익화가 늦어질 위험도 있습니다. 다만 현금흐름 회복에 반드시 기적적인 매출 성장이 필요한 것은 아닙니다.</p>
+<p>단순 민감도 분석으로, 같은 기간 영업현금흐름을 유지하면서 자본지출이 5%만 적었다면:</p>
+<ul>
+<li>자본지출 감소액: 약 <strong>65.98억 달러</strong></li>
+<li>잉여현금흐름: 약 <strong>17.94억 달러 흑자</strong></li>
+</ul>
+<p>가 됩니다. <strong>이는 전망이 아니라, 현금흐름이 투자 속도에 얼마나 민감한지 보여주는 계산</strong>입니다. 투자 강도의 작은 변화도 현금흐름의 방향을 바꿀 수 있습니다.</p>
+<p>유동성 역시 즉각적인 위기 해석을 뒷받침하지 않습니다. 현금및현금성자산은 <strong>563.34억 달러</strong>, 유동비율은 <strong>2.79배</strong>입니다. 다만 순현금 상태는 확인할 수 없고, 재무활동 유입이 컸으므로 자금조달 구성을 반드시 점검해야 합니다.</p>
+<p><strong>제 주장은 “현금흐름은 중요하지 않다”가 아닙니다. “투자지출로 인한 현금흐름 악화와 본업의 현금창출 붕괴는 다르다”입니다.</strong></p>
+<h5>4. 예상되는 약세 반론에 답하겠습니다</h5>
+<h6>“낮은 주가수익비율은 일회성 이익의 착시다.”</h6>
+<p>동의합니다. 최근 12개월 주가수익비율 <strong>13.85배</strong>를 강세 논거의 중심에 두지 않겠습니다. 순이익률이 영업이익률보다 높은 만큼 정상화가 필요합니다.</p>
+<p>대신 제공된 <strong>예상 주가수익비율 17.34배</strong>와 영업이익 성장률을 함께 보겠습니다. 예상치의 기간·출처가 불명확하다는 한계는 있지만, 이 수치가 타당하다면 강한 본업 성장에 비해 과도한 낙관을 요구하는 가격으로 보기는 어렵습니다.</p>
+<p>다만 현재 잉여현금흐름 수익률은 낮습니다. <strong>GOOGL의 매수 논거는 현재 현금흐름이 싸다는 것이 아니라, 향후 현금 전환 개선 가능성에 있습니다.</strong></p>
+<h6>“인공지능 가격이 57% 하락했으니 수익성은 계속 악화될 것이다.”</h6>
+<p>그 수치는 업계 자료이지 GOOGL 자체 가격 지표가 아닙니다. 사용량 증가와 최근 지출 정체는 실제 경고 신호지만, 그것만으로 GOOGL 전체 매출과 이익 감소를 입증하지는 못합니다.</p>
+<p>추론 비용 하락이 서비스 보급을 촉진할 가능성도 있습니다. 판단 기준은 이용량 자체가 아니라 <strong>매출, 단위당 비용, 영업이익의 동반 변화</strong>여야 합니다.</p>
+<h6>“차입과 유튜브 합의 보도는 재무위험이 커졌다는 뜻이다.”</h6>
+<p>약 <strong>41.9억 달러</strong>의 신규 차입과 약 <strong>30억 달러</strong>의 합의 보도는 무시할 수 없습니다. 다만 합의는 미확정이고, 차입 자체가 지급능력 위기를 의미하지는 않습니다.</p>
+<p>합의가 이뤄지면 불확실성이 줄어들 수 있지만, 제품 변경 의무가 장기 수익성에 미치는 영향은 따로 봐야 합니다. 낙관도 비관도 확정 조건을 확인한 뒤 수치화해야 합니다.</p>
+<h6>“앤스로픽 지분가치만으로 주가를 방어할 수 없다.”</h6>
+<p>맞습니다. 보도된 <strong>1,720억 달러</strong>는 검증되지 않은 평가치이며 가용현금이 아닙니다. 이를 매수 논거의 필수 조건으로 삼지 않겠습니다. 확인된다면 추가 자산가치이지, 본업 분석을 대체하는 근거가 아닙니다.</p>
+<h5>5. 기술적 약세는 인정합니다. 그래서 전액 매수보다 분할 접근입니다</h5>
+<p>GOOGL의 종가 <strong>265.29달러</strong>는 주요 이동평균선 아래이고, RSI는 <strong>27.78</strong>입니다. 현재 차트에서 바닥이 확인됐다고 말할 수 없습니다.</p>
+<p>그러나 <strong>단기 추세가 약하다는 사실과 중장기 투자 매력이 없다는 주장은 다릅니다.</strong></p>
+<p>제 접근은 다음과 같습니다.</p>
+<ol>
+<li><strong>초기 비중은 작게:</strong> 과매도만을 근거로 큰 비중을 투입하지 않습니다.</li>
+<li><strong>가격 확인 후 추가:</strong> 10일 지수이동평균 약 <strong>282.005달러</strong> 회복·유지를 반등의 확인 근거로 봅니다.</li>
+<li><strong>핵심 추가매수 조건은 재무:</strong> 자본지출 증가율 둔화, 잉여현금흐름 개선, 영업이익률 안정화를 확인합니다.</li>
+<li><strong>논거가 깨지면 재평가:</strong> 매출·영업이익 성장 둔화와 현금흐름 악화가 함께 지속된다면 매수 판단을 수정합니다.</li>
+</ol>
+<p>심리 점수 <strong>3.2점</strong>도 바닥 신호로 사용하지 않겠습니다. 소셜 자료 수집이 실패한 저신뢰도 평가이므로, 실제 투자자 전체의 포지셔닝을 보여주지는 못합니다.</p>
+<h5>결론: 비용의 급증은 확인됐지만, 성장의 소멸은 확인되지 않았습니다</h5>
+<p>약세 측은 차트, 투자 부담, 순이익의 질에 관해 타당한 문제를 제기할 수 있습니다. 그러나 그 우려가 곧바로 장기 매도 논리로 이어지려면 <strong>본업 성장과 투자 회수 가능성이 지속적으로 훼손된다는 추가 증거</strong>가 필요합니다.</p>
+<p>현재 제공된 자료에서 GOOGL은:</p>
+<ul>
+<li>매출이 <strong>24.7%</strong> 성장하고,</li>
+<li>영업이익이 <strong>29.9%</strong> 증가하며,</li>
+<li>영업현금흐름도 늘고,</li>
+<li>단기 유동성은 양호한 기업입니다.</li>
+</ul>
+<p><strong>따라서 제 판단은 중장기 분할 매수입니다.</strong> 현금흐름 회복을 확신해서가 아니라, 강한 본업 성장과 투자 효율 개선 가능성이 현재의 우려를 상쇄할 잠재력이 있다고 보기 때문입니다. 단, 비중 확대는 가격 하락 자체가 아니라 실제 투자 회수의 증거에 연결해야 합니다.</p>
+<p>최종 매매 제안: 매수</p>
+<h3 id="s2-2">하락론 분석가</h3>
+<p>Bear Analyst: # GOOGL 약세 논거: 성장하는 기업이라도, 투자 회수의 가격을 잘못 지불하면 나쁜 투자가 됩니다</p>
+<p><strong>투자 의견</strong>: 매도</p>
+<p><strong>분석 기준: 제공된 2026년 11월 21일자 자료. 신규 매수 회피와 기존 비중 축소 관점이며, 공매도 진입을 권하는 판단은 아닙니다. 뉴스 추정치는 재무자료와 구분합니다.</strong></p>
+<p>강세 측의 질문에 먼저 답하겠습니다. <strong>GOOGL의 핵심 사업이 붕괴했다는 증거는 없습니다. 그러나 그것이 지금 매수해야 한다는 증거도 아닙니다.</strong></p>
+<p>투자 판단을 “사업 붕괴인가, 성장 투자인가”라는 양자택일로 좁히면 가장 중요한 위험을 놓칩니다. <strong>매출과 영업이익은 성장하지만, 그 성장을 유지하는 데 필요한 자본이 더 빠르게 늘어나 주주에게 돌아갈 현금과 투자수익률이 악화되는 경우</strong>입니다.</p>
+<p>현재 GOOGL의 자료는 바로 이 위험을 보여줍니다. 강세 측은 미래 현금 전환 개선을 기대하지만, 저는 그 개선을 확인하기 전에 매수할 만큼 안전마진이 충분하지 않다고 판단합니다.</p>
+<h5>1. “본업이 성장한다”는 주장에는 동의합니다. 문제는 성장의 현금 전환입니다</h5>
+<p>GOOGL의 3분기 매출 증가율 <strong>24.7%</strong>, 영업이익 증가율 **29.9%**는 분명 강합니다. 이를 부정할 필요는 없습니다.</p>
+<p>그러나 주주가 확보하는 경제적 성과를 평가하려면 다음 숫자도 함께 봐야 합니다.</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>2026년 1~9월 지표</th>
+<th style="text-align:right">결과</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>매출 증가율</td>
+<td style="text-align:right">23.6%</td>
+</tr>
+<tr>
+<td>영업이익 증가율</td>
+<td style="text-align:right">30.0%</td>
+</tr>
+<tr>
+<td>영업현금흐름 증가율</td>
+<td style="text-align:right">13.2%</td>
+</tr>
+<tr>
+<td>자본지출 증가율</td>
+<td style="text-align:right">107.5%</td>
+</tr>
+<tr>
+<td>잉여현금흐름</td>
+<td style="text-align:right">−48.04억 달러</td>
+</tr>
+<tr>
+<td>전년 동기 잉여현금흐름</td>
+<td style="text-align:right">+487.15억 달러</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>매출과 영업이익이 늘어나는 동안, 잉여현금흐름은 전년 동기보다 535.19억 달러 감소했습니다.</strong></p>
+<p>강세 측은 “영업현금 창출이 무너진 것은 아니다”라고 말합니다. 맞습니다. 하지만 주식의 매력은 영업현금흐름이 플러스인지에만 달려 있지 않습니다. 경쟁력을 유지하고 성장하기 위해 그 현금을 얼마나 다시 투입해야 하는지가 중요합니다.</p>
+<p>실제로 자본지출의 매출 대비 비중은 <strong>22.0%에서 36.9%로 상승</strong>했습니다. 이 수치는 GOOGL이 과거와 같은 자본 효율성을 유지하고 있다고 쉽게 가정해서는 안 된다는 경고입니다.</p>
+<p>강세 측의 10~15% 매출 성장 시나리오도 같은 한계를 갖습니다. <strong>추가 매출이 얼마인지를 계산하는 것보다, 그 매출을 얻기 위해 추가로 얼마를 투자해야 하는지를 계산하는 것이 지금은 더 중요합니다.</strong></p>
+<h5>2. “자본지출을 5%만 줄이면 흑자” — 흑자 전환과 매력적인 수익률은 다릅니다</h5>
+<p>강세 측의 민감도 계산은 맞습니다. 같은 기간 영업현금흐름이 유지되고 자본지출이 5% 줄었다면, 누적 잉여현금흐름은 약 <strong>17.94억 달러 흑자</strong>가 됩니다.</p>
+<p>하지만 여기에는 두 가지 문제가 있습니다.</p>
+<p><strong>첫째, 지출을 줄여도 성장과 경쟁력이 유지된다는 보장이 없습니다.</strong></p>
+<p>현재 투자 중 얼마가 선택적 확장이고 얼마가 경쟁 대응에 필요한 지출인지 제공 자료에는 없습니다. 따라서 자본지출 절감과 영업현금흐름 유지를 서로 독립적인 변수처럼 다루기는 어렵습니다. 지출을 줄인 결과 처리능력이나 서비스 경쟁력이 약화된다면 계산의 전제가 깨집니다.</p>
+<p><strong>둘째, 소폭 흑자는 현재 가치평가를 정당화하기에 충분하지 않습니다.</strong></p>
+<p>재무제표로 재구성한 최근 12개월 기준으로:</p>
+<ul>
+<li>잉여현금흐름: <strong>197.47억 달러</strong></li>
+<li>시가총액: 약 <strong>3.261조 달러</strong></li>
+<li>잉여현금흐름 수익률: 약 <strong>0.61%</strong></li>
+<li>시가총액/잉여현금흐름: 약 <strong>165배</strong></li>
+</ul>
+<p>입니다.</p>
+<p>단순한 규모 비교로, 같은 시가총액에서 잉여현금흐름 수익률이 **3%**가 되려면 연간 약 <strong>978.3억 달러</strong>가 필요합니다. 이는 재구성한 현재 수치의 약 <strong>5배</strong>입니다. 3%를 적정수익률이나 목표치로 단정하는 것은 아닙니다. <strong>소폭의 흑자 전환과 충분한 현금창출력 사이에 얼마나 큰 간격이 있는지</strong> 보여주는 계산입니다.</p>
+<p>또한 분기별 잉여현금흐름은 <strong>+101.16억 → −58.55억 → −90.65억 달러</strong>로 악화됐습니다. 현재 확인되는 방향은 회복이 아니라 악화입니다.</p>
+<p>요약 도구와 재무제표 기반 잉여현금흐름이 불일치한다는 점도 인정합니다. 저는 더 양호한 재무제표 기반 수치를 사용해도 매수 매력이 부족하다고 보는 것입니다.</p>
+<h5>3. 낮은 주가수익비율을 내려놓으면, 확실한 저평가 근거도 약해집니다</h5>
+<p>강세 측이 최근 12개월 주가수익비율 <strong>13.85배</strong>를 핵심 근거로 사용하지 않겠다고 한 것은 합리적입니다.</p>
+<p>최근 12개월 순이익률은 <strong>50.03%</strong>, 영업이익률은 **33.32%**입니다. 상반기에는 순이익이 영업이익을 크게 웃돌았지만, 영업외손익과 세금의 상세 원인은 제공되지 않았습니다. 이를 반복 가능한 이익으로 간주하기 어렵습니다.</p>
+<p>그런데 대안으로 제시한 예상 주가수익비율 <strong>17.34배</strong> 역시 예상치의 기간과 출처가 불분명합니다. 예상 주당순이익 <strong>15.30달러</strong>는 최근 12개월 <strong>19.15달러</strong>보다 약 <strong>20.1% 낮습니다</strong>. 이것만으로 본업 악화를 단정할 수는 없지만, 적어도 낮은 과거 배수가 지속 가능한 수익력을 정확히 반영한다는 주장을 약화합니다.</p>
+<p>더 중요한 점은 다음과 같습니다.</p>
+<blockquote>
+<p><strong>자본지출 부담이 급증하는 기업은 회계상 이익 배수가 낮더라도, 주주에게 남는 현금 기준으로는 비쌀 수 있습니다.</strong></p>
+</blockquote>
+<p>향후 투자자산의 감가상각이 확대되면 손익에도 부담이 생길 수 있습니다. 다만 자산 구성과 가동 시점이 없어 규모를 산정할 수는 없습니다.</p>
+<p>이미 3분기에는 전분기 대비 매출이 <strong>6.5% 증가했는데 영업이익은 0.5% 감소</strong>했고, 영업이익률은 <strong>2.23%포인트 하락</strong>했습니다. 한 분기로 장기 추세를 확정하지는 않겠습니다. 그러나 투자 부담이 일시적이라는 주장 역시 아직 입증되지 않았습니다.</p>
+<h5>4. 유통망과 기술력은 강점입니다. 하지만 경쟁 비용을 없애주지는 않습니다</h5>
+<p>강세 측은 검색·광고, 동영상, 구독, 클라우드의 공동 기반을 강조했습니다. 이 경쟁우위는 인정합니다. 다만 <strong>배포 능력과 수익성 있는 배포는 다릅니다.</strong></p>
+<h6>가격 경쟁은 규모 확대의 수익성을 낮출 수 있습니다</h6>
+<p>제공된 업계 보도에서는 모델 가격이 <strong>57% 하락</strong>하고 사용량은 늘었지만 최근 지출은 정체됐다고 합니다. 이는 GOOGL 고유의 실적이 아니므로 그대로 적용해서는 안 됩니다.</p>
+<p>그러나 다음 위험을 검토하기에는 충분합니다.</p>
+<ul>
+<li>비용 절감의 혜택이 가격 인하로 고객에게 이전될 수 있습니다.</li>
+<li>사용량 증가가 연산·전력·설비 수요를 늘려도 매출은 같은 속도로 늘지 않을 수 있습니다.</li>
+<li>기술력 유지에 계속 투자해야 한다면 가격 경쟁과 높은 자본지출이 동시에 지속될 수 있습니다.</li>
+</ul>
+<h6>외부 생태계 채택이 유리한 경제성을 보장하지는 않습니다</h6>
+<p>애플의 Gemini 활용 보도가 사실이라면 기술력에는 긍정적입니다. 하지만 계약 조건, 매출 기여, 비용 부담은 확인되지 않았습니다. 애플의 자체 에이전트 확대는 사용자 접점에서 경쟁이 심해지는 경로도 될 수 있습니다.</p>
+<p>아마존 광고 생태계 확대 역시 GOOGL의 실제 점유율 하락을 입증하지는 않습니다. 다만 기존 유통망이 있다는 이유만으로 미래의 광고 수익화와 협상력이 보장되는 것은 아닙니다.</p>
+<p><strong>사업부별 수익성과 인공지능 투자수익률이 없는 상황에서, 연결 영업실적의 성장을 신규 대규모 투자의 성공 증거로 사용해서는 안 됩니다.</strong></p>
+<h5>5. 유동성 위기가 아니어도 주주 수익률은 악화될 수 있습니다</h5>
+<p>GOOGL의 현금 <strong>563.34억 달러</strong>, 유동비율 <strong>2.79배</strong>는 즉각적인 지급능력 위기라는 주장을 뒷받침하지 않습니다. 저는 그런 주장을 하지 않습니다.</p>
+<p>대신 문제는 자본배분입니다.</p>
+<ul>
+<li>1~9월 투자활동 현금흐름: <strong>−2,171.71억 달러</strong></li>
+<li>재무활동 현금흐름: <strong>+1,157.57억 달러</strong></li>
+<li>약 <strong>41.9억 달러</strong>의 신규 부채 발행 보도</li>
+<li>약 <strong>30억 달러</strong>의 유튜브 합의 접근 보도</li>
+</ul>
+<p>재무활동 유입의 상세 구성은 불명확하고, 합의도 미확정입니다. 그렇더라도 현금 잔액을 본업이 자유롭게 창출한 여유자금과 동일시할 수는 없습니다.</p>
+<p>유튜브 관련해서는 지급액뿐 아니라 청소년 보호를 위한 제품 변경 조건이 중요합니다. 합의가 불확실성을 줄이더라도 이용시간·광고 노출에 영향을 줄 가능성은 별도로 남습니다.</p>
+<p>거시적으로는 광고주의 지출 둔화가 발생할 경우, 높은 인프라 투자 부담과 광고 수요 약화가 겹칠 수 있습니다. <strong>현재 소비 둔화가 확인됐다는 뜻은 아니지만, 수익화 검증이 끝나기 전에 경기 민감 위험까지 부담해야 하는 구조</strong>입니다.</p>
+<h5>6. “작게 분할 매수”는 손실 규모를 줄일 뿐, 투자 논거를 강화하지 않습니다</h5>
+<p>기술적으로 GOOGL은 다음 상태입니다.</p>
+<ul>
+<li>종가 <strong>265.29달러</strong></li>
+<li>10일 지수이동평균 <strong>282.005달러</strong></li>
+<li>50일 단순이동평균 <strong>322.301달러</strong></li>
+<li>200일 단순이동평균 <strong>336.709달러</strong></li>
+<li>최근 30개 거래일 중 최저 종가</li>
+<li>상대강도지수 <strong>27.78</strong>, 이동평균 수렴·확산 히스토그램 음수</li>
+</ul>
+<p>가격은 세 이동평균선 아래에 있고 단기선부터 장기선까지 역배열입니다. 최근 거래일에는 장중 <strong>283.14달러</strong>까지 올랐지만 <strong>265.29달러</strong>로 마감해 반등도 유지하지 못했습니다.</p>
+<p>과매도 반등은 가능합니다. 하지만 강세 측도 현금흐름 개선, 마진 안정, 가격 회복을 추가매수 조건으로 제시했습니다. 그렇다면 묻겠습니다.</p>
+<p><strong>투자 성공을 좌우하는 핵심 증거가 아직 없다면, 왜 그 증거를 기다리지 않고 첫 매수를 해야 합니까?</strong></p>
+<p>작은 비중은 위험 관리 방법이지 저평가의 증거가 아닙니다. 특히 최근 저가 <strong>264.22달러</strong> 아래의 신뢰할 만한 다음 지지대는 제공 자료로 확인되지 않습니다. 반대로 과매도 상태이므로 공격적인 하락 추격 역시 경계해야 합니다.</p>
+<h5>결론: 사업 붕괴가 아니라, 현금 회복에 대한 과도한 선반영이 문제입니다</h5>
+<p>강세 측의 논리는 결국 다음과 같습니다.</p>
+<blockquote>
+<p>“본업이 강하므로, 투자 효율과 현금흐름도 앞으로 개선될 가능성이 있다.”</p>
+</blockquote>
+<p>제 반론은 이렇습니다.</p>
+<blockquote>
+<p><strong>“그 가능성은 인정하지만, 현재 주가는 이미 상당한 현금 회복을 필요로 하며, 그 회복을 입증할 자료는 부족하다.”</strong></p>
+</blockquote>
+<p>GOOGL에 대한 약세 판단을 바꾸려면 단순한 흑자 전환을 넘어 다음이 필요합니다.</p>
+<ol>
+<li>성장과 경쟁력을 유지하면서 자본지출 집약도가 낮아지는 증거</li>
+<li>잉여현금흐름의 지속적이고 의미 있는 회복</li>
+<li>영업이익률 안정과 신규 투자 수익화의 구체적 설명</li>
+<li>영업외손익·자금조달·투자자산 구성의 검증</li>
+</ol>
+<p>그 전까지는 <strong>강한 매출 성장보다 급격히 악화된 현금 전환, 불확실한 정상화 이익, 확인되지 않은 투자수익률에 더 큰 비중을 둬야 합니다.</strong></p>
+<p><strong>GOOGL은 좋은 사업일 수 있습니다. 그러나 현재 자료만으로는 좋은 매수라고 판단하기 어렵습니다. 제 의견은 신규 매수 회피와 기존 비중 축소입니다.</strong></p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s2-3">투자 검토 책임자</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>판단 근거</strong>: GOOGL은 강한 사업 성장보다 현금 전환 악화와 가치평가 검증 부족이 현재 투자 판단에서 더 중요하다고 봅니다. 제공된 2026년 11월 21일자 자료상 3분기 매출은 24.7%, 영업이익은 29.9% 증가했고, 1~9월 영업현금흐름도 13.2% 늘었습니다. 따라서 본업 붕괴나 유동성 위기를 전제로 한 전면 매도는 과도합니다. 다만 같은 기간 자본지출은 107.5% 증가해 잉여현금흐름이 전년 동기 487.15억 달러 흑자에서 48.04억 달러 적자로 바뀌었습니다. 분기별 잉여현금흐름도 악화됐고, 3분기 영업이익률은 전분기 대비 2.23%포인트 하락했습니다. 강세 측의 자본지출 5% 감축 시나리오는 산술적으로 맞지만 성장과 경쟁력을 유지하면서 지출을 줄일 수 있다는 증거가 없고, 소폭 흑자만으로 투자 매력이 입증되지는 않습니다. 재무제표로 재구성한 최근 12개월 잉여현금흐름 수익률 0.61%는 회복 의존도를 보여주지만 적정가치나 목표주가를 직접 산정하는 근거는 아닙니다. 과거 주가수익비율에는 이익 정상화 문제가 있고 예상 주가수익비율은 출처와 기간이 불분명합니다. 현금흐름 자료 간 불일치도 남아 있습니다. 결국 현금 회복을 기다려야 한다는 약세 측 논거가 우세하지만, 강한 영업 성장과 현금 창출력이 유지되는 만큼 전면 이탈보다 제한적인 비중 축소가 적절합니다. 미확정 계약·합의·투자자산 평가 보도는 판단의 핵심 근거에서 제외합니다.</p>
+<p><strong>대응 계획</strong>: GOOGL의 중기 목표 비중을 표준 배분의 0.65배로 설정하고 0.50~0.75배 범위에서 관리합니다. 실제 보유량은 알 수 없으므로 트레이더와 포트폴리오 매니저가 적용합니다. 현재 비중이 목표보다 높다면 초과분의 절반을 먼저 줄이고, 나머지는 이후 2~4주 동안 유동성과 체결 여건에 맞춰 분할 축소합니다. 표준 배분을 보유했다면 총 보유량의 약 35% 축소에 해당합니다. 이미 목표 이하이거나 미보유라면 목표를 채우기 위한 신규 매수는 하지 않습니다. 과매도 상태를 감안해 공매도나 레버리지 하락 추격은 하지 않습니다. 제공된 종가 265.29달러와 10일 지수이동평균 282.005달러는 해당 자료 시점의 참고값일 뿐 현재 주문 가격으로 사용하지 않습니다. 실행 전 최신 가격과 거래 가능 여부를 확인하고, 반등을 기다리느라 축소 계획을 무기한 미루지 않습니다. 다음 실적에서 자본지출/매출 비율이 누적 36.9%에서 낮아지는지, 잉여현금흐름이 의미 있게 개선되는지, 영업이익률이 안정되는지 확인합니다. 이후 실적에서도 개선이 이어지고 성장 유지가 확인되면 표준 비중 복원을 검토합니다. 반대로 현금흐름 악화와 매출·영업이익 성장 둔화가 겹치면 목표를 표준 배분의 0.50배 이하로 낮추는 재심사를 합니다. 추가 판단 전 잉여현금흐름 산식·기간 불일치, 영업외손익, 예상 주당순이익의 출처·기간, 자금조달 구성 및 자본지출의 유지·성장 투자 구분을 확인해야 합니다. 제공 자료만으로 신뢰할 만한 목표주가나 다음 지지선을 산정할 수 없어 임의의 가격 목표·손절선을 설정하지 않습니다.</p>
+</section><section id="s3"><h2>III. 매매 계획</h2><h3 id="s3-1">매매 담당</h3>
+<p><strong>대응</strong>: 매도</p>
+<p><strong>판단 근거</strong>: GOOGL은 영업 성장에도 자본지출 급증과 잉여현금흐름 악화가 확인되어, 전면 매도보다 제한적인 비중 축소라는 연구 계획이 타당합니다. 제공된 종가 265.29달러가 10일·50일·200일 이동평균선 아래에 있고 최근 반등도 실패해 축소 방향을 뒷받침하지만, RSI 27.7822와 ATR 11.314달러는 과매도 반등 및 체결 위험을 경고합니다. 따라서 목표 초과 보유분을 분할 매도하되 공매도와 하락 추격은 피하고, 최신 시세가 없으며 연구 계획도 임의의 가격 설정을 배제하므로 지정 매도 가격과 손절가는 제시하지 않습니다.</p>
+<p><strong>진입 가격</strong>: 제시되지 않음</p>
+<p><strong>손절 기준</strong>: 제시되지 않음</p>
+<p><strong>보유 비중 계획</strong>: GOOGL 중기 목표는 표준 배분의 0.65배, 관리 범위는 0.50~0.75배입니다. 현재 비중이 목표를 초과하면 초과분의 절반을 최신 가격과 거래 가능 여부 확인 후 먼저 축소하고, 나머지는 2~4주 동안 유동성과 변동성을 고려해 분할 매도합니다. 표준 배분을 보유한 경우 총 보유량의 약 35% 축소에 해당합니다. 이미 목표 이하이거나 미보유라면 신규 매수 또는 공매도 없이 유지합니다.</p>
+<p>최종 매매 제안: <strong>매도</strong></p>
+</section><section id="s4"><h2>IV. 위험 관리팀 판단</h2><h3 id="s4-1">적극적 위험 분석가</h3>
+<p>적극적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 GOOGL의 제한적 비중 축소를 지지합니다. 공격적인 투자란 무조건 더 많이 사는 것이 아닙니다. 성장의 대가로 요구되는 자본이 급증하고 시장이 그 성장에 보상하지 않는다면, 초과 노출을 줄여 다음 기회에 투입할 선택권을 확보하는 것도 공격적인 자본배분입니다. 지금 GOOGL에서는 전면 이탈보다 핵심 보유분을 남기면서 초과분을 매도하는 전략이 그 목적에 부합합니다. 다만 판단의 근거는 제공된 2026년 11월 20일 가격 스냅숏과 보고서이지, 실시간으로 확인한 시장 상황은 아닙니다.</p>
+<p>보수적 분석가와 중립적 분석가는 아직 발언하지 않았으므로, 실제로 제기하지 않은 주장을 인용하지는 않겠습니다. 대신 제공된 자료에서 보유 유지를 지지할 수 있는 논리들을 직접 검토하겠습니다.</p>
+<p>먼저 “GOOGL은 매출과 영업이익이 강하게 성장하므로 그대로 보유해야 한다”는 논리는 성장의 가격을 충분히 반영하지 못합니다. 3분기 매출 증가율 24.7%, 영업이익 증가율 29.9%는 분명 매력적입니다. 그러나 1~9월 영업현금흐름이 13.2% 증가하는 동안 자본지출은 107.5% 늘었습니다. 같은 기간 잉여현금흐름은 전년 동기 487.15억 달러 흑자에서 48.04억 달러 적자로 바뀌었습니다. 이것은 사업 붕괴의 증거가 아니라, 성장에 참여하기 위해 주주가 부담해야 하는 현금 투입이 크게 늘었다는 증거입니다. 높은 보상을 추구하는 투자자라면 성장률뿐 아니라 그 성장을 얻는 데 필요한 자본까지 따져야 합니다.</p>
+<p>“인공지능 투자는 미래 경쟁우위를 만드는 비용이므로 기다려야 한다”는 반론에도 절반만 동의합니다. GOOGL의 검색·동영상 플랫폼, 클라우드, Gemini 생태계는 장기 성장의 기반입니다. 그렇기 때문에 전량 매도는 과도합니다. 하지만 경쟁우위의 존재와 현재 보유 비중의 적정성은 다른 문제입니다. 업계 모델 가격이 57% 하락했다는 보도는 사용량 확대의 기회인 동시에 수익화 압박의 경고입니다. 이는 GOOGL 고유의 가격 지표가 아니므로 직접적인 마진 하락으로 계산할 수는 없지만, 이용 증가만으로 투자 회수를 낙관해서도 안 됩니다. 핵심 지분으로 혁신의 상승 여력을 유지하고, 초과분에는 더 엄격한 자본 효율 기준을 적용하는 편이 낫습니다.</p>
+<p>“PER 13.85배라면 이미 충분히 싸다”는 주장도 설득력이 부족합니다. 제공된 최근 12개월 순이익률은 50.03%로 영업이익률 33.32%보다 높고, 그 차이를 설명할 주석은 없습니다. 낮은 PER을 반복 가능한 이익의 가격으로 그대로 받아들이기 어렵다는 뜻입니다. 반면 재무제표 기반으로 재구성한 잉여현금흐름 수익률은 약 0.61%입니다. 이 수치 역시 투자 확대 국면이라는 맥락에서 봐야 하지만, 적어도 “낮은 PER이므로 매도하면 안 된다”는 결론은 지지하지 않습니다. 요약 도구와 재무제표의 잉여현금흐름 수치가 불일치한다는 점까지 고려하면, 확신에 찬 저평가 주장보다 제한적 축소가 더 타당합니다.</p>
+<p>과매도이므로 매도를 미뤄야 한다는 의견에는 이렇게 답하겠습니다. GOOGL의 RSI 27.7822는 반등 위험을 경고하지만, 하락 종료를 확인하지는 않습니다. 종가 265.29달러는 10일 EMA 282.005달러, 50일 SMA 322.301달러, 200일 SMA 336.709달러를 모두 밑돌고 있습니다. 최근 반등 이후 다시 제공된 30거래일 중 최저 종가를 기록했고, MACD 히스토그램도 음수입니다. 이런 상황에서 반등만 기다리며 초과 보유분 전체를 유지하는 것 역시 적극적인 방향성 베팅입니다. 과매도는 매도 결정을 취소할 이유라기보다, 한 번에 던지지 않고 분할해야 할 이유입니다.</p>
+<p>심리 자료도 같은 방향을 보조합니다. 뉴스 기반 점수는 3.2점으로 약세지만, 소셜 데이터 수집 실패로 신뢰도가 낮습니다. 따라서 이를 시장 전체의 투매나 역발상 매수 신호로 포장해서는 안 됩니다. 다만 앤스로픽 지분가치 1,720억 달러 추정이라는 호재와 GOOGL 주가 하락이 함께 보도됐다는 점은 주목할 만합니다. 자산가치 이야기가 당장의 매수 동력으로 충분하지 않았다는 제한적인 신호입니다. 지분 평가액은 가용현금이 아니며, 약 30억 달러의 유튜브 합의 역시 아직 확정 비용은 아닙니다. 확인되지 않은 악재를 부풀릴 필요 없이, 이미 제공된 현금흐름과 가격 구조만으로도 초과 비중 축소 논거는 성립합니다.</p>
+<p>그렇다고 더 공격적인 공매도로 나아가자는 뜻은 아닙니다. ATR 11.314달러는 기준 종가의 약 4.3%이고, 최근 거래일 장중 변동폭은 18.92달러였습니다. 이런 환경에서는 방향을 맞혀도 급반등과 체결 손실에 노출될 수 있습니다. GOOGL의 장기 성장 가능성까지 고려하면, 추가적인 하락 베팅보다 기존 초과 노출을 줄이는 방식이 더 목적에 맞습니다. 매도 후 급반등하면 줄인 물량만큼 상승 참여가 낮아진다는 비용도 분명히 인정해야 합니다. 핵심 보유분을 남기는 이유가 바로 그것입니다.</p>
+<p>실행은 제시된 계획을 지지합니다. GOOGL의 중기 목표를 표준 배분의 0.65배로 두고, 현재 비중이 이를 초과할 때만 초과분의 절반을 최신 시세와 거래 가능 여부 확인 후 먼저 축소합니다. 나머지는 2~4주 동안 유동성과 변동성을 고려해 분할합니다. 현재 표준 배분만큼 보유했다면 최초 축소는 기존 보유량의 약 17.5%, 전체 계획 완료 시 총축소는 약 35%입니다. 이미 목표 이하이거나 미보유라면 이 제안에 따라 추가 매도나 공매도를 할 이유가 없습니다. 관리 범위 0.50~0.75배도 자동 매매 신호로 해석해서는 안 됩니다.</p>
+<p>GOOGL의 잉여현금흐름 회복, 투자 효율 개선, 가격 구조 안정이 확인되면 축소 판단을 재검토해야 합니다. 그러나 그 증거를 기다리는 동안 초과 비중까지 유지할 의무는 없습니다. 저는 무조건적인 보유 유지보다, 성장의 상승 여력은 남기고 자본의 기동성은 높이는 이번 매도 계획이 더 경쟁력 있다고 봅니다. 최신 가격 없이 지정 매도가나 손절가를 만들어 붙이지 않겠습니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-2">보수적 위험 분석가</h3>
+<p>보수적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 GOOGL의 목표 초과 보유분을 줄이는 방향에는 동의합니다. 다만 공격적 분석가가 지지한 계획을 그대로 실행하는 것만으로 자산 보호가 충분해지는 것은 아닙니다. 핵심은 다음 투자 기회를 위한 자금 확보가 아니라, 남겨 둘 GOOGL 보유분이 회사의 손실 허용 범위 안에 있는지 확인하는 것입니다. 같은 매도이라도 목적과 실행 기준은 달라야 합니다.</p>
+<p>공격적 분석가께서는 “핵심 보유분으로 상승 여력을 남기고 초과분을 줄이면 된다”고 하셨습니다. 그러나 핵심 보유분이라는 이름이 그 물량의 안전성을 보장하지는 않습니다. 현재 포트폴리오의 규모, 다른 기술주 노출, 현금 수요, 레버리지를 모르는 상황에서 표준 배분의 0.65배가 보수적이라고 단정할 수 없습니다. 다른 보유자산까지 인공지능 투자심리와 광고경기에 민감하다면, GOOGL만 일부 축소해도 포트폴리오 전체의 집중위험은 여전히 클 수 있습니다. 따라서 0.65배는 잠정 목표이지 검증된 안전 비중이 아닙니다.</p>
+<p>현금흐름에 대한 공격적 분석가의 우려는 타당하지만, 저는 이를 단순히 “성장을 위해 필요한 투자”로 받아들이는 데 더 신중합니다. 제공된 재무자료상 GOOGL의 1~9월 영업현금흐름은 13.2% 증가했지만 자본지출은 107.5% 증가했고, 잉여현금흐름은 48.04억 달러 적자였습니다. 분기별로도 2분기 58.55억 달러 적자에서 3분기 90.65억 달러 적자로 확대됐습니다. 투자가 미래 경쟁력을 높일 가능성은 있지만, 회수 시점이 늦어지거나 기대 수익률이 낮아질 경우 주주환원과 추가 투자 여력이 동시에 제약될 수 있습니다. 설비 확대가 이후 감가상각 부담으로 이어질 가능성도 점검해야 합니다.</p>
+<p>그렇다고 GOOGL의 재무위기를 주장할 근거는 없습니다. 유동비율 2.79배와 현금및현금성자산 563.34억 달러는 중요한 완충재입니다. 다만 지급능력이 양호하다는 사실과 주가 하락 위험이 낮다는 주장은 별개입니다. 기업이 충분히 존속할 수 있어도 주주는 투자수익률 하락과 가치평가 조정으로 손실을 볼 수 있습니다.</p>
+<p>중립적 분석가는 아직 발언하지 않았으므로 실제 주장을 대신 만들지는 않겠습니다. 다만 펀더멘털 보고서의 보유 유지 논리에는 이 구분이 필요합니다. GOOGL의 매출과 영업이익 성장이 강하다는 것은 기업의 경쟁력을 지지하지만, 모든 투자자에게 현재 보유 비중이 적절하다는 뜻은 아닙니다. 기업 차원의 보유 유지와 포트폴리오 차원의 초과 비중 축소는 양립할 수 있습니다. 반대로 이미 위험 한도 안에서 적게 보유하고 있다면, 이 자료만으로 추가 매도를 강요할 이유도 부족합니다.</p>
+<p>낮은 PER에 신중해야 한다는 공격적 분석가의 지적에도 동의합니다. 다만 잉여현금흐름 수익률 0.61% 역시 투자 확대기의 수치이며, 자료 불일치까지 있어 단독 매도 근거로 삼아서는 안 됩니다. GOOGL의 최근 12개월 잉여현금흐름은 재무제표 재구성상 197.47억 달러 흑자지만 요약 도구는 적자를 제시합니다. 따라서 “GOOGL의 현금흐름이 전반적으로 적자”라고 일반화하지 않고, 확인 가능한 누적·분기 악화와 산정 불확실성을 구분해야 합니다. 정보가 불완전하다는 것은 파국을 가정할 이유가 아니라, 큰 비중을 정당화할 확신이 부족하다는 뜻입니다.</p>
+<p>기술적 측면에서도 공격적 분석가의 “과매도는 분할 매도의 이유”라는 설명은 맞지만, 분할만 하면 위험이 통제된다는 결론은 경계합니다. 제공된 스냅숏에서 GOOGL의 ATR 11.314달러는 종가의 약 4.3%이고, 장중 변동폭은 약 7.1%였습니다. ATR은 최대 손실의 상한이 아니며 악재성 갭도 막아 주지 않습니다. 남은 초과분을 2~4주 보유하는 동안 추가 하락을 감수해야 한다는 점이 원안의 주요 약점입니다.</p>
+<p>따라서 GOOGL 매도 일정은 달력보다 위험 한도에 종속돼야 합니다. 위험 한도 내에서는 초과분의 절반을 먼저 줄이고 나머지를 분할하는 접근이 합리적입니다. 그러나 현재 집중도나 레버리지가 내부 한도를 위반한다면, 반등을 기다리거나 2~4주 일정을 고수할 것이 아니라 위험 해소를 우선해야 합니다. 반대로 이미 목표 이하라면 RSI나 이동평균선만을 이유로 추가 매도를 반복하지 않는 편이 낫습니다.</p>
+<p>공격적 분석가가 언급한 뉴스 심리 역시 매도 속도를 높이는 독립적 근거로 쓰기에는 약합니다. GOOGL의 심리 점수 3.2점은 소셜 자료 누락으로 신뢰도가 낮고, 뉴스·거시 보고서는 같은 사건을 반복 인용합니다. 여러 보고서가 약세라고 해서 독립적인 증거가 그만큼 늘어난 것은 아닙니다. 앤스로픽 지분 추정가치는 가용현금이 아니지만, 유튜브 합의와 해외 데이터센터 과세 역시 확정 비용이 아닙니다. 보수적 판단은 호재를 할인하는 동시에 미확정 악재도 과장하지 않아야 합니다.</p>
+<p>제가 제안하는 조정은 GOOGL의 0.65배 목표를 유지하되, 실제 실행 전 포트폴리오 위험 검증을 추가하는 것입니다. 현재 비중과 목표 비중은 동일한 포트폴리오 가치 기준으로 비교하고, 목표 초과분만 축소 대상으로 계산해야 합니다. 표준 배분만큼 보유한 경우 총 35% 축소라는 계산은 맞지만, 모든 보유자에게 적용되는 고정 매도 비율은 아닙니다.</p>
+<p>또한 남길 GOOGL 평가액에 가상의 추가 하락률을 적용해 포트폴리오 손실을 점검해야 합니다. 예를 들어 추가 10%와 20% 하락은 예측이 아니라 스트레스 시나리오입니다. 다른 기술주도 동시에 하락하는 경우까지 고려해 손실 허용액을 넘는다면, 0.65배 목표 자체를 재검토해야 합니다. 0.50~0.75배 관리 범위도 안전을 보장하는 경계선이 아닙니다.</p>
+<p>실행 시에는 최신 GOOGL 시세, 호가 차이, 거래 가능 여부와 중요 공시를 확인하고, 유동성이 충분한 시간대에 가격을 통제하는 분할 주문을 검토하겠습니다. 지정가에는 미체결 위험이 있으므로 주문 방식과 재검토 기준도 함께 정해야 합니다. 최신 시세 없이 특정 매도가나 손절가를 만들지 않는 것은 적절하지만, 잔여 보유분의 손실·집중도 한도까지 비워 두어서는 안 됩니다. 매도 대금을 곧바로 다른 고변동 자산에 재투입하는 것도 이번 위험 축소의 취지를 약화시킵니다.</p>
+<p>결론적으로 GOOGL에 대해서는 전량 청산이나 공매도가 아니라 조건부 초과 비중 축소를 지지합니다. 공격적 분석가와의 차이는 상승 참여와 자금 기동성보다 잔여 노출의 감당 가능성을 먼저 검증한다는 점입니다. 현금흐름 회복과 투자 효율 개선이 확인되면 재평가하되, 그때까지의 손실을 감당할 수 있는 규모만 유지하는 것이 자산 보전에 더 부합합니다.</p>
+<p>최종 매매 제안: 매도</p>
+<h3 id="s4-3">중립적 위험 분석가</h3>
+<p>중립적 위험 분석가: <strong>투자 의견</strong>: 매도</p>
+<p>저는 GOOGL의 제한적인 비중 축소에 동의합니다. 다만 두 분석가 모두 매도에 동의했다고 해서 매도 규모와 속도까지 충분히 검증된 것은 아닙니다. 이번 판단은 “GOOGL의 전망이 나쁘므로 판다”보다 “성장 가능성은 남아 있지만, 현금흐름과 가격 추세의 불확실성을 고려해 목표 초과 노출을 줄인다”로 좁혀야 합니다. 제공된 자료는 2026년 11월 20일 가격 스냅숏과 관련 보고서이며, 현재 시장 상황을 실시간으로 확인한 결과는 아닙니다.</p>
+<p>공격적 분석가께서는 초과분을 줄이면 자금의 기동성을 높일 수 있다고 하셨습니다. 맞지만, 매도해서 확보한 선택권이 반드시 더 높은 수익으로 이어지는 것은 아닙니다. GOOGL을 매도한 뒤 급반등을 놓칠 수도 있고, 대금을 다른 고변동 기술주에 투자한다면 위험은 줄지 않은 채 거래비용만 발생할 수도 있습니다. 따라서 이번 축소의 정당성은 “다음 기회가 더 좋을 것”이라는 기대가 아니라, 현재 GOOGL 노출을 감당할 수 있는 수준으로 조정한다는 데 있어야 합니다.</p>
+<p>또한 공격적 분석가의 현금흐름 우려에는 동의하지만, 투자 확대가 가치 훼손으로 이어진다는 결론은 아직 이릅니다. 제공된 GOOGL 재무자료상 1~9월 자본지출은 107.5% 증가했고 잉여현금흐름은 48.04억 달러 적자였습니다. 그러나 같은 기간 영업현금흐름 자체는 13.2% 증가했습니다. 현금창출 기반이 무너졌다기보다 투자 집행이 현금창출을 앞지른 상황입니다. 3분기 매출과 영업이익이 각각 전년 대비 24.7%, 29.9% 성장했다는 점까지 고려하면, 초과 비중 축소는 설명되지만 핵심 보유분까지 계속 줄여야 한다는 근거는 부족합니다.</p>
+<p>낮은 PER을 경계하는 데도 양쪽 기준을 적용해야 합니다. GOOGL의 최근 12개월 순이익률이 영업이익률보다 높아 PER 13.85배를 그대로 저평가의 증거로 쓰기는 어렵습니다. 반대로 투자지출이 급증한 시점의 잉여현금흐름 수익률 0.61%만으로 고평가를 확정해서도 안 됩니다. 재무제표를 재구성한 최근 12개월 잉여현금흐름은 197.47억 달러 흑자이고 요약 도구 수치와도 불일치합니다. 중립적인 결론은 “싸다”나 “비싸다”의 단정이 아니라, 정상화 이익과 투자 회수 능력을 확인하기 전까지 과도한 비중을 피한다는 것입니다.</p>
+<p>보수적 분석가께서는 남은 GOOGL 보유분의 손실 감당 능력을 먼저 검증해야 한다고 하셨습니다. 이 지적은 중요합니다. 다만 스트레스 시나리오가 곧 추가 매도의 근거가 되어서는 안 됩니다. 추가 10%나 20% 하락은 예측이 아니라 점검 도구입니다. 장기 투자기간과 충분한 유동성을 가진 투자자가 사전에 정한 손실 한도 안에 있다면, 그 가능성만으로 목표를 계속 낮추는 것은 오히려 저가 매도와 재진입 실패 위험을 키웁니다. 보수적 접근도 하락 손실뿐 아니라 상승 참여를 포기하는 비용을 함께 계산해야 합니다.</p>
+<p>GOOGL의 유동비율 2.79배와 현금및현금성자산 563.34억 달러가 주가를 보호하지는 않습니다. 하지만 투자 회수를 기다릴 재무적 여력이 있다는 점은 인정해야 합니다. 현금흐름 악화가 실제 위험인 것과 즉시 더 큰 폭으로 줄여야 한다는 것은 다른 주장입니다. 집중도나 레버리지 한도 위반이 확인되지 않았다면, 불확실성 자체를 이유로 매도 속도를 계속 높일 필요는 없습니다.</p>
+<p>기술적 분석에서는 두 분의 주장을 함께 적용하겠습니다. GOOGL이 10일·50일·200일 이동평균선 아래에 있고 최근 반등도 실패했다는 점은 초과분을 그대로 유지하기 어렵게 합니다. 동시에 RSI 27.7822와 종가 대비 약 4.3%인 ATR은 지금 한꺼번에 매도하는 선택에도 상당한 위험이 있음을 보여줍니다. 과매도는 바닥 신호가 아니지만, 매도 시점의 불리함을 무시할 이유도 아닙니다. 반등을 무작정 기다리지도, 급락을 보고 축소 물량을 늘리지도 않는 분할 접근이 합리적입니다.</p>
+<p>뉴스와 거시환경은 매도 확신을 높이는 독립적인 표로 세지 않겠습니다. GOOGL 심리 점수 3.2점은 소셜 자료가 빠져 신뢰도가 낮고, 뉴스·거시 보고서에는 동일 사건이 중복됩니다. 유튜브 합의와 해외 데이터센터 과세는 아직 확정 비용이 아니며, 앤스로픽 지분 추정가치 역시 가용현금이 아닙니다. 소비 둔화는 광고수요를 압박할 수 있지만 실제 둔화 여부는 별도 확인이 필요합니다. 금리 인하도 성장 우려와 위험 프리미엄 상승을 상쇄한다는 보장이 없습니다. 따라서 GOOGL 매도 속도는 헤드라인보다 공식 현금흐름, 투자계획, 광고·클라우드 수익성의 변화에 더 크게 반응해야 합니다.</p>
+<p>실행에서는 GOOGL의 표준 배분을 먼저 투자자가 자신의 포트폴리오에 맞게 정의해야 합니다. 0.65배 목표와 0.50~0.75배 관리 범위는 잠정 기준이지 최적화된 안전 비중이 아닙니다. 현재 비중을 w, 표준 배분을 s라고 하면 잠정 축소 대상은 ‘w에서 0.65×s를 뺀 값’이 양수인 부분입니다. 이를 현재 비중 w로 나누면 보유량 대비 축소 비율을 구할 수 있습니다. 표준 배분만큼 보유했을 때만 총 35% 축소, 최초 약 17.5% 축소가 적용됩니다.</p>
+<p>최신 GOOGL 시세와 공시, 호가 및 거래 가능 여부를 확인한 뒤 목표 초과분의 절반을 먼저 줄이고, 나머지는 2~4주에 걸쳐 분할하는 원안을 기본으로 지지합니다. 다만 남은 매도는 매주 재평가해야 합니다. GOOGL의 가격 안정과 공식 투자 효율 개선이 함께 확인되고 전체 위험도 허용 범위 안이라면, 잔여 매도의 속도를 늦추거나 계획을 재검토할 수 있습니다. 반대로 집중도·레버리지 한도를 이미 넘었다면 일정 단축이 우선입니다. 단순한 하루 반등이나 하루 급락만으로 계획을 뒤집지는 않겠습니다.</p>
+<p>GOOGL 매도 대금도 전체 자산배분의 일부로 관리해야 합니다. 현금 수요가 있다면 유동성 확보에 우선 사용하고, 재투자한다면 기존 기술주와 위험 요인이 덜 겹치는 자산을 검토하는 편이 취지에 맞습니다. 다른 대형 기술주나 인공지능 관련 자산으로 옮기는 것만으로는 분산이 충분하지 않을 수 있습니다. 거래비용과 적용 가능한 세금도 축소의 편익과 비교해야 합니다.</p>
+<p>결론적으로 GOOGL은 기업 차원의 보유 유지와 포트폴리오 차원의 조건부 매도이 양립하는 사례입니다. 목표를 초과했다면 제한적으로 줄이되, 이미 목표 이하라면 추가 매도를 강요하지 않고 미보유라면 공매도로 전환하지 않겠습니다. 최신 가격 없이 지정 매도가와 손절가를 만들지는 않되, 잔여 보유분의 손실·집중도 한도는 반드시 정해야 합니다. 성장 참여를 남기면서 감당하기 어려운 초과 노출만 줄이는 것이 두 극단보다 지속 가능한 선택입니다.</p>
+<p>최종 매매 제안: 매도</p>
+</section><section id="s5"><h2>V. 최종 투자 판단</h2><h3 id="s5-1">투자 총괄</h3>
+<p><strong>투자 의견</strong>: 비중 축소</p>
+<p><strong>핵심 요약</strong>: GOOGL은 전량 매도보다 목표 초과분의 제한적 축소가 타당하며, 표준 배분의 0.65배를 잠정 목표로 두고 0.50~0.75배 범위는 포트폴리오 위험 검증을 거쳐 적용합니다. 현재 비중이 목표보다 높다면 최신 시세·공시·유동성을 확인한 뒤 초과분의 절반을 먼저 줄이고 나머지를 2~4주간 분할하되, 집중도나 레버리지 한도 위반 시 위험 해소를 우선합니다. 이미 목표 이하이거나 미보유라면 목표를 채우기 위한 신규 매수나 공매도는 하지 않으며, 잔여 GOOGL 보유분에 추가 10%·20% 하락 및 기술주 동반 하락 스트레스를 적용해 기존 손실 한도를 확인합니다. 중기적으로 다음 실적과 이후 실적의 현금흐름·투자 효율을 재평가하며, 최신 가격과 신뢰할 만한 가치평가 근거가 없어 목표주가·가격 손절선은 제시하지 않습니다.</p>
+<p><strong>투자 근거</strong>: GOOGL에 대한 세 분석가의 매도 표기는 실제 제안인 조건부 초과 비중 축소로 해석해야 하며, 전량 청산·진입 회피를 뜻하는 매도보다 비중 축소가 제시된 등급 정의에 부합합니다. 가장 강한 축소 근거는 제공된 2026년 11월 자료에서 1~9월 영업현금흐름이 13.2% 증가하는 동안 자본지출은 107.5% 늘고 잉여현금흐름은 전년 동기 487.15억 달러 흑자에서 48.04억 달러 적자로 전환했다는 점입니다. 분기 잉여현금흐름도 2분기 58.55억 달러 적자에서 3분기 90.65억 달러 적자로 악화됐으며, 3분기 영업이익률은 전분기 대비 2.23%포인트 하락했습니다. 반면 3분기 매출 24.7%, 영업이익 29.9% 성장, 유동비율 2.79배와 현금및현금성자산 563.34억 달러는 사업 붕괴나 유동성 위기를 전제로 한 전량 청산을 반박합니다. 중립적 분석가의 지적대로 투자 확대가 가치 훼손이라는 결론은 아직 입증되지 않았고, 매도 후 급반등을 놓칠 위험도 있어 핵심 노출은 유지할 이유가 있습니다. PER 13.85배는 최근 12개월 순이익률 50.03%와 영업이익률 33.32%의 차이를 설명할 정보가 없어 정상화 이익 기준의 저평가 근거로 부족합니다. 재구성한 최근 12개월 잉여현금흐름은 197.47억 달러 흑자이며 수익률은 약 0.61%이지만 요약 자료와 불일치하므로 전 기간 현금흐름 적자나 확정적 고평가로 일반화하지 않습니다. 제공된 11월 20일 가격 스냅숏에서 GOOGL은 10일·50일·200일 이동평균선 아래였으나 RSI 27.7822와 종가 대비 약 4.3%의 ATR은 일괄 매도보다 분할 축소를 지지합니다. 해당 가격은 현재 주문가격이 아니며, 신뢰도가 낮은 심리 점수와 미확정 합의·투자자산 평가 보도는 핵심 근거에서 제외합니다. 표준 배분과 실제 보유량은 알려져 있지 않으므로 동일 포트폴리오 가치 기준에서 목표 초과분만 계산해야 하며, 표준 배분을 보유한 경우에만 총 35%, 최초 17.5% 축소가 적용됩니다. 보수적 분석가의 위험 한도 검증을 채택하되, 10%·20% 하락 시나리오 자체를 추가 매도 신호로 삼지 않습니다. 다음 실적에서 누적 자본지출/매출 비율 36.9%의 하락, 의미 있는 잉여현금흐름 개선, 영업이익률 안정이 확인되고 이후에도 성장 유지와 개선이 이어지면 표준 비중 복원을 검토합니다. 현금흐름 악화에 매출·영업이익 성장 둔화가 겹치면 목표를 표준 배분의 0.50배 이하로 낮출지 재심사합니다. 잉여현금흐름 산식·기간, 영업외손익, 예상 주당순이익의 출처·기간, 자금조달 구성과 유지·성장 투자 구분은 추가 확인이 필요합니다.</p>
+<p><strong>목표 가격</strong>: 제시되지 않음</p>
+<p><strong>투자 기간</strong>: 2~4주 분할 축소 후 다음 실적 및 이후 실적까지 중기 재평가</p>
+</section>
+</main>
+<footer class="credit"><a href="https://github.com/TauricResearch/TradingAgents" rel="noopener">TradingAgents</a> powered by <a class="brand" href="https://github.com/TauricResearch" rel="noopener">Tauric Research</a></footer>
+</div>
+<a class="to-top" href="#top">맨 위로</a>
+</body>
+</html>
